@@ -1,0 +1,28 @@
+{
+	"name": "triggers-api",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"cf-typegen": "wrangler types"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.8.19",
+		"@playwright/test": "^1.56.1",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.2",
+		"@typescript-eslint/eslint-plugin": "^8.46.4",
+		"@typescript-eslint/parser": "^8.46.4",
+		"eslint": "^9.39.1",
+		"playwright": "^1.56.1",
+		"prettier": "^3.6.2",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"typescript": "^5.5.2",
+		"vitest": "~3.2.0",
+		"wrangler": "^4.46.0"
+	}
+}

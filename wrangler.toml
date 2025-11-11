@@ -1,0 +1,40 @@
+# Cloudflare Workers Configuration
+# Documentation: https://developers.cloudflare.com/workers/wrangler/configuration/
+
+name = "triggers-api"
+main = "src/index.ts"
+compatibility_date = "2025-11-11"
+compatibility_flags = ["nodejs_compat"]
+
+# Observability settings
+[observability]
+enabled = true
+
+# D1 Database Binding
+# Run: wrangler d1 create triggers-api
+[[d1_databases]]
+binding = "DB"
+database_name = "triggers-api"
+
+# KV Binding (for auth tokens and metrics)
+[[kv_namespaces]]
+binding = "AUTH_KV"
+
+# Queue Bindings
+[[queues.producers]]
+binding = "EVENT_QUEUE"
+queue = "event-queue"
+
+[[queues.consumers]]
+queue = "event-queue"
+max_batch_size = 100
+max_batch_timeout = 30
+max_retries = 3
+dead_letter_queue = "event-dlq"
+
+# Workflow Binding
+# Commented out until Epic 2 implementation
+# [[workflows]]
+# binding = "PROCESS_EVENT_WORKFLOW"
+# name = "process-event-workflow"
+# class_name = "ProcessEventWorkflow"

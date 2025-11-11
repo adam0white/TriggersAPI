@@ -89,15 +89,15 @@ test.describe('TriggersAPI Dashboard - Corrected UI Tests', () => {
     test('should be able to change debug flag', async ({ page }) => {
       const debugDropdown = page.locator('#debugFlag');
 
-      // Select option by index
-      await debugDropdown.selectOption('1');
+      // Select option by value
+      await debugDropdown.selectOption('validation_error');
       const selected = await debugDropdown.inputValue();
-      expect(selected).toBe('1');
+      expect(selected).toBe('validation_error');
 
       // Reset to None
-      await debugDropdown.selectOption('0');
+      await debugDropdown.selectOption('');
       const reset = await debugDropdown.inputValue();
-      expect(reset).toBe('0');
+      expect(reset).toBe('');
     });
   });
 

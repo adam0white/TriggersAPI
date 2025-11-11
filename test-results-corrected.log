@@ -1,0 +1,81 @@
+
+Running 28 tests using 1 worker
+
+  ✓   1 [chromium] › tests/ui-corrected.spec.ts:12:9 › TriggersAPI Dashboard - Corrected UI Tests › Visual Inspection › should load dashboard correctly (323ms)
+  ✓   2 [chromium] › tests/ui-corrected.spec.ts:18:9 › TriggersAPI Dashboard - Corrected UI Tests › Visual Inspection › should display status badge correctly (138ms)
+  ✓   3 [chromium] › tests/ui-corrected.spec.ts:25:9 › TriggersAPI Dashboard - Corrected UI Tests › Visual Inspection › should have correct page styling (147ms)
+  ✓   4 [chromium] › tests/ui-corrected.spec.ts:35:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should have Bearer token field pre-filled (144ms)
+  ✓   5 [chromium] › tests/ui-corrected.spec.ts:44:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should allow editing Bearer token (165ms)
+  ✓   6 [chromium] › tests/ui-corrected.spec.ts:53:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should have payload textarea field (140ms)
+  ✓   7 [chromium] › tests/ui-corrected.spec.ts:62:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should accept valid JSON in payload (170ms)
+  ✓   8 [chromium] › tests/ui-corrected.spec.ts:76:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should have metadata textarea field (138ms)
+  ✓   9 [chromium] › tests/ui-corrected.spec.ts:81:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should have debug flag dropdown (146ms)
+  ✘  10 [chromium] › tests/ui-corrected.spec.ts:89:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should be able to change debug flag (30.6s)
+  ✓  11 [chromium] › tests/ui-corrected.spec.ts:105:9 › TriggersAPI Dashboard - Corrected UI Tests › Responsive Design › should be responsive on mobile (375x667) (152ms)
+  ✓  12 [chromium] › tests/ui-corrected.spec.ts:114:9 › TriggersAPI Dashboard - Corrected UI Tests › Responsive Design › should be responsive on tablet (768x1024) (113ms)
+  ✓  13 [chromium] › tests/ui-corrected.spec.ts:119:9 › TriggersAPI Dashboard - Corrected UI Tests › Responsive Design › should be responsive on desktop (1920x1080) (289ms)
+  ✓  14 [chromium] › tests/ui-corrected.spec.ts:131:9 › TriggersAPI Dashboard - Corrected UI Tests › Buttons & Actions › should have Submit Event button (131ms)
+  ✓  15 [chromium] › tests/ui-corrected.spec.ts:136:9 › TriggersAPI Dashboard - Corrected UI Tests › Buttons & Actions › should have Clear Form button (145ms)
+  ✓  16 [chromium] › tests/ui-corrected.spec.ts:141:9 › TriggersAPI Dashboard - Corrected UI Tests › Buttons & Actions › should clear form when Clear button clicked (519ms)
+  ✓  17 [chromium] › tests/ui-corrected.spec.ts:166:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Structure & Accessibility › should have proper form element (156ms)
+  ✓  18 [chromium] › tests/ui-corrected.spec.ts:171:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Structure & Accessibility › should have all required labels (147ms)
+  ✓  19 [chromium] › tests/ui-corrected.spec.ts:182:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Structure & Accessibility › should have proper input element structure (145ms)
+  ✓  20 [chromium] › tests/ui-corrected.spec.ts:188:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Structure & Accessibility › should have hint text for fields (145ms)
+Page load time: 508ms
+  ✓  21 [chromium] › tests/ui-corrected.spec.ts:199:9 › TriggersAPI Dashboard - Corrected UI Tests › Performance › should load within acceptable time (668ms)
+  ✓  22 [chromium] › tests/ui-corrected.spec.ts:209:9 › TriggersAPI Dashboard - Corrected UI Tests › Performance › should not have console errors (663ms)
+  ✓  23 [chromium] › tests/ui-corrected.spec.ts:225:9 › TriggersAPI Dashboard - Corrected UI Tests › Token Field Edge Cases › should preserve token when navigating back to page (675ms)
+  ✓  24 [chromium] › tests/ui-corrected.spec.ts:239:9 › TriggersAPI Dashboard - Corrected UI Tests › Token Field Edge Cases › should allow token to be empty temporarily (164ms)
+  ✓  25 [chromium] › tests/ui-corrected.spec.ts:254:9 › TriggersAPI Dashboard - Corrected UI Tests › Payload Field Edge Cases › should handle multiline JSON (148ms)
+  ✓  26 [chromium] › tests/ui-corrected.spec.ts:272:9 › TriggersAPI Dashboard - Corrected UI Tests › Payload Field Edge Cases › should have required attribute on payload field (157ms)
+  ✓  27 [chromium] › tests/ui-corrected.spec.ts:283:9 › TriggersAPI Dashboard - Corrected UI Tests › Complete Happy Path › should show all form fields in sequence (282ms)
+  ✓  28 [chromium] › tests/ui-corrected.spec.ts:315:9 › TriggersAPI Dashboard - Corrected UI Tests › Complete Happy Path › should prepare form for submission (146ms)
+
+
+  1) [chromium] › tests/ui-corrected.spec.ts:89:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should be able to change debug flag 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('#debugFlag')[22m
+    [2m    - locator resolved to <select id="debugFlag" name="debugFlag">…</select>[22m
+    [2m  - attempting select option action[22m
+    [2m    2 × waiting for element to be visible and enabled[22m
+    [2m      - did not find some options[22m
+    [2m    - retrying select option action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible and enabled[22m
+    [2m      - did not find some options[22m
+    [2m    - retrying select option action[22m
+    [2m      - waiting 100ms[22m
+    [2m    60 × waiting for element to be visible and enabled[22m
+    [2m       - did not find some options[22m
+    [2m     - retrying select option action[22m
+    [2m       - waiting 500ms[22m
+
+
+      91 |
+      92 |       // Select option by index
+    > 93 |       await debugDropdown.selectOption('1');
+         |                           ^
+      94 |       const selected = await debugDropdown.inputValue();
+      95 |       expect(selected).toBe('1');
+      96 |
+        at /Users/abdul/Downloads/Projects/TriggersAPI/tests/ui-corrected.spec.ts:93:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/ui-corrected-TriggersAPI-D-f49b8-e-able-to-change-debug-flag-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/ui-corrected-TriggersAPI-D-f49b8-e-able-to-change-debug-flag-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/ui-corrected-TriggersAPI-D-f49b8-e-able-to-change-debug-flag-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/ui-corrected.spec.ts:89:9 › TriggersAPI Dashboard - Corrected UI Tests › Form Fields - Correct Selectors › should be able to change debug flag 
+  27 passed (38.0s)
+
+[36m  Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.[39m
