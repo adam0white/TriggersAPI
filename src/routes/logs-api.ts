@@ -34,8 +34,6 @@ export interface LogEntry {
 	correlation_id: string;
 	request_id?: string;
 	timestamp: string;
-	log_level: 'debug' | 'info' | 'warn' | 'error';
-	message: string;
 	method?: string;
 	path?: string;
 	endpoint?: string;
@@ -174,8 +172,6 @@ function buildLogsQuery(params: LogsQueryParams): { query: string; bindings: any
 			correlation_id,
 			request_id,
 			timestamp,
-			log_level,
-			message,
 			method,
 			path,
 			endpoint,
@@ -198,11 +194,8 @@ function buildLogsQuery(params: LogsQueryParams): { query: string; bindings: any
 		WHERE timestamp > datetime('now', '-1 hour')
 	`;
 
-	// Add log level filter
-	if (params.level) {
-		query += ` AND log_level = ?`;
-		bindings.push(params.level);
-	}
+	// Log level filter removed - column doesn't exist in schema
+	// Status class can be used as alternative: 2xx (info), 4xx (warn), 5xx (error)
 
 	// Add worker name filter
 	if (params.worker) {

@@ -6,150 +6,535 @@
   <title>TriggersAPI - Event Ingestion Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    /* Inline CSS for fast load time */
+    /* ============================================
+       DESIGN SYSTEM - Story 5.4: UI Polish
+       ============================================ */
+
+    /* CSS Custom Properties (Design Tokens) */
+    :root {
+      /* Primary Color Palette - WCAG AA Compliant */
+      --color-primary: #2563eb;
+      --color-primary-dark: #1d4ed8;
+      --color-primary-light: #dbeafe;
+      --color-primary-hover: #1e40af;
+
+      /* Success Colors - WCAG AA Compliant */
+      --color-success: #059669;
+      --color-success-dark: #047857;
+      --color-success-light: #d1fae5;
+
+      /* Warning Colors - WCAG AA Compliant */
+      --color-warning: #d97706;
+      --color-warning-dark: #b45309;
+      --color-warning-light: #fef3c7;
+
+      /* Error Colors - WCAG AA Compliant */
+      --color-error: #dc2626;
+      --color-error-dark: #b91c1c;
+      --color-error-light: #fee2e2;
+
+      /* Neutral Colors */
+      --color-neutral: #6b7280;
+      --color-neutral-dark: #4b5563;
+      --color-neutral-light: #9ca3af;
+
+      /* Text Colors */
+      --color-text-primary: #1f2937;
+      --color-text-secondary: #6b7280;
+      --color-text-tertiary: #9ca3af;
+      --color-text-inverse: #ffffff;
+
+      /* Background Colors */
+      --color-bg-primary: #ffffff;
+      --color-bg-secondary: #f9fafb;
+      --color-bg-tertiary: #f3f4f6;
+      --color-bg-canvas: #f9fafb;
+      --color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+      /* Border Colors */
+      --color-border-primary: #e5e7eb;
+      --color-border-secondary: #d1d5db;
+      --color-border-focus: #2563eb;
+
+      /* Typography */
+      --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      --font-family-mono: 'Monaco', 'Menlo', 'Courier New', monospace;
+
+      /* Font Sizes */
+      --font-size-xs: 12px;
+      --font-size-sm: 13px;
+      --font-size-base: 14px;
+      --font-size-md: 16px;
+      --font-size-lg: 18px;
+      --font-size-xl: 20px;
+      --font-size-2xl: 24px;
+      --font-size-3xl: 28px;
+
+      /* Font Weights */
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+
+      /* Line Heights */
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.5;
+      --line-height-relaxed: 1.6;
+
+      /* Spacing Scale (16px base) */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 12px;
+      --spacing-base: 16px;
+      --spacing-lg: 20px;
+      --spacing-xl: 24px;
+      --spacing-2xl: 32px;
+      --spacing-3xl: 40px;
+      --spacing-4xl: 48px;
+
+      /* Border Radius */
+      --radius-sm: 4px;
+      --radius-base: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-base: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+      /* Transitions */
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.2s ease;
+      --transition-slow: 0.3s ease;
+
+      /* Z-Index Scale */
+      --z-base: 1;
+      --z-dropdown: 100;
+      --z-sticky: 200;
+      --z-modal: 1000;
+      --z-toast: 9999;
+      --z-tooltip: 10000;
+
+      /* Layout */
+      --container-max-width: 1400px;
+      --grid-gap: var(--spacing-base);
+    }
+
+    /* ============================================
+       GLOBAL RESET & BASE STYLES
+       ============================================ */
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: var(--font-family-primary);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-relaxed);
+      color: var(--color-text-primary);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: var(--spacing-lg);
     }
 
+    /* ============================================
+       TYPOGRAPHY SYSTEM
+       ============================================ */
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: var(--spacing-base) 0 var(--spacing-md) 0;
+      line-height: var(--line-height-tight);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+
+    h1 { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); }
+    h2 { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); }
+    h3 { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); }
+    h4 { font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); }
+    h5 { font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); }
+    h6 { font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); }
+
+    p {
+      margin: var(--spacing-md) 0;
+      line-height: var(--line-height-relaxed);
+    }
+
+    code {
+      font-family: var(--font-family-mono);
+      background: var(--color-bg-tertiary);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+    }
+
+    pre {
+      background: var(--color-bg-tertiary);
+      padding: var(--spacing-base);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-normal);
+    }
+
+    /* ============================================
+       LAYOUT - CONTAINER & SECTIONS
+       ============================================ */
+
+    /* PHASE 1: Layout Transformation - New Dashboard Container System */
+    .dashboard-container {
+      background: transparent;
+      max-width: var(--container-max-width); /* 1400px */
+      width: 100%;
+      padding: var(--spacing-xl);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-xl);
+    }
+
+    .dashboard-card {
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-xl);
+      transition: all var(--transition-base);
+    }
+
+    .dashboard-card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-full { grid-column: 1 / -1; }
+
+    /* Legacy container for backward compatibility */
     .container {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
       max-width: 800px;
       width: 100%;
-      padding: 40px;
+      padding: var(--spacing-3xl);
     }
 
     header {
-      margin-bottom: 40px;
+      margin-bottom: var(--spacing-3xl);
       text-align: center;
-      border-bottom: 2px solid #f0f0f0;
-      padding-bottom: 20px;
+      border-bottom: 2px solid var(--color-border-primary);
+      padding-bottom: var(--spacing-lg);
     }
 
-    h1 {
-      color: #333;
-      font-size: 28px;
-      margin-bottom: 10px;
+    header h1 {
+      margin: 0 0 var(--spacing-sm) 0;
     }
+
+    /* ============================================
+       COMPONENT LIBRARY - STATUS BADGES
+       ============================================ */
 
     .status {
       display: inline-block;
-      padding: 8px 16px;
-      background: #10b981;
-      color: white;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 600;
+      padding: var(--spacing-sm) var(--spacing-base);
+      background: var(--color-success);
+      color: var(--color-text-inverse);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      transition: all var(--transition-base);
     }
 
     .status.loading {
-      background: #f59e0b;
+      background: var(--color-warning);
     }
 
     .status.error {
-      background: #ef4444;
+      background: var(--color-error);
     }
 
+    /* ============================================
+       FORM COMPONENTS
+       ============================================ */
+
     .form-group {
-      margin-bottom: 24px;
+      margin-bottom: var(--spacing-xl);
+      position: relative;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      color: #333;
-      font-weight: 600;
-      font-size: 14px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-base);
     }
 
     input[type="text"],
     textarea,
     select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-family: 'Monaco', 'Menlo', monospace;
-      font-size: 14px;
-      transition: border-color 0.3s;
+      padding: var(--spacing-md);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: var(--radius-base);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-base);
+      transition: all var(--transition-base);
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
     }
 
     input[type="text"]:focus,
     textarea:focus,
     select:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    input[type="text"]:hover,
+    textarea:hover,
+    select:hover {
+      border-color: var(--color-neutral);
     }
 
     textarea {
       resize: vertical;
       min-height: 150px;
-      font-family: 'Monaco', 'Menlo', monospace;
+      font-family: var(--font-family-mono);
+      line-height: var(--line-height-normal);
     }
+
+    /* ============================================
+       BUTTON COMPONENTS
+       ============================================ */
 
     .button-group {
       display: flex;
-      gap: 12px;
-      margin-top: 24px;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-xl);
+      flex-wrap: wrap;
     }
 
     button {
-      flex: 1;
-      padding: 12px 24px;
+      padding: var(--spacing-md) var(--spacing-xl);
       border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
+      border-radius: var(--radius-base);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      font-family: var(--font-family-primary);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all var(--transition-base);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      min-height: 44px; /* Touch-friendly minimum */
     }
 
-    .btn-submit {
-      background: #667eea;
-      color: white;
+    .btn-submit,
+    button[type="submit"] {
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      flex: 1;
     }
 
-    .btn-submit:hover {
-      background: #5568d3;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    .btn-submit:hover:not(:disabled),
+    button[type="submit"]:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
 
-    .btn-submit:disabled {
-      background: #cbd5e1;
+    .btn-submit:active:not(:disabled),
+    button[type="submit"]:active:not(:disabled) {
+      background: var(--color-primary-hover);
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled,
+    button[type="submit"]:disabled {
+      background: var(--color-neutral-light);
       cursor: not-allowed;
+      opacity: 0.5;
       transform: none;
     }
 
-    .btn-clear {
-      background: #f0f0f0;
-      color: #333;
+    .btn-clear,
+    .btn-secondary {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border-secondary);
+      flex: 1;
     }
 
-    .btn-clear:hover {
-      background: #e5e5e5;
+    .btn-clear:hover:not(:disabled),
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--color-bg-secondary);
+      border-color: var(--color-neutral);
     }
+
+    /* Focus states for accessibility */
+    button:focus-visible {
+      outline: 2px solid var(--color-border-focus);
+      outline-offset: 2px;
+    }
+
+    /* ============================================
+       CARD COMPONENTS
+       ============================================ */
+
+    .card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border-primary);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-base);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-base);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .card-header {
+      margin: 0 0 var(--spacing-base) 0;
+      padding-bottom: var(--spacing-base);
+      border-bottom: 1px solid var(--color-border-primary);
+    }
+
+    .card-title {
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+      margin: 0;
+      color: var(--color-text-primary);
+    }
+
+    .card-content {
+      padding: var(--spacing-base) 0;
+    }
+
+    /* ============================================
+       GRID SYSTEM
+       ============================================ */
+
+    .grid {
+      display: grid;
+      gap: var(--grid-gap);
+    }
+
+    .grid-1 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-6 { grid-template-columns: repeat(6, 1fr); }
+    .grid-12 { grid-template-columns: repeat(12, 1fr); }
+
+    /* ============================================
+       BADGE COMPONENTS
+       ============================================ */
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-success {
+      background: var(--color-success-light);
+      color: var(--color-success-dark);
+    }
+
+    .badge-error {
+      background: var(--color-error-light);
+      color: var(--color-error-dark);
+    }
+
+    .badge-warning {
+      background: var(--color-warning-light);
+      color: var(--color-warning-dark);
+    }
+
+    .badge-info {
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+    }
+
+    .badge-neutral {
+      background: var(--color-bg-tertiary);
+      color: var(--color-neutral);
+    }
+
+    /* ============================================
+       UTILITY CLASSES
+       ============================================ */
+
+    .hidden {
+      display: none !important;
+    }
+
+    .visible {
+      display: block !important;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-left {
+      text-align: left;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .mt-0 { margin-top: 0; }
+    .mt-1 { margin-top: var(--spacing-xs); }
+    .mt-2 { margin-top: var(--spacing-sm); }
+    .mt-3 { margin-top: var(--spacing-md); }
+    .mt-4 { margin-top: var(--spacing-base); }
+    .mt-6 { margin-top: var(--spacing-xl); }
+
+    .mb-0 { margin-bottom: 0; }
+    .mb-1 { margin-bottom: var(--spacing-xs); }
+    .mb-2 { margin-bottom: var(--spacing-sm); }
+    .mb-3 { margin-bottom: var(--spacing-md); }
+    .mb-4 { margin-bottom: var(--spacing-base); }
+    .mb-6 { margin-bottom: var(--spacing-xl); }
+
+    /* ============================================
+       RESPONSE SECTIONS
+       ============================================ */
 
     .response-section {
       margin-top: 40px;
       padding: 20px;
-      background: #f9fafb;
+      background: var(--color-bg-secondary);
       border-radius: 6px;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--color-border-primary);
       display: none;
     }
 
@@ -158,13 +543,13 @@
     }
 
     .response-section.success {
-      background: #f0fdf4;
-      border-color: #bbf7d0;
+      background: var(--color-success-light);
+      border-color: var(--color-success-light);
     }
 
     .response-section.error {
-      background: #fef2f2;
-      border-color: #fecaca;
+      background: var(--color-error-light);
+      border-color: var(--color-error-light);
     }
 
     .response-title {
@@ -174,11 +559,11 @@
     }
 
     .response-section.success .response-title {
-      color: #15803d;
+      color: var(--color-success-dark);
     }
 
     .response-section.error .response-title {
-      color: #b91c1c;
+      color: var(--color-error-dark);
     }
 
     .response-content {
@@ -188,17 +573,17 @@
       background: white;
       padding: 12px;
       border-radius: 4px;
-      color: #333;
+      color: var(--color-text-primary);
       line-height: 1.5;
     }
 
     .response-section.error .response-content {
-      color: #7f1d1d;
+      color: var(--color-error-dark);
     }
 
     .hint {
       font-size: 12px;
-      color: #666;
+      color: var(--color-text-secondary);
       margin-top: 6px;
     }
 
@@ -206,7 +591,7 @@
     .metrics-section {
       margin-top: 48px;
       padding-top: 48px;
-      border-top: 2px solid #f0f0f0;
+      border-top: 2px solid var(--color-bg-tertiary);
     }
 
     .metrics-header {
@@ -219,12 +604,12 @@
     .metrics-title {
       font-size: 20px;
       font-weight: 700;
-      color: #333;
+      color: var(--color-text-primary);
     }
 
     .refresh-indicator {
       font-size: 12px;
-      color: #666;
+      color: var(--color-text-secondary);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -234,8 +619,8 @@
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: 2px solid #e5e7eb;
-      border-top-color: #667eea;
+      border: 2px solid var(--color-border-primary);
+      border-top-color: var(--color-primary);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -264,8 +649,8 @@
     }
 
     .metric-card {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-primary);
       border-radius: 8px;
       padding: 20px;
       text-align: center;
@@ -278,23 +663,23 @@
     }
 
     .metric-card.pending {
-      background: #fef3c7;
-      border-color: #fbbf24;
+      background: var(--color-warning-light);
+      border-color: var(--color-warning);
     }
 
     .metric-card.delivered {
-      background: #d1fae5;
-      border-color: #34d399;
+      background: var(--color-success-light);
+      border-color: var(--color-success);
     }
 
     .metric-card.failed {
-      background: #fee2e2;
-      border-color: #f87171;
+      background: var(--color-error-light);
+      border-color: var(--color-error);
     }
 
     .metric-card.total {
-      background: #dbeafe;
-      border-color: #60a5fa;
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
     }
 
     .metric-value {
@@ -304,25 +689,25 @@
     }
 
     .metric-card.pending .metric-value {
-      color: #d97706;
+      color: var(--color-warning-dark);
     }
 
     .metric-card.delivered .metric-value {
-      color: #059669;
+      color: var(--color-success-dark);
     }
 
     .metric-card.failed .metric-value {
-      color: #dc2626;
+      color: var(--color-error-dark);
     }
 
     .metric-card.total .metric-value {
-      color: #2563eb;
+      color: var(--color-primary-dark);
     }
 
     .metric-label {
       font-size: 14px;
       font-weight: 600;
-      color: #666;
+      color: var(--color-text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -340,8 +725,8 @@
     }
 
     .detail-card {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-primary);
       border-radius: 8px;
       padding: 20px;
     }
@@ -349,10 +734,10 @@
     .detail-card-title {
       font-size: 16px;
       font-weight: 700;
-      color: #333;
+      color: var(--color-text-primary);
       margin-bottom: 16px;
       padding-bottom: 12px;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--color-border-primary);
     }
 
     .detail-row {
@@ -360,7 +745,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 0;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--color-bg-tertiary);
     }
 
     .detail-row:last-child {
@@ -370,7 +755,7 @@
     .detail-label {
       font-size: 14px;
       font-weight: 500;
-      color: #666;
+      color: var(--color-text-secondary);
     }
 
     .detail-value {
@@ -379,33 +764,33 @@
     }
 
     .detail-value.blue {
-      color: #2563eb;
+      color: var(--color-primary-dark);
     }
 
     .detail-value.purple {
-      color: #9333ea;
+      color: var(--color-primary);
     }
 
     .detail-value.green {
-      color: #059669;
+      color: var(--color-success-dark);
     }
 
     .detail-value.red {
-      color: #dc2626;
+      color: var(--color-error-dark);
     }
 
     .detail-timestamp {
       font-size: 12px;
-      color: #666;
+      color: var(--color-text-secondary);
       margin-top: 12px;
       padding-top: 12px;
-      border-top: 1px solid #f0f0f0;
+      border-top: 1px solid var(--color-bg-tertiary);
     }
 
     .progress-bar-container {
       width: 100%;
       height: 8px;
-      background: #e5e7eb;
+      background: var(--color-border-primary);
       border-radius: 4px;
       overflow: hidden;
       margin: 12px 0;
@@ -413,7 +798,7 @@
 
     .progress-bar {
       height: 100%;
-      background: #059669;
+      background: var(--color-success-dark);
       border-radius: 4px;
       transition: width 0.3s ease;
     }
@@ -421,12 +806,12 @@
     .metrics-loading {
       text-align: center;
       padding: 40px;
-      color: #666;
+      color: var(--color-text-secondary);
     }
 
     .metrics-error {
-      background: #fee2e2;
-      border: 1px solid #f87171;
+      background: var(--color-error-light);
+      border: 1px solid var(--color-error);
       border-radius: 8px;
       padding: 20px;
       text-align: center;
@@ -435,7 +820,7 @@
     .error-title {
       font-size: 16px;
       font-weight: 700;
-      color: #dc2626;
+      color: var(--color-error-dark);
       margin-bottom: 8px;
       display: flex;
       align-items: center;
@@ -445,13 +830,13 @@
 
     .error-message {
       font-size: 14px;
-      color: #7f1d1d;
+      color: var(--color-error-dark);
       margin-bottom: 16px;
     }
 
     .btn-retry {
       padding: 10px 20px;
-      background: #dc2626;
+      background: var(--color-error-dark);
       color: white;
       border: none;
       border-radius: 6px;
@@ -462,7 +847,7 @@
     }
 
     .btn-retry:hover {
-      background: #b91c1c;
+      background: var(--color-error-dark);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
     }
@@ -495,13 +880,13 @@
     .inbox-section {
       margin-top: 48px;
       padding-top: 48px;
-      border-top: 2px solid #f0f0f0;
+      border-top: 2px solid var(--color-bg-tertiary);
     }
 
     .inbox-title {
       font-size: 20px;
       font-weight: 700;
-      color: #333;
+      color: var(--color-text-primary);
       margin-bottom: 24px;
     }
 
@@ -526,14 +911,14 @@
     .filter-label {
       font-size: 14px;
       font-weight: 600;
-      color: #333;
+      color: var(--color-text-primary);
       margin-bottom: 8px;
     }
 
     .filter-input, .filter-select {
       width: 100%;
       padding: 10px 12px;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--color-border-secondary);
       border-radius: 6px;
       font-size: 14px;
       transition: border-color 0.3s;
@@ -541,20 +926,20 @@
 
     .filter-input:focus, .filter-select:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
     .inbox-info {
       font-size: 14px;
-      color: #666;
+      color: var(--color-text-secondary);
       margin-bottom: 16px;
     }
 
     /* Table Styles */
     .events-table-container {
       overflow-x: auto;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--color-border-primary);
       border-radius: 8px;
       margin-bottom: 24px;
     }
@@ -566,15 +951,15 @@
     }
 
     .events-table thead {
-      background: #f9fafb;
-      border-bottom: 2px solid #e5e7eb;
+      background: var(--color-bg-secondary);
+      border-bottom: 2px solid var(--color-border-primary);
     }
 
     .events-table th {
       padding: 12px 16px;
       text-align: left;
       font-weight: 600;
-      color: #333;
+      color: var(--color-text-primary);
     }
 
     .events-table th:last-child {
@@ -582,12 +967,12 @@
     }
 
     .events-table tbody tr {
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--color-bg-tertiary);
       transition: background-color 0.2s;
     }
 
     .events-table tbody tr:hover {
-      background: #f9fafb;
+      background: var(--color-bg-secondary);
     }
 
     .events-table td {
@@ -597,7 +982,7 @@
     .event-id {
       font-family: 'Monaco', 'Menlo', monospace;
       font-size: 12px;
-      color: #666;
+      color: var(--color-text-secondary);
     }
 
     .status-badge {
@@ -610,22 +995,22 @@
     }
 
     .status-badge.pending {
-      background: #fef3c7;
-      color: #d97706;
+      background: var(--color-warning-light);
+      color: var(--color-warning-dark);
     }
 
     .status-badge.delivered {
-      background: #d1fae5;
-      color: #059669;
+      background: var(--color-success-light);
+      color: var(--color-success-dark);
     }
 
     .status-badge.failed {
-      background: #fee2e2;
-      color: #dc2626;
+      background: var(--color-error-light);
+      color: var(--color-error-dark);
     }
 
     .payload-preview {
-      color: #666;
+      color: var(--color-text-secondary);
       max-width: 300px;
       white-space: nowrap;
       overflow: hidden;
@@ -656,30 +1041,30 @@
     }
 
     .btn-view {
-      background: #dbeafe;
-      color: #2563eb;
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
     }
 
     .btn-view:hover:not(:disabled) {
-      background: #bfdbfe;
+      background: var(--color-primary-light);
     }
 
     .btn-retry {
-      background: #fed7aa;
-      color: #ea580c;
+      background: var(--color-warning-light);
+      color: var(--color-warning-dark);
     }
 
     .btn-retry:hover:not(:disabled) {
-      background: #fdba74;
+      background: var(--color-warning-light);
     }
 
     .btn-ack {
-      background: #d1fae5;
-      color: #059669;
+      background: var(--color-success-light);
+      color: var(--color-success-dark);
     }
 
     .btn-ack:hover:not(:disabled) {
-      background: #a7f3d0;
+      background: var(--color-success-light);
     }
 
     /* Card Layout (Mobile) */
@@ -698,8 +1083,8 @@
     }
 
     .event-card {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-primary);
       border-radius: 8px;
       padding: 16px;
       margin-bottom: 12px;
@@ -721,7 +1106,7 @@
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      color: #666;
+      color: var(--color-text-secondary);
       margin-bottom: 12px;
     }
 
@@ -745,7 +1130,7 @@
 
     .pagination-info {
       font-size: 14px;
-      color: #666;
+      color: var(--color-text-secondary);
     }
 
     .pagination-buttons {
@@ -756,7 +1141,7 @@
 
     .btn-page {
       padding: 8px 16px;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--color-border-secondary);
       border-radius: 6px;
       background: white;
       font-size: 14px;
@@ -766,7 +1151,7 @@
     }
 
     .btn-page:hover:not(:disabled) {
-      background: #f9fafb;
+      background: var(--color-bg-secondary);
     }
 
     .btn-page:disabled {
@@ -810,18 +1195,18 @@
       align-items: center;
       margin-bottom: 24px;
       padding-bottom: 16px;
-      border-bottom: 2px solid #f0f0f0;
+      border-bottom: 2px solid var(--color-bg-tertiary);
     }
 
     .modal-title {
       font-size: 20px;
       font-weight: 700;
-      color: #333;
+      color: var(--color-text-primary);
     }
 
     .btn-close {
       font-size: 24px;
-      color: #666;
+      color: var(--color-text-secondary);
       background: none;
       border: none;
       cursor: pointer;
@@ -836,8 +1221,8 @@
     }
 
     .btn-close:hover {
-      background: #f0f0f0;
-      color: #333;
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
     }
 
     .modal-body {
@@ -850,20 +1235,20 @@
 
     .detail-field-label {
       font-weight: 600;
-      color: #333;
+      color: var(--color-text-primary);
       margin-bottom: 8px;
       font-size: 14px;
     }
 
     .detail-field-value {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-primary);
       border-radius: 6px;
       padding: 12px;
       font-family: 'Monaco', 'Menlo', monospace;
       font-size: 12px;
       overflow-x: auto;
-      color: #333;
+      color: var(--color-text-primary);
       line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-all;
@@ -885,7 +1270,7 @@
       display: flex;
       gap: 12px;
       padding-top: 16px;
-      border-top: 2px solid #f0f0f0;
+      border-top: 2px solid var(--color-bg-tertiary);
     }
 
     .modal-actions .btn-action {
@@ -894,51 +1279,548 @@
       font-size: 14px;
     }
 
-    /* Toast */
-    .toast {
+    /* Toast Container and Notification System */
+    .toast-container {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      padding: 16px 24px;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .toast-container {
+        left: 12px;
+        right: 12px;
+        top: 12px;
+        max-width: none;
+      }
+    }
+
+    .toast {
+      padding: 16px;
       border-radius: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: slideInRight 0.3s ease-out;
+      min-width: 300px;
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      .toast {
+        min-width: auto;
+      }
+    }
+
+    .toast.removing {
+      animation: slideOutRight 0.3s ease-in forwards;
+    }
+
+    .toast-success {
+      background: var(--color-success);
+      color: white;
+    }
+
+    .toast-error {
+      background: var(--color-error);
+      color: white;
+    }
+
+    .toast-warning {
+      background: var(--color-warning);
+      color: var(--color-text-primary);
+    }
+
+    .toast-info {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .toast-loading {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .toast-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .toast-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .toast-message {
       font-size: 14px;
       font-weight: 600;
-      z-index: 2000;
-      display: none;
-      animation: slideIn 0.3s ease-out;
+      margin: 0 0 4px 0;
+      line-height: 1.4;
     }
 
-    .toast.visible {
-      display: block;
+    .toast-details {
+      font-size: 12px;
+      opacity: 0.9;
+      margin: 4px 0 0 0;
+      line-height: 1.4;
     }
 
-    .toast.success {
-      background: #d1fae5;
-      color: #059669;
-      border: 1px solid #a7f3d0;
+    .toast-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
     }
 
-    .toast.error {
-      background: #fee2e2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
+    .toast-action {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: inherit;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: background 0.2s;
+      flex-shrink: 0;
     }
 
-    @keyframes slideIn {
+    .toast-action:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 20px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      padding: 0;
+      flex-shrink: 0;
+      line-height: 1;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast-close:hover {
+      opacity: 1;
+    }
+
+    @keyframes slideInRight {
       from {
-        transform: translateY(100px);
+        transform: translateX(400px);
         opacity: 0;
       }
       to {
-        transform: translateY(0);
+        transform: translateX(0);
         opacity: 1;
       }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+
+    /* Loading Spinners */
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinner.small {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+    }
+
+    .spinner.medium {
+      width: 40px;
+      height: 40px;
+      border-width: 4px;
+    }
+
+    .spinner.large {
+      width: 60px;
+      height: 60px;
+      border-width: 6px;
+    }
+
+    .spinner.blue {
+      border-color: rgba(59, 130, 246, 0.3);
+      border-top-color: var(--color-primary);
+    }
+
+    .spinner.green {
+      border-color: rgba(16, 185, 129, 0.3);
+      border-top-color: var(--color-success);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Button Loading States */
+    button.loading {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    button.loading .button-text {
+      opacity: 0;
+    }
+
+    button.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-left: -8px;
+      margin-top: -8px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .status-badge.pending {
+      background: var(--color-border-primary);
+      color: var(--color-neutral);
+    }
+
+    .status-badge.processing {
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+    }
+
+    .status-badge.success {
+      background: var(--color-success-light);
+      color: var(--color-success-dark);
+    }
+
+    .status-badge.delivered {
+      background: var(--color-success-light);
+      color: var(--color-success-dark);
+    }
+
+    .status-badge.error {
+      background: var(--color-error-light);
+      color: var(--color-error-dark);
+    }
+
+    .status-badge.failed {
+      background: var(--color-error-light);
+      color: var(--color-error-dark);
+    }
+
+    .status-badge.retry {
+      background: var(--color-warning-light);
+      color: var(--color-warning-dark);
+    }
+
+    .status-badge.retrying {
+      background: var(--color-warning-light);
+      color: var(--color-warning-dark);
+    }
+
+    .status-badge .spinner {
+      width: 12px;
+      height: 12px;
+      border-width: 2px;
+      border-color: currentColor;
+      border-top-color: transparent;
+      opacity: 0.5;
+    }
+
+    /* Progress Indicators */
+    .progress-container {
+      width: 100%;
+      margin: 12px 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--color-border-primary);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--color-primary);
+      transition: width 0.3s ease, background 0.3s ease;
+      border-radius: 4px;
+    }
+
+    .progress-fill.low {
+      background: var(--color-neutral-light);
+    }
+
+    .progress-fill.medium {
+      background: var(--color-primary);
+    }
+
+    .progress-fill.high {
+      background: var(--color-success);
+    }
+
+    .progress-fill.pulse {
+      animation: progressPulse 1s ease-in-out;
+    }
+
+    @keyframes progressPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--color-neutral);
+      margin-top: 4px;
+      display: block;
+      text-align: center;
+    }
+
+    /* Skeleton Loading */
+    .skeleton-row {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0;
+      animation: skeletonPulse 2s ease-in-out infinite;
+    }
+
+    .skeleton-box {
+      background: var(--color-border-primary);
+      border-radius: 4px;
+      height: 20px;
+    }
+
+    @keyframes skeletonPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Form Validation Feedback */
+    .form-group.error input,
+    .form-group.error textarea,
+    .form-group.error select {
+      border-color: var(--color-error);
+      background: var(--color-error-light);
+    }
+
+    .form-group.success input,
+    .form-group.success textarea,
+    .form-group.success select {
+      border-color: var(--color-success);
+    }
+
+    .form-group.success::after {
+      content: '✓';
+      position: absolute;
+      right: 12px;
+      top: 38px;
+      color: var(--color-success);
+      font-weight: bold;
+    }
+
+    .form-error-message {
+      color: var(--color-error);
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .form-group.error .form-error-message {
+      display: block;
+    }
+
+    .form-error-summary {
+      background: var(--color-error-light);
+      border: 1px solid var(--color-error-light);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 20px;
+      color: var(--color-error-dark);
+      font-size: 14px;
+      display: none;
+    }
+
+    .form-error-summary.visible {
+      display: block;
+    }
+
+    /* Success Animation */
+    .success-checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--color-success);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: successPop 0.5s ease-out forwards;
+    }
+
+    .success-checkmark::after {
+      content: '✓';
+      color: white;
+      font-size: 48px;
+      font-weight: bold;
+    }
+
+    @keyframes successPop {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* Pulse Animation for Real-time Updates */
+    .pulse-update {
+      animation: pulseGlow 2s ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        background-color: inherit;
+      }
+      50% {
+        background-color: var(--color-primary-light);
+      }
+    }
+
+    /* Empty States */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--color-neutral-light);
+    }
+
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-state-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-neutral);
+      margin-bottom: 8px;
+    }
+
+    .empty-state-description {
+      font-size: 14px;
+      color: var(--color-neutral-light);
+      margin-bottom: 20px;
+    }
+
+    .empty-state-action {
+      display: inline-block;
+      padding: 10px 20px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .empty-state-action:hover {
+      background: var(--color-primary-dark);
+    }
+
+    /* Disabled State Tooltips */
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    button:disabled:hover::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-text-primary);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      margin-bottom: 8px;
+      z-index: 1000;
+    }
+
+    button:disabled:hover::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-text-primary);
+      margin-bottom: 2px;
     }
 
     .inbox-empty {
       text-align: center;
       padding: 60px 20px;
-      color: #666;
+      color: var(--color-text-secondary);
     }
 
     .inbox-empty-icon {
@@ -949,7 +1831,7 @@
     .inbox-loading {
       text-align: center;
       padding: 60px 20px;
-      color: #666;
+      color: var(--color-text-secondary);
     }
 
     /* Live Logs Styles */
@@ -964,55 +1846,55 @@
     }
 
     .log-level-badge.debug {
-      background: #e5e7eb;
-      color: #6b7280;
+      background: var(--color-border-primary);
+      color: var(--color-neutral);
     }
 
     .log-level-badge.info {
-      background: #dbeafe;
-      color: #2563eb;
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
     }
 
     .log-level-badge.warn {
-      background: #fef3c7;
-      color: #d97706;
+      background: var(--color-warning-light);
+      color: var(--color-warning-dark);
     }
 
     .log-level-badge.error {
-      background: #fee2e2;
-      color: #dc2626;
+      background: var(--color-error-light);
+      color: var(--color-error-dark);
     }
 
     .log-row-error {
-      background: #fef2f2 !important;
-      border-left: 3px solid #dc2626;
+      background: var(--color-error-light) !important;
+      border-left: 3px solid var(--color-error-dark);
     }
 
     .log-row-warn {
-      background: #fffbeb !important;
-      border-left: 3px solid #f59e0b;
+      background: var(--color-warning-light) !important;
+      border-left: 3px solid var(--color-warning);
     }
 
     .log-correlation {
       font-family: 'Monaco', 'Menlo', monospace;
       font-size: 11px;
-      color: #2563eb;
+      color: var(--color-primary-dark);
       cursor: pointer;
       text-decoration: underline;
     }
 
     .log-correlation:hover {
-      color: #1d4ed8;
+      color: var(--color-primary-hover);
     }
 
     .log-message {
       font-size: 13px;
-      color: #333;
+      color: var(--color-text-primary);
       word-break: break-word;
     }
 
     .log-message mark {
-      background: #fef3c7;
+      background: var(--color-warning-light);
       padding: 2px 4px;
       border-radius: 3px;
     }
@@ -1024,32 +1906,32 @@
     }
 
     .log-status-badge.success {
-      color: #059669;
+      color: var(--color-success-dark);
     }
 
     .log-status-badge.client-error {
-      color: #ea580c;
+      color: var(--color-warning-dark);
     }
 
     .log-status-badge.server-error {
-      color: #dc2626;
+      color: var(--color-error-dark);
     }
 
     .log-duration {
       font-family: 'Monaco', 'Menlo', monospace;
       font-size: 12px;
-      color: #666;
+      color: var(--color-text-secondary);
     }
 
     .log-duration.slow {
-      color: #ea580c;
+      color: var(--color-warning-dark);
       font-weight: 600;
     }
 
     .log-time {
       font-family: 'Monaco', 'Menlo', monospace;
       font-size: 11px;
-      color: #666;
+      color: var(--color-text-secondary);
       white-space: nowrap;
     }
 
@@ -1066,17 +1948,17 @@
     .time-range-selector {
       display: flex;
       gap: 8px;
-      background: #f9fafb;
+      background: var(--color-bg-secondary);
       padding: 4px;
       border-radius: 8px;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--color-border-primary);
     }
 
     .time-range-btn {
       padding: 8px 16px;
       border: none;
       background: transparent;
-      color: #666;
+      color: var(--color-text-secondary);
       font-size: 14px;
       font-weight: 600;
       border-radius: 6px;
@@ -1085,11 +1967,11 @@
     }
 
     .time-range-btn:hover {
-      background: #e5e7eb;
+      background: var(--color-border-primary);
     }
 
     .time-range-btn.active {
-      background: #667eea;
+      background: var(--color-primary);
       color: white;
     }
 
@@ -1101,9 +1983,9 @@
 
     .btn-pause {
       padding: 8px 16px;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--color-border-secondary);
       background: white;
-      color: #333;
+      color: var(--color-text-primary);
       font-size: 14px;
       font-weight: 600;
       border-radius: 6px;
@@ -1112,13 +1994,13 @@
     }
 
     .btn-pause:hover {
-      background: #f9fafb;
+      background: var(--color-bg-secondary);
     }
 
     .btn-pause.paused {
-      background: #fef3c7;
-      color: #d97706;
-      border-color: #fbbf24;
+      background: var(--color-warning-light);
+      color: var(--color-warning-dark);
+      border-color: var(--color-warning);
     }
 
     .charts-grid {
@@ -1139,8 +2021,8 @@
     }
 
     .chart-card {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-primary);
       border-radius: 8px;
       padding: 20px;
     }
@@ -1155,12 +2037,12 @@
     .chart-title {
       font-size: 16px;
       font-weight: 700;
-      color: #333;
+      color: var(--color-text-primary);
     }
 
     .chart-subtitle {
       font-size: 12px;
-      color: #666;
+      color: var(--color-text-secondary);
       margin-top: 4px;
     }
 
@@ -1178,7 +2060,7 @@
       align-items: center;
       justify-content: center;
       height: 300px;
-      color: #666;
+      color: var(--color-text-secondary);
       font-size: 14px;
     }
 
@@ -1196,15 +2078,15 @@
     }
 
     .trend-arrow.up {
-      color: #ef4444;
+      color: var(--color-error);
     }
 
     .trend-arrow.down {
-      color: #22c55e;
+      color: var(--color-success);
     }
 
     .trend-arrow.stable {
-      color: #6b7280;
+      color: var(--color-neutral);
     }
 
     .trend-percentage {
@@ -1245,16 +2127,1128 @@
         justify-content: space-between;
       }
     }
+
+    /* Event Flow Visualization Styles */
+    .event-flow-section {
+      background: white;
+      border: 2px solid var(--color-border-primary);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .flow-section-title {
+      margin: 0 0 20px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .flow-diagram {
+      width: 100%;
+      max-width: 1200px;
+      height: auto;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .stage-box {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .stage-box:hover {
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+    }
+
+    .stage-rect {
+      stroke-width: 2;
+      transition: all 0.3s ease;
+    }
+
+    .stage-box[data-status="normal"] .stage-rect {
+      stroke: var(--color-success);
+      fill: url(#normalGradient);
+    }
+
+    .stage-box[data-status="degraded"] .stage-rect {
+      stroke: var(--color-warning);
+      fill: url(#degradedGradient);
+      animation: pulse-box 2s ease-in-out infinite;
+    }
+
+    .stage-box[data-status="critical"] .stage-rect {
+      stroke: var(--color-error);
+      fill: url(#criticalGradient);
+      animation: pulse-box 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse-box {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .stage-title {
+      text-anchor: middle;
+      font-size: 16px;
+      font-weight: 600;
+      fill: var(--color-text-primary);
+    }
+
+    .stage-icon {
+      text-anchor: middle;
+      font-size: 36px;
+    }
+
+    .stage-metric {
+      text-anchor: middle;
+      font-size: 20px;
+      font-weight: 700;
+      fill: var(--color-text-primary);
+      transition: fill 0.3s ease;
+    }
+
+    .stage-metric.updating {
+      fill: var(--color-primary);
+      animation: metric-update 0.3s ease;
+    }
+
+    @keyframes metric-update {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .stage-label {
+      text-anchor: middle;
+      font-size: 13px;
+      fill: var(--color-neutral);
+    }
+
+    .trend-indicator {
+      transition: all 0.3s ease;
+    }
+
+    .flow-line {
+      stroke-dashoffset: 0;
+      animation: flow-animation 2s linear infinite;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes flow-animation {
+      to {
+        stroke-dashoffset: -10;
+      }
+    }
+
+    .flow-line.active {
+      stroke-width: 4;
+      animation: flow-animation 1s linear infinite, glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { filter: drop-shadow(0 0 2px var(--color-primary)); }
+      50% { filter: drop-shadow(0 0 6px var(--color-primary)); }
+    }
+
+    .dlq-arrow {
+      transition: all 0.3s ease;
+    }
+
+    .dlq-arrow.active {
+      opacity: 1;
+      stroke-width: 4;
+      animation: flow-animation 1s linear infinite, pulse-error 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-error {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .flow-label {
+      font-size: 13px;
+      fill: var(--color-primary);
+      font-weight: 600;
+      text-anchor: middle;
+    }
+
+    .flow-label-error {
+      fill: var(--color-error);
+    }
+
+    .flow-legend {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border-primary);
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--color-neutral-dark);
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid var(--color-border-secondary);
+    }
+
+    .btn-export {
+      margin-left: auto;
+      padding: 8px 16px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-export:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .flow-detail-popover {
+      position: fixed;
+      background: white;
+      border: 2px solid var(--color-border-primary);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      max-width: 300px;
+      z-index: 1000;
+      animation: popover-appear 0.2s ease-out;
+    }
+
+    @keyframes popover-appear {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .flow-detail-popover.hidden {
+      display: none;
+    }
+
+    .popover-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--color-neutral-light);
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .popover-close:hover {
+      color: var(--color-text-primary);
+    }
+
+    .popover-title {
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .popover-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .popover-metric {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .popover-label {
+      color: var(--color-neutral);
+      font-weight: 500;
+    }
+
+    .popover-value {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+
+    #popover-sparkline {
+      margin-top: 8px;
+      border-top: 1px solid var(--color-border-primary);
+      padding-top: 8px;
+    }
+
+    .flow-controls {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border-primary);
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--color-neutral-dark);
+      cursor: pointer;
+    }
+
+    .toggle-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    /* Particle Animation */
+    .event-particle {
+      animation: particle-move 3s linear;
+    }
+
+    @keyframes particle-move {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .event-flow-section {
+        padding: 16px;
+      }
+
+      .flow-diagram {
+        height: auto;
+      }
+
+      .flow-legend {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .btn-export {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .flow-detail-popover {
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        max-width: 90%;
+      }
+    }
+
+    /* Debug Control Panel Styles */
+    .debug-panel {
+      border: 2px solid var(--color-border-primary);
+      border-radius: 8px;
+      background: var(--color-bg-secondary);
+      padding: 16px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .debug-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .debug-header-left {
+      flex: 1;
+    }
+
+    .debug-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .debug-header .subtitle {
+      margin: 4px 0 0 0;
+      font-size: 14px;
+      color: var(--color-neutral);
+    }
+
+    .debug-header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .help-icon-btn, .collapse-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--color-border-secondary);
+      border-radius: 6px;
+      background: white;
+      color: var(--color-primary);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .help-icon-btn:hover, .collapse-btn:hover {
+      background: var(--color-bg-tertiary);
+    }
+
+    .debug-content.collapsed {
+      display: none;
+    }
+
+    .debug-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .debug-card {
+      border: 1px solid var(--color-border-secondary);
+      border-radius: 6px;
+      padding: 12px;
+      background: white;
+      transition: box-shadow 0.2s;
+    }
+
+    .debug-card:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .card-icon {
+      font-size: 20px;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .card-description {
+      font-size: 13px;
+      color: var(--color-neutral-dark);
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+
+    .debug-btn {
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .debug-btn.primary {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .debug-btn.primary:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+    }
+
+    .debug-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .expected-result {
+      font-size: 12px;
+      color: var(--color-neutral-light);
+      margin: 8px 0 0 0;
+      font-style: italic;
+    }
+
+    .debug-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border-primary);
+    }
+
+    .debug-section h4 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-header h4 {
+      margin: 0;
+    }
+
+    .btn-text {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: underline;
+      padding: 0;
+    }
+
+    .btn-text:hover {
+      color: var(--color-primary-dark);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: auto;
+      cursor: pointer;
+    }
+
+    .payload-select,
+    .input-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--color-border-secondary);
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .input-group {
+      margin-bottom: 8px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+
+    .custom-payload {
+      width: 100%;
+      min-height: 100px;
+      padding: 8px;
+      border: 1px solid var(--color-border-secondary);
+      border-radius: 4px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+    }
+
+    .custom-payload.hidden {
+      display: none;
+    }
+
+    .quick-templates {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+    }
+
+    .template-btn {
+      padding: 8px;
+      background: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border-secondary);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .template-btn:hover {
+      background: var(--color-border-primary);
+      border-color: var(--color-neutral-light);
+    }
+
+    .progress-bar-debug {
+      width: 100%;
+      height: 24px;
+      background: var(--color-border-primary);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      margin: 12px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .progress-bar-debug.hidden {
+      display: none;
+    }
+
+    .debug-history {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .history-entry {
+      padding: 8px;
+      border-left: 3px solid var(--color-primary);
+      background: white;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .history-entry[data-status="200"],
+    .history-entry[data-status="201"],
+    .history-entry[data-status="202"] {
+      border-left-color: var(--color-success);
+    }
+
+    .history-entry[data-status="400"],
+    .history-entry[data-status="401"],
+    .history-entry[data-status="404"],
+    .history-entry[data-status="409"] {
+      border-left-color: var(--color-warning);
+    }
+
+    .history-entry[data-status="500"],
+    .history-entry[data-status="503"] {
+      border-left-color: var(--color-error);
+    }
+
+    .entry-header {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .timestamp {
+      color: var(--color-neutral);
+      font-size: 11px;
+    }
+
+    .flag-badge {
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--color-bg-tertiary);
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .status-badge-debug {
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--color-bg-tertiary);
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .expand-btn {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      cursor: pointer;
+      font-size: 11px;
+      text-decoration: underline;
+      margin-left: 8px;
+      padding: 0;
+    }
+
+    .expand-btn:hover {
+      color: var(--color-primary-dark);
+    }
+
+    .details {
+      margin-top: 8px;
+      padding: 8px;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      overflow-x: auto;
+    }
+
+    .details.hidden {
+      display: none;
+    }
+
+    .details pre {
+      margin: 0;
+      font-size: 11px;
+    }
+
+    .empty-state {
+      color: var(--color-neutral-light);
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+    }
+
+    .debug-metrics {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border-primary);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+    }
+
+    .metric-label {
+      color: var(--color-neutral);
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .metric-value {
+      color: var(--color-text-primary);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .scenario-dropdown {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--color-border-secondary);
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 8px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .scenario-btn {
+      width: 100%;
+      padding: 10px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scenario-btn:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+    }
+
+    .scenario-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .keyboard-shortcuts {
+      font-size: 11px;
+      color: var(--color-neutral);
+      margin-top: 8px;
+      padding: 8px;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+    }
+
+    .keyboard-shortcuts kbd {
+      background: var(--color-border-primary);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 10px;
+      border: 1px solid var(--color-border-secondary);
+    }
+
+    @media (max-width: 768px) {
+      .debug-cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-templates {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .debug-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* ============================================
+       COMPREHENSIVE RESPONSIVE DESIGN
+       Breakpoints: 320px (mobile), 768px (tablet), 1024px (laptop), 1400px (desktop)
+       ============================================ */
+
+    /* Mobile-first: 320px - 767px */
+    @media (max-width: 767px) {
+      body {
+        padding: var(--spacing-md);
+      }
+
+      .container {
+        padding: var(--spacing-lg);
+        max-width: 100%;
+      }
+
+      h1 {
+        font-size: var(--font-size-2xl);
+      }
+
+      h2 {
+        font-size: var(--font-size-lg);
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .button-group button {
+        width: 100%;
+      }
+
+      /* Grid becomes single column on mobile */
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .grid-6,
+      .grid-12 {
+        grid-template-columns: 1fr;
+      }
+
+      /* Stack metrics vertically */
+      .metrics-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+      }
+
+      /* Ensure touch targets are minimum 44px */
+      button,
+      .btn-action,
+      input[type="checkbox"],
+      select {
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      /* Font size minimum 12px for readability */
+      .hint,
+      code,
+      pre,
+      .timestamp {
+        font-size: max(12px, var(--font-size-xs));
+      }
+    }
+
+    /* Tablet: 768px - 1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .container {
+        max-width: 720px;
+      }
+
+      /* 6-column grid on tablet */
+      .grid-12 {
+        grid-template-columns: repeat(6, 1fr);
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-6 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Laptop: 1024px - 1399px */
+    @media (min-width: 1024px) and (max-width: 1399px) {
+      .container {
+        max-width: 960px;
+      }
+    }
+
+    /* Desktop: 1400px+ */
+    @media (min-width: 1400px) {
+      .container {
+        max-width: var(--container-max-width);
+      }
+    }
+
+    /* ============================================
+       PHASE 1: RESPONSIVE DASHBOARD GRID SYSTEM
+       ============================================ */
+
+    /* Tablet: 768px+ - Two column layout */
+    @media (min-width: 768px) {
+      .dashboard-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Desktop: 1200px+ - 12 column grid system */
+    @media (min-width: 1200px) {
+      .dashboard-container {
+        grid-template-columns: repeat(12, 1fr);
+      }
+      .card-full { grid-column: span 12; }
+      .card-half { grid-column: span 6; }
+      .card-quarter { grid-column: span 3; }
+    }
+
+    /* Large Desktop: 1600px+ - Increased spacing */
+    @media (min-width: 1600px) {
+      .dashboard-container {
+        padding: var(--spacing-2xl);
+        gap: var(--spacing-2xl);
+      }
+    }
+
+    /* Mobile: max 767px - Optimized for small screens */
+    @media (max-width: 767px) {
+      .dashboard-container {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-md);
+      }
+
+      .dashboard-card {
+        padding: var(--spacing-base);
+      }
+
+      /* Hide flow viz on mobile (too complex) */
+      .event-flow-section {
+        display: none !important;
+      }
+    }
+
+    /* ============================================
+       ACCESSIBILITY ENHANCEMENTS
+       ============================================ */
+
+    /* Focus indicators for keyboard navigation */
+    *:focus-visible {
+      outline: 2px solid var(--color-border-focus);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      box-shadow: 0 0 0 3px var(--color-primary-light);
+    }
+
+    /* Skip to main content link (for screen readers) */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      padding: var(--spacing-sm) var(--spacing-base);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      z-index: var(--z-tooltip);
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --color-border-primary: #000000;
+        --color-border-secondary: #000000;
+      }
+
+      .card,
+      .metric-card,
+      input,
+      textarea,
+      select,
+      button {
+        border-width: 2px;
+      }
+    }
+
+    /* Reduced motion for accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Dark mode support (optional enhancement from story) */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-text-primary: #f9fafb;
+        --color-text-secondary: #d1d5db;
+        --color-text-tertiary: #9ca3af;
+        --color-bg-primary: #111827;
+        --color-bg-secondary: #1f2937;
+        --color-bg-tertiary: #374151;
+        --color-bg-canvas: #0f172a;
+        --color-border-primary: #374151;
+        --color-border-secondary: #4b5563;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1e3a8a 0%, #6b21a8 100%);
+      }
+
+      .response-content {
+        background: var(--color-bg-tertiary);
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      .container {
+        box-shadow: none;
+        max-width: 100%;
+      }
+
+      button,
+      .btn-submit,
+      .btn-clear,
+      .debug-panel {
+        display: none;
+      }
+
+      .metrics-section,
+      .inbox-section {
+        page-break-inside: avoid;
+      }
+    }
+
+    /* ============================================
+       SMOOTH ANIMATIONS & TRANSITIONS
+       ============================================ */
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Apply smooth entrance animations to key components */
+    .container {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .metric-card,
+    .card,
+    .response-section.visible {
+      animation: slideUp 0.3s ease-out;
+    }
+
+    /* Loading state animation */
+    .loading-indicator {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="dashboard-container">
     <header>
       <h1>TriggersAPI</h1>
-      <p style="color: #666; margin-bottom: 16px; font-size: 14px;">
+      <p style="color: var(--color-text-secondary); margin-bottom: 16px; font-size: 14px;">
         Real-time Event Ingestion at the Edge
       </p>
-      <div class="status" id="status">System Live</div>
+      <!-- PHASE 2: Real health check replaces fake "System Live" badge -->
+      <div id="healthStatus" style="font-size: 12px; color: var(--color-text-secondary);">
+        <span id="healthCheckText">Checking status...</span>
+      </div>
     </header>
 
     <form id="eventForm">
@@ -1301,18 +3295,7 @@
         <div class="hint">Additional metadata about the event (optional)</div>
       </div>
 
-      <!-- Debug Flag -->
-      <div class="form-group">
-        <label for="debugFlag">Debug Flag (optional)</label>
-        <select id="debugFlag" name="debugFlag">
-          <option value="">None</option>
-          <option value="validation_error">validation_error</option>
-          <option value="processing_error">processing_error</option>
-          <option value="queue_delay">queue_delay</option>
-          <option value="dlq_routing">dlq_routing</option>
-        </select>
-        <div class="hint">For testing error pathways (see docs)</div>
-      </div>
+      <!-- PHASE 2: Debug Flag dropdown removed - use Debug Control Panel instead -->
 
       <!-- Buttons -->
       <div class="button-group">
@@ -1325,6 +3308,186 @@
     <div class="response-section" id="response">
       <div class="response-title" id="responseTitle">Response</div>
       <div class="response-content" id="responseContent"></div>
+    </div>
+
+    <!-- Debug Control Panel -->
+    <div id="debug-panel" class="debug-panel">
+      <div class="debug-header">
+        <div class="debug-header-left">
+          <h2>Debug Control Panel</h2>
+          <p class="subtitle">Test error pathways and system behavior</p>
+        </div>
+        <div class="debug-header-actions">
+          <button id="debug-help-btn" class="help-icon-btn" title="Help & Documentation">?</button>
+          <button id="debug-toggle-btn" class="collapse-btn" title="Toggle Panel">−</button>
+        </div>
+      </div>
+
+      <div class="debug-content" id="debug-content">
+        <!-- Debug Flag Cards -->
+        <div class="debug-cards-grid">
+          <div class="debug-card" id="validation-error-card">
+            <div class="card-header">
+              <span class="card-icon">⚠️</span>
+              <h3>Validation Error</h3>
+            </div>
+            <p class="card-description">Force a validation error to test error handling</p>
+            <button class="debug-btn primary" data-debug-flag="validation_error">
+              Trigger Validation Error
+            </button>
+            <p class="expected-result">Expected: 400 Bad Request</p>
+          </div>
+
+          <div class="debug-card" id="processing-error-card">
+            <div class="card-header">
+              <span class="card-icon">⚡</span>
+              <h3>Processing Error</h3>
+            </div>
+            <p class="card-description">Simulate processing failure after event queued</p>
+            <button class="debug-btn primary" data-debug-flag="processing_error">
+              Trigger Processing Error
+            </button>
+            <p class="expected-result">Expected: Event queued, then processor fails</p>
+          </div>
+
+          <div class="debug-card" id="queue-delay-card">
+            <div class="card-header">
+              <span class="card-icon">🕐</span>
+              <h3>Queue Delay</h3>
+            </div>
+            <p class="card-description">Inject artificial latency</p>
+            <div class="input-group">
+              <label>Latency (ms):</label>
+              <input type="number" id="delay-input" value="2000" min="100" max="30000">
+            </div>
+            <button class="debug-btn primary" data-debug-flag="queue_delay">
+              Inject Latency
+            </button>
+            <p class="expected-result">Expected: Response delayed by specified ms</p>
+          </div>
+
+          <div class="debug-card" id="dlq-routing-card">
+            <div class="card-header">
+              <span class="card-icon">❌</span>
+              <h3>DLQ Routing</h3>
+            </div>
+            <p class="card-description">Force event to Dead Letter Queue</p>
+            <button class="debug-btn primary" data-debug-flag="dlq_routing">
+              Trigger DLQ Routing
+            </button>
+            <p class="expected-result">Expected: Event routes to DLQ after retries</p>
+          </div>
+        </div>
+
+        <!-- Mock Payload Options -->
+        <div class="debug-section">
+          <h4>Mock Payload Configuration</h4>
+          <label class="checkbox-label">
+            <input type="checkbox" id="mock-payload-toggle" checked>
+            Include mock event payload
+          </label>
+          <select id="payload-template" class="payload-select">
+            <option value="minimal">Minimal Test (empty payload)</option>
+            <option value="user-created">User Created Event</option>
+            <option value="order-placed">Order Placed Event</option>
+            <option value="custom">Custom JSON</option>
+          </select>
+          <textarea id="custom-payload" class="custom-payload hidden"
+                    placeholder='{"payload": {"custom": "data"}}'></textarea>
+        </div>
+
+        <!-- Mock Data Generator - Story 5.5 -->
+        <div class="debug-section">
+          <div class="section-header">
+            <h4>Mock Data Generator</h4>
+            <button class="btn-text" onclick="showTemplatesBrowser()">View All Templates</button>
+          </div>
+          <p style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 16px;">
+            Generate realistic Zapier event templates with one click
+          </p>
+
+          <!-- Quick Action Buttons -->
+          <div class="quick-actions" style="margin-bottom: 20px;">
+            <button class="btn-submit" onclick="loadDemoData()" style="flex: 1;">
+              Load Demo (5 events)
+            </button>
+            <button class="btn-secondary" onclick="showBatchGeneratorModal()" style="flex: 1;">
+              Batch Generate
+            </button>
+            <button class="btn-secondary" onclick="generateRealisticScenario()" style="flex: 1;">
+              Generate Scenario
+            </button>
+          </div>
+
+          <!-- Template Categories -->
+          <div id="template-categories"></div>
+        </div>
+
+        <!-- Batch Testing Mode -->
+        <div class="debug-section">
+          <label class="checkbox-label">
+            <input type="checkbox" id="batch-mode-toggle">
+            Batch Testing Mode (submit all flags sequentially)
+          </label>
+          <button class="scenario-btn" id="batch-submit-btn" style="display: none;">
+            Run Batch Test
+          </button>
+          <div id="batch-progress" class="progress-bar-debug hidden">
+            <div id="batch-progress-fill" class="progress-fill"></div>
+            <span id="batch-progress-text" class="progress-text">0/4</span>
+          </div>
+        </div>
+
+        <!-- Pre-configured Scenarios -->
+        <div class="debug-section">
+          <h4>Pre-configured Scenarios</h4>
+          <select id="scenario-dropdown" class="scenario-dropdown">
+            <option value="">Select a scenario...</option>
+            <option value="happy-path">Test Happy Path (valid event)</option>
+            <option value="all-errors">Test All Errors (batch all 4 flags)</option>
+            <option value="retry-logic">Test Retry Logic (multiple processing errors)</option>
+            <option value="dlq-flow">Test DLQ Flow (sequence leading to DLQ)</option>
+          </select>
+          <button class="scenario-btn" id="scenario-btn" disabled>Execute Scenario</button>
+        </div>
+
+        <!-- Debug History -->
+        <div class="debug-section">
+          <div class="section-header">
+            <h4>Debug History (Last 10)</h4>
+            <button id="clear-history-btn" class="btn-text">Clear</button>
+          </div>
+          <div id="debug-history" class="debug-history">
+            <p class="empty-state">No debug submissions yet</p>
+          </div>
+        </div>
+
+        <!-- Sidebar Metrics -->
+        <div class="debug-metrics">
+          <div class="metric-item">
+            <span class="metric-label">Total Submissions:</span>
+            <span id="total-submissions" class="metric-value">0</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Last Submission:</span>
+            <span id="last-submission-time" class="metric-value">--:--</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Most Used Flag:</span>
+            <span id="most-used-flag" class="metric-value">None</span>
+          </div>
+        </div>
+
+        <!-- Keyboard Shortcuts Help -->
+        <div class="keyboard-shortcuts">
+          <strong>Keyboard Shortcuts:</strong>
+          <kbd>Alt+D</kbd> Toggle panel |
+          <kbd>Alt+1</kbd> Validation Error |
+          <kbd>Alt+2</kbd> Processing Error |
+          <kbd>Alt+3</kbd> Queue Delay |
+          <kbd>Alt+4</kbd> DLQ Routing
+        </div>
+      </div>
     </div>
 
     <!-- Metrics Dashboard -->
@@ -1351,6 +3514,154 @@
         </div>
         <p class="error-message" id="errorMessage">Failed to load metrics</p>
         <button class="btn-retry" onclick="fetchMetrics()">Retry</button>
+      </div>
+
+      <!-- PHASE 2: Event Flow Visualization - Now always visible -->
+      <div id="eventFlowSection" class="event-flow-section" style="display: block; margin-bottom: 32px;">
+        <h3 class="flow-section-title">Event Flow Visualization</h3>
+        <svg id="flowDiagram" viewBox="0 0 1200 400" class="flow-diagram" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <!-- Arrow marker for flow lines -->
+            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+              <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+            </marker>
+            <marker id="arrowhead-error" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+              <polygon points="0 0, 10 3, 0 6" fill="#ef4444" />
+            </marker>
+
+            <!-- Gradient for stage boxes -->
+            <linearGradient id="normalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:var(--color-success-light);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#dcfce7;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="degradedGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#fefce8;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#fef9c3;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="criticalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:var(--color-error-light);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:var(--color-error-light);stop-opacity:1" />
+            </linearGradient>
+          </defs>
+
+          <!-- Ingestion Stage -->
+          <g id="stage-ingestion" class="stage-box" transform="translate(50, 80)" data-status="normal">
+            <rect class="stage-rect" width="180" height="140" rx="8" fill="url(#normalGradient)"/>
+            <text x="90" y="30" class="stage-title">Ingestion</text>
+            <text x="90" y="60" class="stage-icon">📥</text>
+            <text x="90" y="95" class="stage-metric" id="flow-metric-ingestion">0</text>
+            <text x="90" y="115" class="stage-label">events/sec</text>
+            <path d="M 85 125 L 95 125" stroke="#10b981" stroke-width="2" class="trend-indicator" id="trend-ingestion"/>
+          </g>
+
+          <!-- Queue Stage -->
+          <g id="stage-queue" class="stage-box" transform="translate(320, 80)" data-status="normal">
+            <rect class="stage-rect" width="180" height="140" rx="8" fill="url(#normalGradient)"/>
+            <text x="90" y="30" class="stage-title">Queue</text>
+            <text x="90" y="60" class="stage-icon">⏳</text>
+            <text x="90" y="95" class="stage-metric" id="flow-metric-queue">0</text>
+            <text x="90" y="115" class="stage-label">pending</text>
+            <path d="M 85 125 L 95 125" stroke="#10b981" stroke-width="2" class="trend-indicator" id="trend-queue"/>
+          </g>
+
+          <!-- Processing Stage -->
+          <g id="stage-processing" class="stage-box" transform="translate(590, 80)" data-status="normal">
+            <rect class="stage-rect" width="180" height="140" rx="8" fill="url(#normalGradient)"/>
+            <text x="90" y="30" class="stage-title">Processing</text>
+            <text x="90" y="60" class="stage-icon">⚙️</text>
+            <text x="90" y="95" class="stage-metric" id="flow-metric-processing">0%</text>
+            <text x="90" y="115" class="stage-label">success rate</text>
+            <path d="M 85 125 L 95 125" stroke="#10b981" stroke-width="2" class="trend-indicator" id="trend-processing"/>
+          </g>
+
+          <!-- Storage Stage -->
+          <g id="stage-storage" class="stage-box" transform="translate(860, 80)" data-status="normal">
+            <rect class="stage-rect" width="180" height="140" rx="8" fill="url(#normalGradient)"/>
+            <text x="90" y="30" class="stage-title">Storage</text>
+            <text x="90" y="60" class="stage-icon">💾</text>
+            <text x="90" y="95" class="stage-metric" id="flow-metric-storage">0</text>
+            <text x="90" y="115" class="stage-label">persisted</text>
+            <path d="M 85 125 L 95 125" stroke="#10b981" stroke-width="2" class="trend-indicator" id="trend-storage"/>
+          </g>
+
+          <!-- Dead Letter Queue Stage -->
+          <g id="stage-dlq" class="stage-box dlq-stage" transform="translate(590, 280)" data-status="normal">
+            <rect class="stage-rect" width="180" height="100" rx="8" fill="url(#normalGradient)"/>
+            <text x="90" y="30" class="stage-title">Dead Letter Queue</text>
+            <text x="90" y="55" class="stage-icon">❌</text>
+            <text x="90" y="85" class="stage-metric" id="flow-metric-dlq">0</text>
+          </g>
+
+          <!-- Flow Arrows -->
+          <!-- Ingestion → Queue -->
+          <line x1="230" y1="150" x2="320" y2="150" class="flow-line" id="arrow-1" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+          <text x="270" y="140" class="flow-label" id="throughput-1">0/s</text>
+
+          <!-- Queue → Processing -->
+          <line x1="500" y1="150" x2="590" y2="150" class="flow-line" id="arrow-2" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+          <text x="540" y="140" class="flow-label" id="throughput-2">0/s</text>
+
+          <!-- Processing → Storage -->
+          <line x1="770" y1="150" x2="860" y2="150" class="flow-line" id="arrow-3" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+          <text x="810" y="140" class="flow-label" id="throughput-3">0/s</text>
+
+          <!-- Processing → DLQ (vertical branch) -->
+          <line x1="680" y1="220" x2="680" y2="280" class="flow-line dlq-arrow" id="arrow-dlq" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowhead-error)" stroke-dasharray="5,5" opacity="0.3"/>
+          <text x="695" y="255" class="flow-label flow-label-error" id="dlq-rate">0/s</text>
+
+          <!-- Particle container for animations -->
+          <g id="particles-container"></g>
+        </svg>
+
+        <!-- Flow Legend -->
+        <div class="flow-legend">
+          <div class="legend-item">
+            <span class="legend-color" style="background: var(--color-success);"></span>
+            <span>Normal Operation</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background: var(--color-warning);"></span>
+            <span>Degraded (Backlog)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background: var(--color-error);"></span>
+            <span>Critical (Failing)</span>
+          </div>
+          <button class="btn-export" id="exportFlowBtn" title="Export as PNG">📸 Export</button>
+        </div>
+
+        <!-- Detail Popover -->
+        <div id="flowDetailPopover" class="flow-detail-popover hidden">
+          <button class="popover-close" id="popoverClose">×</button>
+          <h4 id="popover-title" class="popover-title">Stage Details</h4>
+          <div class="popover-content">
+            <div class="popover-metric">
+              <span class="popover-label">Current Value:</span>
+              <span id="popover-value" class="popover-value">0</span>
+            </div>
+            <div class="popover-metric">
+              <span class="popover-label">Rate:</span>
+              <span id="popover-rate" class="popover-value">0/sec</span>
+            </div>
+            <div class="popover-metric">
+              <span class="popover-label">Trend:</span>
+              <span id="popover-trend" class="popover-value">→</span>
+            </div>
+            <div class="popover-metric">
+              <span class="popover-label">Last Update:</span>
+              <span id="popover-timestamp" class="popover-value">--</span>
+            </div>
+            <canvas id="popover-sparkline" width="200" height="50"></canvas>
+          </div>
+        </div>
+
+        <!-- Comparison Toggle -->
+        <div class="flow-controls">
+          <label class="toggle-label">
+            <input type="checkbox" id="comparisonModeToggle" />
+            <span>Comparison Mode (vs 24h avg)</span>
+          </label>
+        </div>
       </div>
 
       <!-- Metrics Content -->
@@ -1431,7 +3742,7 @@
           </div>
           <div class="metrics-actions">
             <button class="btn-pause" id="chartsPauseBtn" onclick="toggleChartsPause()">Pause Auto-refresh</button>
-            <span id="chartsLastUpdate" style="font-size: 12px; color: #666;">Loading...</span>
+            <span id="chartsLastUpdate" style="font-size: 12px; color: var(--color-text-secondary);">Loading...</span>
           </div>
         </div>
 
@@ -1751,8 +4062,136 @@
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div class="toast" id="toast"></div>
+  <!-- Debug Help Modal -->
+  <div class="modal-overlay" id="debugHelpModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Debug Control Panel Help</h3>
+        <button class="btn-close" onclick="closeDebugHelpModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4 style="margin-top: 0;">Debug Flags Overview</h4>
+        <p style="margin-bottom: 20px;">The Debug Control Panel allows you to test error pathways and system behavior by triggering specific debug flags through the API.</p>
+
+        <div style="margin-bottom: 20px;">
+          <h5 style="margin: 10px 0 8px 0;">⚠️ Validation Error</h5>
+          <p style="margin: 0; color: var(--color-text-secondary); font-size: 14px;">Forces a validation error response (400 Bad Request). Use this to test client-side error handling for malformed requests.</p>
+          <p style="margin: 8px 0 0 0; font-size: 13px; color: #999;"><strong>Usage:</strong> POST /events?debug=validation_error</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h5 style="margin: 10px 0 8px 0;">⚡ Processing Error</h5>
+          <p style="margin: 0; color: var(--color-text-secondary); font-size: 14px;">Simulates processing failure after the event is queued. The event will be accepted but will fail during processing, triggering retry logic.</p>
+          <p style="margin: 8px 0 0 0; font-size: 13px; color: #999;"><strong>Usage:</strong> POST /events?debug=processing_error</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h5 style="margin: 10px 0 8px 0;">🕐 Queue Delay</h5>
+          <p style="margin: 0; color: var(--color-text-secondary); font-size: 14px;">Injects artificial latency (default 2000ms) to simulate slow processing or network delays. Useful for performance testing.</p>
+          <p style="margin: 8px 0 0 0; font-size: 13px; color: #999;"><strong>Usage:</strong> POST /events?debug=queue_delay&delay=2000</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h5 style="margin: 10px 0 8px 0;">❌ DLQ Routing</h5>
+          <p style="margin: 0; color: var(--color-text-secondary); font-size: 14px;">Forces the event to be routed to the Dead Letter Queue after exhausting all retry attempts. Tests DLQ handling logic.</p>
+          <p style="margin: 8px 0 0 0; font-size: 13px; color: #999;"><strong>Usage:</strong> POST /events?debug=dlq_routing</p>
+        </div>
+
+        <h4 style="margin: 24px 0 12px 0;">Features</h4>
+        <ul style="margin: 0; padding-left: 20px; color: var(--color-text-secondary); font-size: 14px;">
+          <li style="margin-bottom: 8px;"><strong>Mock Payloads:</strong> Choose from pre-built event templates or create custom JSON payloads</li>
+          <li style="margin-bottom: 8px;"><strong>Quick Templates:</strong> One-click submission of common Zapier event types</li>
+          <li style="margin-bottom: 8px;"><strong>Batch Testing:</strong> Execute all 4 debug flags sequentially with automatic progress tracking</li>
+          <li style="margin-bottom: 8px;"><strong>Debug History:</strong> View your last 10 debug submissions with expandable response details</li>
+          <li style="margin-bottom: 8px;"><strong>Pre-configured Scenarios:</strong> Run complex test scenarios with multiple debug flags</li>
+          <li style="margin-bottom: 8px;"><strong>Keyboard Shortcuts:</strong> Quick access via Alt+D (toggle) and Alt+1-4 (trigger flags)</li>
+        </ul>
+
+        <h4 style="margin: 24px 0 12px 0;">Common Troubleshooting</h4>
+        <ul style="margin: 0; padding-left: 20px; color: var(--color-text-secondary); font-size: 14px;">
+          <li style="margin-bottom: 8px;"><strong>401 Unauthorized:</strong> Ensure your Bearer token is valid in the Authorization Token field</li>
+          <li style="margin-bottom: 8px;"><strong>No response:</strong> Check browser console for network errors or CORS issues</li>
+          <li style="margin-bottom: 8px;"><strong>Debug flags not working:</strong> Verify your API worker supports debug query parameters</li>
+        </ul>
+
+        <p style="margin-top: 24px; padding: 12px; background: var(--color-bg-tertiary); border-radius: 6px; font-size: 13px; color: var(--color-text-secondary);">
+          <strong>Note:</strong> Debug flags are intended for development and demonstration purposes. Do not use in production environments.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch Generator Modal - Story 5.5 -->
+  <div class="modal-overlay" id="batchGeneratorModal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Batch Event Generator</h3>
+        <button class="btn-close" onclick="closeBatchGeneratorModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px;">
+          Generate multiple events from a single template with randomized data
+        </p>
+
+        <div class="form-group">
+          <label for="batch-template-select">Event Template</label>
+          <select id="batch-template-select" class="payload-select"></select>
+        </div>
+
+        <div class="form-group">
+          <label for="batch-count-input">Number of Events (1-100)</label>
+          <input type="number" id="batch-count-input" min="1" max="100" value="10" style="width: 100%; padding: 8px; border: 1px solid var(--color-border-secondary); border-radius: 4px;">
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 24px;">
+          <button class="btn-submit" onclick="submitBatchGeneration()" style="flex: 1;">
+            Generate Events
+          </button>
+          <button class="btn-secondary" onclick="closeBatchGeneratorModal()" style="flex: 1;">
+            Cancel
+          </button>
+        </div>
+
+        <div id="batch-progress-container" style="display: none; margin-top: 16px;">
+          <div style="background: var(--color-bg-tertiary); height: 8px; border-radius: 4px; overflow: hidden;">
+            <div id="batch-progress-bar" style="background: var(--color-primary); height: 100%; width: 0%; transition: width 0.3s;"></div>
+          </div>
+          <p id="batch-progress-text" style="font-size: 12px; color: var(--color-text-secondary); margin-top: 8px; text-align: center;">0 / 0 events created</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Browser Modal - Story 5.5 -->
+  <div class="modal-overlay" id="templateBrowserModal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px; max-height: 80vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h3 class="modal-title">Event Template Browser</h3>
+        <button class="btn-close" onclick="closeTemplateBrowserModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px;">
+          Browse all available Zapier event templates organized by category
+        </p>
+
+        <!-- Search and Filter -->
+        <div style="margin-bottom: 20px;">
+          <input type="text" id="template-search" placeholder="Search templates..."
+            style="width: 100%; padding: 10px; border: 1px solid var(--color-border-secondary); border-radius: 6px; font-size: 14px;"
+            oninput="filterTemplates(this.value)">
+        </div>
+
+        <!-- Category Filter -->
+        <div style="margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap;" id="category-filters"></div>
+
+        <!-- Templates Grid -->
+        <div id="templates-browser-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
 
   <script>
     // Client-side form handling
@@ -1769,7 +4208,7 @@
       const bearerToken = document.getElementById('bearerToken').value;
       const payload = document.getElementById('payload').value;
       const metadata = document.getElementById('metadata').value;
-      const debugFlag = document.getElementById('debugFlag').value;
+      // PHASE 2: debugFlag removed - use Debug Control Panel
 
       // Validate inputs
       if (!bearerToken.trim()) {
@@ -1801,11 +4240,8 @@
       response.classList.remove('visible', 'success', 'error');
 
       try {
-        // Build URL with debug flag if present
+        // PHASE 2: Debug flag removed - always use base URL
         let url = '/events';
-        if (debugFlag) {
-          url += '?debug=' + encodeURIComponent(debugFlag);
-        }
 
         // Send request
         const res = await fetch(url, {
@@ -2065,16 +4501,381 @@
     }
 
     /**
-     * Show toast notification
+     * ToastManager - Comprehensive toast notification system
+     */
+    class ToastManager {
+      constructor() {
+        this.container = document.getElementById('toast-container');
+        this.toasts = new Map();
+      }
+
+      show(message, type = 'info', options = {}) {
+        const {
+          duration = type === 'error' ? 6000 : (type === 'warning' || type === 'info' ? 3000 : 4000),
+          icon = this.getIcon(type),
+          details = null,
+          action = null,
+          id = Math.random().toString(36).substr(2, 9),
+          showSpinner = false
+        } = options;
+
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.id = `toast-${id}`;
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'polite');
+
+        // Icon
+        const iconEl = document.createElement('span');
+        iconEl.className = 'toast-icon';
+        if (showSpinner) {
+          iconEl.innerHTML = '<span class="spinner small"></span>';
+        } else {
+          iconEl.textContent = icon;
+        }
+        toast.appendChild(iconEl);
+
+        // Content
+        const content = document.createElement('div');
+        content.className = 'toast-content';
+
+        const messageEl = document.createElement('div');
+        messageEl.className = 'toast-message';
+        messageEl.textContent = message;
+        content.appendChild(messageEl);
+
+        if (details) {
+          const detailsEl = document.createElement('div');
+          detailsEl.className = 'toast-details';
+          detailsEl.textContent = details;
+          content.appendChild(detailsEl);
+        }
+
+        // Add action button if provided
+        if (action) {
+          const actionsDiv = document.createElement('div');
+          actionsDiv.className = 'toast-actions';
+
+          const actionBtn = document.createElement('button');
+          actionBtn.className = 'toast-action';
+          actionBtn.textContent = action.label;
+          actionBtn.addEventListener('click', () => {
+            action.callback();
+            this.remove(id);
+          });
+          actionsDiv.appendChild(actionBtn);
+          content.appendChild(actionsDiv);
+        }
+
+        toast.appendChild(content);
+
+        // Add close button
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'toast-close';
+        closeBtn.textContent = '×';
+        closeBtn.setAttribute('aria-label', 'Close notification');
+        closeBtn.addEventListener('click', () => this.remove(id));
+        toast.appendChild(closeBtn);
+
+        // Add to container
+        this.container.appendChild(toast);
+        this.toasts.set(id, toast);
+
+        // Auto-dismiss
+        if (duration > 0) {
+          setTimeout(() => this.remove(id), duration);
+        }
+
+        return id;
+      }
+
+      success(message, options = {}) {
+        return this.show(message, 'success', options);
+      }
+
+      error(message, errorCode = null, options = {}) {
+        const details = errorCode ? `Error: ${errorCode}` : null;
+        return this.show(message, 'error', { ...options, details, duration: 6000 });
+      }
+
+      warning(message, options = {}) {
+        return this.show(message, 'warning', { ...options, duration: 3000 });
+      }
+
+      info(message, options = {}) {
+        return this.show(message, 'info', { ...options, duration: 3000 });
+      }
+
+      loading(message, options = {}) {
+        return this.show(message, 'loading', {
+          ...options,
+          showSpinner: true,
+          duration: 0  // No auto-dismiss
+        });
+      }
+
+      update(id, message, type = null) {
+        const toast = this.toasts.get(id);
+        if (!toast) return;
+
+        const messageEl = toast.querySelector('.toast-message');
+        if (messageEl) messageEl.textContent = message;
+
+        if (type) {
+          toast.className = `toast toast-${type}`;
+          const iconEl = toast.querySelector('.toast-icon');
+          if (iconEl) iconEl.textContent = this.getIcon(type);
+        }
+      }
+
+      remove(id) {
+        const toast = this.toasts.get(id);
+        if (!toast) return;
+
+        toast.classList.add('removing');
+        setTimeout(() => {
+          toast.remove();
+          this.toasts.delete(id);
+        }, 300);
+      }
+
+      getIcon(type) {
+        const icons = {
+          'success': '✓',
+          'error': '✗',
+          'warning': '⚠',
+          'info': 'ℹ',
+          'loading': 'ℹ'
+        };
+        return icons[type] || 'ℹ';
+      }
+    }
+
+    // Initialize ToastManager globally
+    const toast = new ToastManager();
+
+    /**
+     * Legacy showToast function for backward compatibility
      */
     function showToast(type, message) {
-      const toast = document.getElementById('toast');
-      toast.className = `toast ${type} visible`;
-      toast.textContent = message;
+      if (type === 'success') {
+        toast.success(message);
+      } else if (type === 'error') {
+        toast.error(message);
+      } else if (type === 'warning') {
+        toast.warning(message);
+      } else {
+        toast.info(message);
+      }
+    }
 
-      setTimeout(() => {
-        toast.className = 'toast';
-      }, 3000);
+    /**
+     * LoadingStateManager - Handle loading states for buttons, skeletons, and progress
+     */
+    class LoadingStateManager {
+      constructor() {
+        this.buttonStates = new Map();
+      }
+
+      setButtonLoading(button, isLoading = true) {
+        if (!button) return;
+
+        if (isLoading) {
+          // Store original state
+          this.buttonStates.set(button, {
+            text: button.innerHTML,
+            disabled: button.disabled
+          });
+
+          button.disabled = true;
+          button.classList.add('loading');
+          button.innerHTML = `<span class="button-text">${button.textContent}</span>`;
+        } else {
+          // Restore original state
+          const originalState = this.buttonStates.get(button);
+          if (originalState) {
+            button.innerHTML = originalState.text;
+            button.disabled = originalState.disabled;
+            button.classList.remove('loading');
+            this.buttonStates.delete(button);
+          }
+        }
+      }
+
+      showSkeleton(container, count = 5, columns = 3) {
+        if (!container) return;
+
+        const rows = [];
+        for (let i = 0; i < count; i++) {
+          const widths = columns === 3 ? ['20%', '50%', '20%'] :
+                         columns === 2 ? ['40%', '50%'] : ['100%'];
+
+          const boxes = widths.map(w =>
+            `<div class="skeleton-box" style="width: ${w}; height: 20px;"></div>`
+          ).join('');
+
+          rows.push(`<div class="skeleton-row">${boxes}</div>`);
+        }
+
+        container.innerHTML = rows.join('');
+      }
+
+      showProgress(container, current, total) {
+        if (!container) return;
+
+        const percentage = Math.min(100, (current / total) * 100);
+        let progressClass = 'low';
+        if (percentage > 75) progressClass = 'high';
+        else if (percentage > 25) progressClass = 'medium';
+
+        container.innerHTML = `
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill ${progressClass}" style="width: ${percentage}%"></div>
+            </div>
+            <span class="progress-text">${current} of ${total}</span>
+          </div>
+        `;
+      }
+
+      createStatusBadge(status, withSpinner = false) {
+        const statusLower = status.toLowerCase();
+        const spinnerHtml = withSpinner ? '<span class="spinner"></span>' : '';
+        return `<span class="status-badge ${statusLower}">${spinnerHtml}${status}</span>`;
+      }
+
+      showSuccessAnimation() {
+        const checkmark = document.createElement('div');
+        checkmark.className = 'success-checkmark';
+        document.body.appendChild(checkmark);
+
+        setTimeout(() => {
+          checkmark.remove();
+        }, 500);
+      }
+
+      addPulseEffect(element) {
+        if (!element) return;
+
+        element.classList.add('pulse-update');
+        setTimeout(() => {
+          element.classList.remove('pulse-update');
+        }, 2000);
+      }
+    }
+
+    // Initialize LoadingStateManager globally
+    const loadingState = new LoadingStateManager();
+
+    /**
+     * Form Validation Helper
+     */
+    class FormValidator {
+      constructor(formId) {
+        this.form = document.getElementById(formId);
+        this.errors = new Map();
+      }
+
+      validateField(fieldId, rules) {
+        const field = document.getElementById(fieldId);
+        if (!field) return true;
+
+        const value = field.value.trim();
+        const formGroup = field.closest('.form-group');
+
+        // Clear previous error
+        this.clearFieldError(fieldId);
+
+        // Check required
+        if (rules.required && !value) {
+          this.setFieldError(fieldId, 'This field is required');
+          return false;
+        }
+
+        // Check JSON validity
+        if (rules.json && value) {
+          try {
+            JSON.parse(value);
+          } catch (e) {
+            this.setFieldError(fieldId, 'Invalid JSON format');
+            return false;
+          }
+        }
+
+        // Mark as valid
+        if (formGroup && value) {
+          formGroup.classList.add('success');
+          formGroup.classList.remove('error');
+        }
+
+        return true;
+      }
+
+      setFieldError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+
+        const formGroup = field.closest('.form-group');
+        if (formGroup) {
+          formGroup.classList.add('error');
+          formGroup.classList.remove('success');
+
+          let errorMsg = formGroup.querySelector('.form-error-message');
+          if (!errorMsg) {
+            errorMsg = document.createElement('div');
+            errorMsg.className = 'form-error-message';
+            formGroup.appendChild(errorMsg);
+          }
+          errorMsg.textContent = message;
+        }
+
+        this.errors.set(fieldId, message);
+      }
+
+      clearFieldError(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+
+        const formGroup = field.closest('.form-group');
+        if (formGroup) {
+          formGroup.classList.remove('error', 'success');
+          const errorMsg = formGroup.querySelector('.form-error-message');
+          if (errorMsg) errorMsg.remove();
+        }
+
+        this.errors.delete(fieldId);
+      }
+
+      showErrorSummary() {
+        if (this.errors.size === 0) return;
+
+        let summary = this.form.querySelector('.form-error-summary');
+        if (!summary) {
+          summary = document.createElement('div');
+          summary.className = 'form-error-summary';
+          this.form.insertBefore(summary, this.form.firstChild);
+        }
+
+        summary.innerHTML = `
+          <strong>Please fix ${this.errors.size} error(s):</strong>
+          <ul style="margin: 8px 0 0 20px;">
+            ${Array.from(this.errors.values()).map(err => `<li>${err}</li>`).join('')}
+          </ul>
+        `;
+        summary.classList.add('visible');
+      }
+
+      clearErrorSummary() {
+        const summary = this.form.querySelector('.form-error-summary');
+        if (summary) {
+          summary.classList.remove('visible');
+        }
+      }
+
+      isValid() {
+        return this.errors.size === 0;
+      }
     }
 
     /**
@@ -2681,7 +5482,7 @@
         errorSection = `
           <div class="detail-field">
             <div class="detail-field-label">Error Information</div>
-            <div class="detail-field-value" style="color: #dc2626;">
+            <div class="detail-field-value" style="color: var(--color-error-dark);">
               ${log.error_code ? `Code: ${log.error_code}\n` : ''}${log.error_message || ''}
               ${log.error_category ? `\nCategory: ${log.error_category}` : ''}
             </div>
@@ -2946,6 +5747,2129 @@
         startLogsAutoRefresh();
       }
     });
+
+    // ===== DEBUG CONTROL PANEL =====
+    class DebugPanel {
+      constructor() {
+        this.history = [];
+        this.batchMode = false;
+        this.flagCount = { validation_error: 0, processing_error: 0, queue_delay: 0, dlq_routing: 0 };
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.loadHistory();
+        this.updateMetrics();
+      }
+
+      setupEventListeners() {
+        // Debug flag buttons
+        document.querySelectorAll('[data-debug-flag]').forEach(btn => {
+          btn.addEventListener('click', (e) => this.handleDebugFlag(e));
+        });
+
+        // Mock payload toggle
+        const mockToggle = document.getElementById('mock-payload-toggle');
+        if (mockToggle) {
+          mockToggle.addEventListener('change', (e) => {
+            this.togglePayloadOptions(e.target.checked);
+          });
+        }
+
+        // Payload template selector
+        const templateSelect = document.getElementById('payload-template');
+        if (templateSelect) {
+          templateSelect.addEventListener('change', (e) => {
+            this.updatePayloadPreview(e.target.value);
+          });
+        }
+
+        // Batch mode toggle
+        const batchToggle = document.getElementById('batch-mode-toggle');
+        if (batchToggle) {
+          batchToggle.addEventListener('change', (e) => {
+            this.batchMode = e.target.checked;
+            const batchBtn = document.getElementById('batch-submit-btn');
+            if (batchBtn) {
+              batchBtn.style.display = e.target.checked ? 'block' : 'none';
+            }
+          });
+        }
+
+        // Batch submit button
+        const batchBtn = document.getElementById('batch-submit-btn');
+        if (batchBtn) {
+          batchBtn.addEventListener('click', () => this.runBatchTest());
+        }
+
+        // Quick templates
+        document.querySelectorAll('[data-template]').forEach(btn => {
+          btn.addEventListener('click', (e) => this.submitQuickTemplate(e));
+        });
+
+        // Clear history
+        const clearBtn = document.getElementById('clear-history-btn');
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => this.clearHistory());
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => this.handleKeyboardShortcuts(e));
+
+        // Toggle panel
+        const toggleBtn = document.getElementById('debug-toggle-btn');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => this.togglePanel());
+        }
+
+        // Help button
+        const helpBtn = document.getElementById('debug-help-btn');
+        if (helpBtn) {
+          helpBtn.addEventListener('click', () => this.openHelpModal());
+        }
+
+        // Scenario dropdown and button
+        const scenarioDropdown = document.getElementById('scenario-dropdown');
+        const scenarioBtn = document.getElementById('scenario-btn');
+        if (scenarioDropdown && scenarioBtn) {
+          scenarioDropdown.addEventListener('change', (e) => {
+            scenarioBtn.disabled = !e.target.value;
+          });
+          scenarioBtn.addEventListener('click', () => this.executeScenario());
+        }
+      }
+
+      async handleDebugFlag(event) {
+        const debugFlag = event.target.dataset.debugFlag;
+        const payload = this.buildPayload();
+        const btn = event.target;
+
+        try {
+          // Use loading state manager for button
+          loadingState.setButtonLoading(btn, true);
+
+          // Show loading toast
+          const loadingToastId = toast.loading(`Submitting with ${debugFlag} flag...`);
+
+          let url = '/events?debug=' + debugFlag;
+          if (debugFlag === 'queue_delay') {
+            const delay = document.getElementById('delay-input')?.value || 2000;
+            url += `&delay=${delay}`;
+          }
+
+          const startTime = Date.now();
+          const token = document.getElementById('bearerToken')?.value || 'sk_test_abc123xyz789';
+
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const endTime = Date.now();
+          const latency = endTime - startTime;
+          const data = await response.json();
+
+          this.addToHistory(debugFlag, response.status, data, latency);
+          this.updateMetrics();
+          this.flagCount[debugFlag]++;
+
+          // Remove loading toast
+          toast.remove(loadingToastId);
+
+          // Show success/error toast with action button
+          if (response.ok) {
+            loadingState.showSuccessAnimation();
+            toast.success(
+              `${debugFlag}: ${response.status} ${response.statusText}`,
+              {
+                details: `Latency: ${latency}ms`,
+                action: {
+                  label: 'View',
+                  callback: () => {
+                    // Switch to inbox tab
+                    const inboxTab = document.querySelector('[data-tab="inbox"]');
+                    if (inboxTab) inboxTab.click();
+                  }
+                }
+              }
+            );
+          } else {
+            toast.error(
+              `${debugFlag}: ${response.status} ${response.statusText}`,
+              data.error?.code || 'REQUEST_FAILED',
+              { details: `Latency: ${latency}ms` }
+            );
+          }
+
+          loadingState.setButtonLoading(btn, false);
+
+        } catch (error) {
+          console.error('Debug submission failed:', error);
+          toast.error('Submission failed', 'NETWORK_ERROR', {
+            details: error.message
+          });
+          loadingState.setButtonLoading(btn, false);
+        }
+      }
+
+      buildPayload() {
+        const useMockPayload = document.getElementById('mock-payload-toggle')?.checked ?? true;
+        const template = document.getElementById('payload-template')?.value || 'minimal';
+
+        if (!useMockPayload) {
+          return { payload: { test: true } };
+        }
+
+        const payloads = {
+          'minimal': { payload: { test: true } },
+          'user-created': {
+            payload: {
+              user_id: 'usr_' + Math.random().toString(36).substr(2, 9),
+              email: 'user@example.com',
+              created_at: new Date().toISOString()
+            },
+            metadata: { event_type: 'user.created', source: 'auth-service' }
+          },
+          'order-placed': {
+            payload: {
+              order_id: 'ord_' + Math.random().toString(36).substr(2, 9),
+              amount: Math.floor(Math.random() * 10000) / 100,
+              customer_id: 'cust_' + Math.random().toString(36).substr(2, 9),
+              items: [{ sku: 'ITEM-001', quantity: 1, price: 29.99 }]
+            },
+            metadata: { event_type: 'order.placed', source: 'orders-service' }
+          }
+        };
+
+        if (template === 'custom') {
+          try {
+            const customValue = document.getElementById('custom-payload')?.value;
+            return customValue ? JSON.parse(customValue) : payloads['minimal'];
+          } catch (e) {
+            this.showToast('error', 'Invalid JSON in custom payload');
+            return payloads['minimal'];
+          }
+        }
+
+        return payloads[template] || payloads['minimal'];
+      }
+
+      addToHistory(flag, status, response, latency = null) {
+        const entry = {
+          timestamp: new Date(),
+          flag,
+          event_id: response?.data?.event_id || response?.event_id || 'N/A',
+          status: status,
+          response: response,
+          latency: latency
+        };
+
+        this.history.unshift(entry);
+        if (this.history.length > 10) {
+          this.history.pop();
+        }
+
+        this.renderHistory();
+        localStorage.setItem('debugHistory', JSON.stringify(this.history));
+      }
+
+      renderHistory() {
+        const historyDiv = document.getElementById('debug-history');
+        if (!historyDiv) return;
+
+        if (this.history.length === 0) {
+          historyDiv.innerHTML = '<p class="empty-state">No debug submissions yet</p>';
+          return;
+        }
+
+        historyDiv.innerHTML = this.history.map((entry, index) => `
+          <div class="history-entry" data-status="${entry.status}">
+            <div class="entry-header">
+              <span class="timestamp">${entry.timestamp.toLocaleTimeString()}</span>
+              <span class="flag-badge">${entry.flag}</span>
+              <span class="status-badge-debug">${entry.status}</span>
+              ${entry.latency ? `<span class="flag-badge">${entry.latency}ms</span>` : ''}
+            </div>
+            <div class="entry-details">
+              <div style="font-size: 11px;">Event ID: <code>${entry.event_id}</code></div>
+              <button class="expand-btn" onclick="window.debugPanel.toggleDetails(${index})">Show Response</button>
+              <div class="details hidden" id="details-${index}">
+                <pre>${JSON.stringify(entry.response, null, 2)}</pre>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      toggleDetails(index) {
+        const detailsDiv = document.getElementById(`details-${index}`);
+        if (detailsDiv) {
+          detailsDiv.classList.toggle('hidden');
+          const btn = detailsDiv.previousElementSibling;
+          if (btn) {
+            btn.textContent = detailsDiv.classList.contains('hidden') ? 'Show Response' : 'Hide Response';
+          }
+        }
+      }
+
+      loadHistory() {
+        const saved = localStorage.getItem('debugHistory');
+        if (saved) {
+          try {
+            this.history = JSON.parse(saved).map(entry => ({
+              ...entry,
+              timestamp: new Date(entry.timestamp)
+            }));
+            this.renderHistory();
+          } catch (e) {
+            console.error('Failed to load debug history:', e);
+          }
+        }
+      }
+
+      clearHistory() {
+        if (confirm('Clear all debug history?')) {
+          this.history = [];
+          localStorage.removeItem('debugHistory');
+          this.renderHistory();
+          this.updateMetrics();
+        }
+      }
+
+      updateMetrics() {
+        const totalElem = document.getElementById('total-submissions');
+        const lastElem = document.getElementById('last-submission-time');
+        const mostUsedElem = document.getElementById('most-used-flag');
+
+        if (totalElem) totalElem.textContent = this.history.length;
+
+        if (lastElem && this.history.length > 0) {
+          lastElem.textContent = this.history[0].timestamp.toLocaleTimeString();
+        }
+
+        if (mostUsedElem) {
+          const mostUsed = Object.entries(this.flagCount).reduce((a, b) => a[1] > b[1] ? a : b, ['None', 0]);
+          mostUsedElem.textContent = mostUsed[1] > 0 ? mostUsed[0] : 'None';
+        }
+      }
+
+      togglePayloadOptions(enabled) {
+        const selector = document.getElementById('payload-template');
+        const custom = document.getElementById('custom-payload');
+        if (selector) selector.disabled = !enabled;
+        if (custom && !enabled) custom.classList.add('hidden');
+      }
+
+      updatePayloadPreview(template) {
+        const custom = document.getElementById('custom-payload');
+        if (custom) {
+          if (template === 'custom') {
+            custom.classList.remove('hidden');
+          } else {
+            custom.classList.add('hidden');
+          }
+        }
+      }
+
+      async submitQuickTemplate(event) {
+        const template = event.target.dataset.template;
+        const payloads = {
+          'user-created': {
+            payload: { user_id: 'usr_' + Math.random().toString(36).substr(2, 9), email: 'user@example.com' },
+            metadata: { event_type: 'user.created' }
+          },
+          'order-placed': {
+            payload: { order_id: 'ord_' + Math.random().toString(36).substr(2, 9), amount: 99.99 },
+            metadata: { event_type: 'order.placed' }
+          },
+          'payment': {
+            payload: { payment_id: 'pay_' + Math.random().toString(36).substr(2, 9), amount: 199.99 },
+            metadata: { event_type: 'payment.completed' }
+          },
+          'webhook': {
+            payload: { webhook_id: 'wh_' + Math.random().toString(36).substr(2, 9), data: {} },
+            metadata: { event_type: 'webhook.received' }
+          }
+        };
+
+        const payload = payloads[template];
+        if (!payload) return;
+
+        try {
+          const token = document.getElementById('bearerToken')?.value || 'sk_test_abc123xyz789';
+          const response = await fetch('/events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await response.json();
+          this.addToHistory(`template:${template}`, response.status, data);
+          this.updateMetrics();
+          this.showToast(response.ok ? 'success' : 'error', `Template ${template}: ${response.status}`);
+        } catch (error) {
+          console.error('Template submission failed:', error);
+          this.showToast('error', `Error: ${error.message}`);
+        }
+      }
+
+      async runBatchTest() {
+        const flags = ['validation_error', 'processing_error', 'queue_delay', 'dlq_routing'];
+        const progressContainer = document.getElementById('batch-progress');
+        const batchBtn = document.getElementById('batch-submit-btn');
+
+        // Use loading state manager for button
+        loadingState.setButtonLoading(batchBtn, true);
+
+        // Show progress in a dedicated container or toast
+        if (progressContainer) {
+          progressContainer.classList.remove('hidden');
+        }
+
+        let successCount = 0;
+        let errorCount = 0;
+
+        for (let i = 0; i < flags.length; i++) {
+          const flag = flags[i];
+
+          // Update progress
+          if (progressContainer) {
+            loadingState.showProgress(progressContainer, i + 1, flags.length);
+          }
+
+          // Show info toast for current flag
+          toast.info(`Testing flag ${i + 1}/${flags.length}: ${flag}`, { duration: 2000 });
+
+          const btn = document.querySelector(`[data-debug-flag="${flag}"]`);
+          if (btn) {
+            try {
+              await this.handleDebugFlag({ target: btn });
+              successCount++;
+            } catch (error) {
+              errorCount++;
+            }
+            await new Promise(resolve => setTimeout(resolve, 500)); // 500ms delay between submissions
+          }
+        }
+
+        // Hide progress after a delay
+        if (progressContainer) {
+          setTimeout(() => progressContainer.classList.add('hidden'), 2000);
+        }
+
+        loadingState.setButtonLoading(batchBtn, false);
+
+        // Show completion toast
+        if (errorCount === 0) {
+          loadingState.showSuccessAnimation();
+          toast.success(
+            'Batch test completed successfully',
+            { details: `All ${flags.length} debug flags executed` }
+          );
+        } else {
+          toast.warning(
+            'Batch test completed with errors',
+            { details: `${successCount} succeeded, ${errorCount} failed` }
+          );
+        }
+      }
+
+      async executeScenario() {
+        const scenario = document.getElementById('scenario-dropdown')?.value;
+        if (!scenario) return;
+
+        const scenarioBtn = document.getElementById('scenario-btn');
+        if (scenarioBtn) scenarioBtn.disabled = true;
+
+        switch (scenario) {
+          case 'happy-path':
+            await this.submitQuickTemplate({ target: { dataset: { template: 'user-created' } } });
+            break;
+          case 'all-errors':
+            await this.runBatchTest();
+            break;
+          case 'retry-logic':
+            for (let i = 0; i < 3; i++) {
+              const btn = document.querySelector('[data-debug-flag="processing_error"]');
+              if (btn) await this.handleDebugFlag({ target: btn });
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            break;
+          case 'dlq-flow':
+            const dlqBtn = document.querySelector('[data-debug-flag="dlq_routing"]');
+            if (dlqBtn) await this.handleDebugFlag({ target: dlqBtn });
+            break;
+        }
+
+        if (scenarioBtn) scenarioBtn.disabled = false;
+      }
+
+      handleKeyboardShortcuts(event) {
+        if (event.altKey) {
+          if (event.key === 'd' || event.key === 'D') {
+            event.preventDefault();
+            this.togglePanel();
+          } else if (event.key === '1') {
+            event.preventDefault();
+            const btn = document.querySelector('[data-debug-flag="validation_error"]');
+            if (btn) btn.click();
+          } else if (event.key === '2') {
+            event.preventDefault();
+            const btn = document.querySelector('[data-debug-flag="processing_error"]');
+            if (btn) btn.click();
+          } else if (event.key === '3') {
+            event.preventDefault();
+            const btn = document.querySelector('[data-debug-flag="queue_delay"]');
+            if (btn) btn.click();
+          } else if (event.key === '4') {
+            event.preventDefault();
+            const btn = document.querySelector('[data-debug-flag="dlq_routing"]');
+            if (btn) btn.click();
+          }
+        }
+      }
+
+      togglePanel() {
+        const content = document.getElementById('debug-content');
+        const btn = document.getElementById('debug-toggle-btn');
+        if (content && btn) {
+          content.classList.toggle('collapsed');
+          btn.textContent = content.classList.contains('collapsed') ? '+' : '−';
+        }
+      }
+
+      openHelpModal() {
+        const modal = document.getElementById('debugHelpModal');
+        if (modal) modal.classList.add('visible');
+      }
+
+      showToast(type, message) {
+        // Use global toast manager
+        if (window.toast) {
+          if (type === 'success') {
+            window.toast.success(message);
+          } else if (type === 'error') {
+            window.toast.error(message);
+          } else if (type === 'warning') {
+            window.toast.warning(message);
+          } else {
+            window.toast.info(message);
+          }
+        }
+      }
+    }
+
+    // Helper function to close debug help modal
+    function closeDebugHelpModal() {
+      const modal = document.getElementById('debugHelpModal');
+      if (modal) modal.classList.remove('visible');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('debugHelpModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'debugHelpModal') {
+        closeDebugHelpModal();
+      }
+    });
+
+    // Initialize Debug Panel on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      window.debugPanel = new DebugPanel();
+    });
+
+    /**
+     * MockDataGenerator Class - Story 5.5
+     * Comprehensive library of realistic Zapier event templates with batch generation
+     */
+    class MockDataGenerator {
+      constructor() {
+        this.templates = this.initializeTemplates();
+      }
+
+      initializeTemplates() {
+        return {
+          'user.created': {
+            name: 'User Created',
+            icon: '👤',
+            category: 'Users',
+            description: 'A new user account was created',
+            eventType: 'user.created',
+            source: 'auth-service',
+            generate: () => ({
+              payload: {
+                user_id: this.generateUUID('usr'),
+                email: this.generateEmail(),
+                first_name: this.randomFirstName(),
+                last_name: this.randomLastName(),
+                status: 'active',
+                created_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'user.created',
+                source: 'auth-service'
+              }
+            })
+          },
+
+          'user.updated': {
+            name: 'User Updated',
+            icon: '✏️',
+            category: 'Users',
+            description: 'User profile information was updated',
+            eventType: 'user.updated',
+            source: 'auth-service',
+            generate: () => ({
+              payload: {
+                user_id: this.generateUUID('usr'),
+                email: this.generateEmail(),
+                first_name: this.randomFirstName(),
+                last_name: this.randomLastName(),
+                updated_at: new Date().toISOString(),
+                changed_fields: ['email', 'first_name']
+              },
+              metadata: {
+                event_type: 'user.updated',
+                source: 'auth-service'
+              }
+            })
+          },
+
+          'user.deleted': {
+            name: 'User Deleted',
+            icon: '🗑️',
+            category: 'Users',
+            description: 'User account was deleted',
+            eventType: 'user.deleted',
+            source: 'auth-service',
+            generate: () => ({
+              payload: {
+                user_id: this.generateUUID('usr'),
+                email: this.generateEmail(),
+                deleted_at: new Date().toISOString(),
+                deletion_reason: this.randomDeletionReason()
+              },
+              metadata: {
+                event_type: 'user.deleted',
+                source: 'auth-service'
+              }
+            })
+          },
+
+          'order.created': {
+            name: 'Order Created',
+            icon: '🛒',
+            category: 'E-commerce',
+            description: 'New order was placed',
+            eventType: 'order.created',
+            source: 'ecommerce-service',
+            generate: () => ({
+              payload: {
+                order_id: this.generateUUID('ord'),
+                customer_id: this.generateUUID('cust'),
+                amount: this.randomAmount(10, 500),
+                currency: 'USD',
+                status: 'pending',
+                items: [
+                  {
+                    sku: 'SKU-' + Math.floor(Math.random() * 9999),
+                    name: this.randomProductName(),
+                    quantity: Math.floor(Math.random() * 5) + 1,
+                    price: this.randomAmount(5, 200)
+                  }
+                ],
+                created_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'order.created',
+                source: 'ecommerce-service'
+              }
+            })
+          },
+
+          'order.paid': {
+            name: 'Order Paid',
+            icon: '✅',
+            category: 'E-commerce',
+            description: 'Order payment was received',
+            eventType: 'order.paid',
+            source: 'ecommerce-service',
+            generate: () => ({
+              payload: {
+                order_id: this.generateUUID('ord'),
+                customer_id: this.generateUUID('cust'),
+                amount: this.randomAmount(10, 500),
+                currency: 'USD',
+                status: 'paid',
+                payment_id: this.generateUUID('pay'),
+                paid_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'order.paid',
+                source: 'ecommerce-service'
+              }
+            })
+          },
+
+          'order.shipped': {
+            name: 'Order Shipped',
+            icon: '📦',
+            category: 'E-commerce',
+            description: 'Order was dispatched to customer',
+            eventType: 'order.shipped',
+            source: 'ecommerce-service',
+            generate: () => ({
+              payload: {
+                order_id: this.generateUUID('ord'),
+                tracking_number: 'TRK-' + Math.floor(Math.random() * 999999),
+                carrier: this.randomCarrier(),
+                shipped_at: new Date().toISOString(),
+                estimated_delivery: this.futureDate(3, 7)
+              },
+              metadata: {
+                event_type: 'order.shipped',
+                source: 'ecommerce-service'
+              }
+            })
+          },
+
+          'payment.completed': {
+            name: 'Payment Completed',
+            icon: '💳',
+            category: 'Payments',
+            description: 'Payment processing was successful',
+            eventType: 'payment.completed',
+            source: 'stripe',
+            generate: () => ({
+              payload: {
+                payment_id: this.generateUUID('pay'),
+                amount: Math.floor(this.randomAmount(10, 10000) * 100),
+                currency: 'USD',
+                status: 'completed',
+                customer_id: this.generateUUID('cust'),
+                payment_method: this.randomPaymentMethod(),
+                receipt_url: 'https://example.com/receipts/' + this.generateUUID(),
+                created_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'payment.completed',
+                source: 'stripe'
+              }
+            })
+          },
+
+          'payment.failed': {
+            name: 'Payment Failed',
+            icon: '❌',
+            category: 'Payments',
+            description: 'Payment processing failed',
+            eventType: 'payment.failed',
+            source: 'stripe',
+            generate: () => ({
+              payload: {
+                payment_id: this.generateUUID('pay'),
+                amount: Math.floor(this.randomAmount(10, 10000) * 100),
+                currency: 'USD',
+                status: 'failed',
+                customer_id: this.generateUUID('cust'),
+                error_code: this.randomPaymentErrorCode(),
+                error_message: this.randomPaymentErrorMessage(),
+                created_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'payment.failed',
+                source: 'stripe'
+              }
+            })
+          },
+
+          'payment.refunded': {
+            name: 'Payment Refunded',
+            icon: '↩️',
+            category: 'Payments',
+            description: 'Payment was refunded to customer',
+            eventType: 'payment.refunded',
+            source: 'stripe',
+            generate: () => ({
+              payload: {
+                payment_id: this.generateUUID('pay'),
+                refund_id: this.generateUUID('ref'),
+                amount: Math.floor(this.randomAmount(10, 10000) * 100),
+                currency: 'USD',
+                status: 'refunded',
+                reason: this.randomRefundReason(),
+                refunded_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'payment.refunded',
+                source: 'stripe'
+              }
+            })
+          },
+
+          'email.sent': {
+            name: 'Email Sent',
+            icon: '📧',
+            category: 'Communications',
+            description: 'Email was delivered to recipient',
+            eventType: 'email.sent',
+            source: 'sendgrid',
+            generate: () => ({
+              payload: {
+                email_id: this.generateUUID('email'),
+                recipient: this.generateEmail(),
+                sender: 'noreply@example.com',
+                subject: this.randomEmailSubject(),
+                sent_at: new Date().toISOString(),
+                template: 'transactional',
+                status: 'delivered'
+              },
+              metadata: {
+                event_type: 'email.sent',
+                source: 'sendgrid'
+              }
+            })
+          },
+
+          'sms.sent': {
+            name: 'SMS Sent',
+            icon: '💬',
+            category: 'Communications',
+            description: 'SMS message was sent',
+            eventType: 'sms.sent',
+            source: 'twilio',
+            generate: () => ({
+              payload: {
+                message_id: this.generateUUID('sms'),
+                recipient: this.randomPhoneNumber(),
+                message: this.randomSMSMessage(),
+                sent_at: new Date().toISOString(),
+                status: 'sent'
+              },
+              metadata: {
+                event_type: 'sms.sent',
+                source: 'twilio'
+              }
+            })
+          },
+
+          'form.submitted': {
+            name: 'Form Submitted',
+            icon: '📝',
+            category: 'Forms',
+            description: 'Form was submitted by user',
+            eventType: 'form.submitted',
+            source: 'forms-service',
+            generate: () => ({
+              payload: {
+                form_id: this.generateUUID('form'),
+                submission_id: this.generateUUID('sub'),
+                submitter_email: this.generateEmail(),
+                fields: {
+                  name: this.randomFirstName() + ' ' + this.randomLastName(),
+                  email: this.generateEmail(),
+                  message: 'This is a test form submission'
+                },
+                submitted_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'form.submitted',
+                source: 'forms-service'
+              }
+            })
+          },
+
+          'task.created': {
+            name: 'Task Created',
+            icon: '✓',
+            category: 'Tasks',
+            description: 'New task was created',
+            eventType: 'task.created',
+            source: 'tasks-service',
+            generate: () => ({
+              payload: {
+                task_id: this.generateUUID('task'),
+                title: this.randomTaskTitle(),
+                description: 'Task description here',
+                assignee: this.generateEmail(),
+                due_date: this.futureDate(1, 14),
+                priority: this.randomPriority(),
+                created_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'task.created',
+                source: 'tasks-service'
+              }
+            })
+          },
+
+          'file.uploaded': {
+            name: 'File Uploaded',
+            icon: '📁',
+            category: 'Files',
+            description: 'File was uploaded to storage',
+            eventType: 'file.uploaded',
+            source: 'storage-service',
+            generate: () => ({
+              payload: {
+                file_id: this.generateUUID('file'),
+                filename: this.randomFilename(),
+                size: Math.floor(Math.random() * 10000000),
+                mime_type: this.randomMimeType(),
+                url: 'https://storage.example.com/files/' + this.generateUUID(),
+                uploaded_at: new Date().toISOString(),
+                uploaded_by: this.generateEmail()
+              },
+              metadata: {
+                event_type: 'file.uploaded',
+                source: 'storage-service'
+              }
+            })
+          },
+
+          'subscription.created': {
+            name: 'Subscription Created',
+            icon: '🔄',
+            category: 'Subscriptions',
+            description: 'New subscription was created',
+            eventType: 'subscription.created',
+            source: 'billing-service',
+            generate: () => ({
+              payload: {
+                subscription_id: this.generateUUID('sub'),
+                customer_id: this.generateUUID('cust'),
+                plan_id: this.randomPlanId(),
+                status: 'active',
+                billing_cycle: 'monthly',
+                amount: this.randomAmount(10, 200),
+                renewal_date: this.futureDate(28, 31),
+                created_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'subscription.created',
+                source: 'billing-service'
+              }
+            })
+          },
+
+          'subscription.cancelled': {
+            name: 'Subscription Cancelled',
+            icon: '⛔',
+            category: 'Subscriptions',
+            description: 'Subscription was cancelled',
+            eventType: 'subscription.cancelled',
+            source: 'billing-service',
+            generate: () => ({
+              payload: {
+                subscription_id: this.generateUUID('sub'),
+                customer_id: this.generateUUID('cust'),
+                status: 'cancelled',
+                cancellation_reason: this.randomCancellationReason(),
+                cancelled_at: new Date().toISOString(),
+                effective_end_date: this.futureDate(1, 30)
+              },
+              metadata: {
+                event_type: 'subscription.cancelled',
+                source: 'billing-service'
+              }
+            })
+          },
+
+          'webhook.received': {
+            name: 'Webhook Received',
+            icon: '🔗',
+            category: 'Webhooks',
+            description: 'Incoming webhook from external service',
+            eventType: 'webhook.received',
+            source: 'external-webhook',
+            generate: () => ({
+              payload: {
+                webhook_id: this.generateUUID('wh'),
+                source_service: this.randomWebhookSource(),
+                event_type: this.randomWebhookEvent(),
+                data: {
+                  id: this.generateUUID(),
+                  timestamp: new Date().toISOString(),
+                  action: 'created'
+                },
+                received_at: new Date().toISOString()
+              },
+              metadata: {
+                event_type: 'webhook.received',
+                source: 'external-webhook'
+              }
+            })
+          }
+        };
+      }
+
+      // Utility methods for data generation
+      generateUUID(prefix = '') {
+        const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+          const r = (Math.random() * 16) | 0;
+          const v = c === 'x' ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        });
+        return prefix ? `${prefix}_${uuid.slice(0, 8)}` : uuid;
+      }
+
+      generateEmail() {
+        const firstName = this.randomFirstName().toLowerCase();
+        const lastName = this.randomLastName().toLowerCase();
+        const domains = ['example.com', 'test.com', 'demo.com', 'mail.com'];
+        const domain = domains[Math.floor(Math.random() * domains.length)];
+        return `${firstName}.${lastName}@${domain}`;
+      }
+
+      randomFirstName() {
+        const names = ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Emma', 'James', 'Maria', 'Robert', 'Lisa', 'William', 'Jennifer'];
+        return names[Math.floor(Math.random() * names.length)];
+      }
+
+      randomLastName() {
+        const names = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+        return names[Math.floor(Math.random() * names.length)];
+      }
+
+      randomAmount(min, max) {
+        return parseFloat((Math.random() * (max - min) + min).toFixed(2));
+      }
+
+      randomProductName() {
+        const adjectives = ['Premium', 'Deluxe', 'Standard', 'Pro', 'Basic', 'Elite', 'Professional'];
+        const products = ['Widget', 'Gadget', 'Device', 'Tool', 'Solution', 'Kit', 'Bundle'];
+        return adjectives[Math.floor(Math.random() * adjectives.length)] + ' ' +
+               products[Math.floor(Math.random() * products.length)];
+      }
+
+      randomCarrier() {
+        const carriers = ['FedEx', 'UPS', 'DHL', 'USPS', 'Amazon Logistics'];
+        return carriers[Math.floor(Math.random() * carriers.length)];
+      }
+
+      randomPaymentMethod() {
+        const methods = ['card', 'bank_account', 'apple_pay', 'google_pay', 'paypal'];
+        return methods[Math.floor(Math.random() * methods.length)];
+      }
+
+      randomPaymentErrorCode() {
+        const codes = ['card_declined', 'insufficient_funds', 'expired_card', 'invalid_cvc', 'processing_error'];
+        return codes[Math.floor(Math.random() * codes.length)];
+      }
+
+      randomPaymentErrorMessage() {
+        const messages = {
+          'card_declined': 'Your card was declined',
+          'insufficient_funds': 'Insufficient funds',
+          'expired_card': 'Card has expired',
+          'invalid_cvc': 'Invalid CVC code',
+          'processing_error': 'Payment processing error'
+        };
+        const code = this.randomPaymentErrorCode();
+        return messages[code];
+      }
+
+      randomRefundReason() {
+        const reasons = ['customer_request', 'duplicate_charge', 'fraudulent', 'product_not_received'];
+        return reasons[Math.floor(Math.random() * reasons.length)];
+      }
+
+      randomEmailSubject() {
+        const subjects = ['Order Confirmation', 'Payment Receipt', 'Welcome to TriggersAPI', 'Account Updated', 'Password Reset', 'Subscription Renewal'];
+        return subjects[Math.floor(Math.random() * subjects.length)];
+      }
+
+      randomSMSMessage() {
+        const messages = ['Your verification code is 123456', 'Your order has shipped', 'Payment received', 'Reminder: appointment today'];
+        return messages[Math.floor(Math.random() * messages.length)];
+      }
+
+      randomPhoneNumber() {
+        return '+1' + Math.floor(Math.random() * 9000000000 + 1000000000);
+      }
+
+      randomTaskTitle() {
+        const tasks = ['Review pull request', 'Fix bug in authentication', 'Update documentation', 'Deploy to production', 'Run performance tests'];
+        return tasks[Math.floor(Math.random() * tasks.length)];
+      }
+
+      randomPriority() {
+        const priorities = ['low', 'medium', 'high', 'urgent'];
+        return priorities[Math.floor(Math.random() * priorities.length)];
+      }
+
+      randomFilename() {
+        const names = ['document.pdf', 'report.xlsx', 'image.png', 'presentation.pptx', 'data.csv'];
+        return names[Math.floor(Math.random() * names.length)];
+      }
+
+      randomMimeType() {
+        const types = ['application/pdf', 'application/vnd.ms-excel', 'image/png', 'image/jpeg', 'text/csv'];
+        return types[Math.floor(Math.random() * types.length)];
+      }
+
+      randomPlanId() {
+        const plans = ['plan_basic', 'plan_pro', 'plan_enterprise', 'plan_starter'];
+        return plans[Math.floor(Math.random() * plans.length)];
+      }
+
+      randomCancellationReason() {
+        const reasons = ['too_expensive', 'not_enough_features', 'switching_to_competitor', 'no_longer_needed'];
+        return reasons[Math.floor(Math.random() * reasons.length)];
+      }
+
+      randomDeletionReason() {
+        const reasons = ['user_request', 'terms_violation', 'duplicate_account', 'inactivity'];
+        return reasons[Math.floor(Math.random() * reasons.length)];
+      }
+
+      randomWebhookSource() {
+        const sources = ['github', 'slack', 'stripe', 'shopify', 'mailchimp'];
+        return sources[Math.floor(Math.random() * sources.length)];
+      }
+
+      randomWebhookEvent() {
+        const events = ['push', 'pull_request', 'message.created', 'order.created', 'subscriber.added'];
+        return events[Math.floor(Math.random() * events.length)];
+      }
+
+      futureDate(minDays, maxDays) {
+        const days = Math.floor(Math.random() * (maxDays - minDays + 1)) + minDays;
+        const future = new Date();
+        future.setDate(future.getDate() + days);
+        return future.toISOString();
+      }
+
+      // Public API
+      getTemplates() {
+        return Object.values(this.templates).map(t => ({
+          id: t.eventType,
+          name: t.name,
+          icon: t.icon,
+          category: t.category,
+          description: t.description
+        }));
+      }
+
+      getTemplatesByCategory() {
+        const byCategory = {};
+        this.getTemplates().forEach(t => {
+          if (!byCategory[t.category]) {
+            byCategory[t.category] = [];
+          }
+          byCategory[t.category].push(t);
+        });
+        return byCategory;
+      }
+
+      generateEvent(templateId, customizations = {}) {
+        const template = this.templates[templateId];
+        if (!template) throw new Error(`Unknown template: ${templateId}`);
+
+        const event = template.generate();
+
+        // Apply customizations
+        if (customizations.payload) {
+          event.payload = { ...event.payload, ...customizations.payload };
+        }
+
+        return event;
+      }
+
+      generateBatch(templateId, count = 1) {
+        const events = [];
+        for (let i = 0; i < count; i++) {
+          events.push(this.generateEvent(templateId));
+        }
+        return events;
+      }
+
+      generateDemoScenario() {
+        // Sequence: user created → order created → order paid → email sent
+        return [
+          this.generateEvent('user.created'),
+          this.generateEvent('order.created'),
+          this.generateEvent('payment.completed'),
+          this.generateEvent('order.paid'),
+          this.generateEvent('email.sent')
+        ];
+      }
+
+      generateStressTestData(count = 100) {
+        const events = [];
+        const templates = Object.keys(this.templates);
+        for (let i = 0; i < count; i++) {
+          const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+          events.push(this.generateEvent(randomTemplate));
+        }
+        return events;
+      }
+    }
+
+    // Initialize MockDataGenerator globally
+    window.mockDataGenerator = new MockDataGenerator();
+
+    /**
+     * Mock Data Generator UI Functions - Story 5.5
+     */
+
+    // Initialize template categories on page load
+    function initializeTemplateCategories() {
+      const container = document.getElementById('template-categories');
+      if (!container) return;
+
+      const byCategory = window.mockDataGenerator.getTemplatesByCategory();
+      let html = '';
+
+      Object.entries(byCategory).forEach(([category, templates]) => {
+        html += `
+          <div class="template-category" style="margin-bottom: 16px;">
+            <h5 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--color-text-secondary);">${category}</h5>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px;">
+              ${templates.map(t => `
+                <button class="template-btn" onclick="generateAndSubmitEvent('${t.id}')"
+                  title="${t.description}"
+                  style="display: flex; align-items: center; gap: 6px; padding: 8px; background: var(--color-bg-primary); border: 1px solid var(--color-border-secondary); border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.2s;">
+                  <span style="font-size: 16px;">${t.icon}</span>
+                  <span style="flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.name}</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Generate and submit a single event from template
+    async function generateAndSubmitEvent(templateId) {
+      try {
+        const event = window.mockDataGenerator.generateEvent(templateId);
+        const token = document.getElementById('bearerToken')?.value;
+
+        if (!token) {
+          if (window.toast) window.toast.error('Please enter authorization token first');
+          return;
+        }
+
+        const response = await fetch('/events', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(event)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          if (window.toast) {
+            const template = window.mockDataGenerator.templates[templateId];
+            window.toast.success(`${template.name} event created`, {
+              description: `Event ID: ${result.data?.event_id || 'N/A'}`
+            });
+          }
+        } else {
+          if (window.toast) window.toast.error('Failed to create event', result.error?.message);
+        }
+      } catch (error) {
+        console.error('Error generating event:', error);
+        if (window.toast) window.toast.error('Error: ' + error.message);
+      }
+    }
+
+    // Load demo data (5 events from different categories)
+    async function loadDemoData() {
+      const token = document.getElementById('bearerToken')?.value;
+      if (!token) {
+        if (window.toast) window.toast.error('Please enter authorization token first');
+        return;
+      }
+
+      const demoEvents = window.mockDataGenerator.generateDemoScenario();
+      const toastId = window.toast ? window.toast.loading('Generating demo data...') : null;
+
+      try {
+        let succeeded = 0;
+        for (const event of demoEvents) {
+          const response = await fetch('/events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(event)
+          });
+
+          if (response.ok) {
+            succeeded++;
+          }
+
+          // Small delay between requests
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        if (toastId && window.toast) window.toast.remove(toastId);
+        if (window.toast) window.toast.success(`Demo data loaded: ${succeeded} events created`);
+      } catch (error) {
+        if (toastId && window.toast) window.toast.remove(toastId);
+        if (window.toast) window.toast.error('Error loading demo data: ' + error.message);
+      }
+    }
+
+    // Generate realistic scenario (sequential events)
+    async function generateRealisticScenario() {
+      const token = document.getElementById('bearerToken')?.value;
+      if (!token) {
+        if (window.toast) window.toast.error('Please enter authorization token first');
+        return;
+      }
+
+      const scenario = window.mockDataGenerator.generateDemoScenario();
+      const toastId = window.toast ? window.toast.loading('Generating realistic scenario...') : null;
+
+      try {
+        let succeeded = 0;
+        for (const event of scenario) {
+          const response = await fetch('/events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(event)
+          });
+
+          if (response.ok) {
+            succeeded++;
+          }
+
+          // Delay to show sequence
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        if (toastId && window.toast) window.toast.remove(toastId);
+        if (window.toast) window.toast.success(`Scenario complete: ${succeeded} events created`);
+      } catch (error) {
+        if (toastId && window.toast) window.toast.remove(toastId);
+        if (window.toast) window.toast.error('Scenario generation failed: ' + error.message);
+      }
+    }
+
+    // Show batch generator modal
+    function showBatchGeneratorModal() {
+      const modal = document.getElementById('batchGeneratorModal');
+      const select = document.getElementById('batch-template-select');
+
+      if (modal && select) {
+        // Populate template dropdown
+        const templates = window.mockDataGenerator.getTemplates();
+        select.innerHTML = templates.map(t =>
+          `<option value="${t.id}">${t.icon} ${t.name}</option>`
+        ).join('');
+
+        modal.style.display = 'flex';
+      }
+    }
+
+    // Close batch generator modal
+    function closeBatchGeneratorModal() {
+      const modal = document.getElementById('batchGeneratorModal');
+      if (modal) modal.style.display = 'none';
+
+      // Reset progress
+      const progressContainer = document.getElementById('batch-progress-container');
+      if (progressContainer) progressContainer.style.display = 'none';
+    }
+
+    // Submit batch generation
+    async function submitBatchGeneration() {
+      const templateId = document.getElementById('batch-template-select')?.value;
+      const count = parseInt(document.getElementById('batch-count-input')?.value || '10');
+      const token = document.getElementById('bearerToken')?.value;
+
+      if (!token) {
+        if (window.toast) window.toast.error('Please enter authorization token first');
+        return;
+      }
+
+      if (count < 1 || count > 100) {
+        if (window.toast) window.toast.warning('Count must be between 1 and 100');
+        return;
+      }
+
+      // Show progress
+      const progressContainer = document.getElementById('batch-progress-container');
+      const progressBar = document.getElementById('batch-progress-bar');
+      const progressText = document.getElementById('batch-progress-text');
+
+      if (progressContainer) progressContainer.style.display = 'block';
+
+      try {
+        const events = window.mockDataGenerator.generateBatch(templateId, count);
+        let succeeded = 0;
+
+        for (let i = 0; i < events.length; i++) {
+          const event = events[i];
+          const response = await fetch('/events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(event)
+          });
+
+          if (response.ok) {
+            succeeded++;
+          }
+
+          // Update progress
+          const progress = ((i + 1) / count) * 100;
+          if (progressBar) progressBar.style.width = progress + '%';
+          if (progressText) progressText.textContent = `${succeeded} / ${count} events created`;
+
+          // Small delay to avoid overwhelming server
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        if (window.toast) window.toast.success(`Batch complete: ${succeeded}/${count} events created`);
+
+        // Close modal after success
+        setTimeout(() => {
+          closeBatchGeneratorModal();
+        }, 1000);
+
+      } catch (error) {
+        console.error('Batch generation error:', error);
+        if (window.toast) window.toast.error('Batch generation failed: ' + error.message);
+      }
+    }
+
+    // Show templates browser modal
+    function showTemplatesBrowser() {
+      const modal = document.getElementById('templateBrowserModal');
+      const grid = document.getElementById('templates-browser-grid');
+      const filterContainer = document.getElementById('category-filters');
+
+      if (modal && grid) {
+        // Populate category filters
+        const byCategory = window.mockDataGenerator.getTemplatesByCategory();
+        const categories = Object.keys(byCategory);
+
+        if (filterContainer) {
+          filterContainer.innerHTML = `
+            <button class="category-filter active" data-category="all" onclick="filterByCategory('all')"
+              style="padding: 6px 12px; border: 1px solid var(--color-border-secondary); border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer; font-size: 12px;">
+              All
+            </button>
+            ${categories.map(cat => `
+              <button class="category-filter" data-category="${cat}" onclick="filterByCategory('${cat}')"
+                style="padding: 6px 12px; border: 1px solid var(--color-border-secondary); border-radius: 4px; background: white; cursor: pointer; font-size: 12px;">
+                ${cat}
+              </button>
+            `).join('')}
+          `;
+        }
+
+        // Populate templates grid
+        renderTemplatesGrid();
+        modal.style.display = 'flex';
+      }
+    }
+
+    // Close templates browser modal
+    function closeTemplateBrowserModal() {
+      const modal = document.getElementById('templateBrowserModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    // Render templates grid
+    function renderTemplatesGrid(filter = null, category = 'all') {
+      const grid = document.getElementById('templates-browser-grid');
+      if (!grid) return;
+
+      let templates = window.mockDataGenerator.getTemplates();
+
+      // Apply category filter
+      if (category !== 'all') {
+        templates = templates.filter(t => t.category === category);
+      }
+
+      // Apply search filter
+      if (filter) {
+        const lowerFilter = filter.toLowerCase();
+        templates = templates.filter(t =>
+          t.name.toLowerCase().includes(lowerFilter) ||
+          t.description.toLowerCase().includes(lowerFilter) ||
+          t.category.toLowerCase().includes(lowerFilter)
+        );
+      }
+
+      grid.innerHTML = templates.map(t => `
+        <div class="template-card" style="padding: 16px; border: 1px solid var(--color-border-secondary); border-radius: 8px; background: white; transition: all 0.2s; cursor: pointer;"
+          onclick="generateAndSubmitEventFromBrowser('${t.id}')">
+          <div style="font-size: 32px; text-align: center; margin-bottom: 8px;">${t.icon}</div>
+          <h4 style="font-size: 14px; font-weight: 600; margin: 0 0 4px 0; text-align: center;">${t.name}</h4>
+          <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0; text-align: center;">${t.description}</p>
+          <div style="margin-top: 8px; text-align: center;">
+            <span style="display: inline-block; padding: 2px 8px; background: var(--color-bg-tertiary); border-radius: 3px; font-size: 10px; color: var(--color-text-secondary);">
+              ${t.category}
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Filter templates by search
+    function filterTemplates(searchText) {
+      const activeCategory = document.querySelector('.category-filter.active')?.dataset.category || 'all';
+      renderTemplatesGrid(searchText, activeCategory);
+    }
+
+    // Filter by category
+    function filterByCategory(category) {
+      // Update active filter button
+      document.querySelectorAll('.category-filter').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'white';
+        btn.style.color = 'inherit';
+      });
+
+      const activeBtn = document.querySelector(`[data-category="${category}"]`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.background = 'var(--color-primary)';
+        activeBtn.style.color = 'white';
+      }
+
+      const searchText = document.getElementById('template-search')?.value || '';
+      renderTemplatesGrid(searchText, category);
+    }
+
+    // Generate and submit from browser modal
+    async function generateAndSubmitEventFromBrowser(templateId) {
+      await generateAndSubmitEvent(templateId);
+      closeTemplateBrowserModal();
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTemplateCategories();
+    });
+
+    /**
+     * FlowVisualization Class - Event Flow Diagram
+     * Visualizes event journey: Ingestion → Queue → Processing → Storage
+     */
+    class FlowVisualization {
+      constructor() {
+        this.metrics = {};
+        this.previousMetrics = {};
+        this.baselineMetrics = null;
+        this.comparisonMode = false;
+        this.updateInterval = null;
+        this.particleInterval = null;
+        this.metricHistory = {
+          ingestion: [],
+          queue: [],
+          processing: [],
+          storage: [],
+          dlq: []
+        };
+        this.maxHistoryLength = 30; // 5 minutes at 2s intervals
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.startMetricsUpdate();
+        this.startParticleAnimation();
+      }
+
+      setupEventListeners() {
+        // Click stages for detail popover
+        const stages = ['ingestion', 'queue', 'processing', 'storage', 'dlq'];
+        stages.forEach(stage => {
+          const element = document.getElementById(`stage-${stage}`);
+          if (element) {
+            element.addEventListener('click', (e) => this.showDetailPopover(stage, e));
+          }
+        });
+
+        // Close popover button
+        const closeBtn = document.getElementById('popoverClose');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => this.hideDetailPopover());
+        }
+
+        // Close popover when clicking outside
+        document.addEventListener('click', (e) => {
+          const popover = document.getElementById('flowDetailPopover');
+          if (popover && !popover.classList.contains('hidden') &&
+              !popover.contains(e.target) &&
+              !e.target.closest('.stage-box')) {
+            this.hideDetailPopover();
+          }
+        });
+
+        // Comparison mode toggle
+        const comparisonToggle = document.getElementById('comparisonModeToggle');
+        if (comparisonToggle) {
+          comparisonToggle.addEventListener('change', (e) => {
+            this.comparisonMode = e.target.checked;
+            if (this.comparisonMode && !this.baselineMetrics) {
+              this.calculateBaseline();
+            }
+            this.updateDisplay();
+          });
+        }
+
+        // Export button
+        const exportBtn = document.getElementById('exportFlowBtn');
+        if (exportBtn) {
+          exportBtn.addEventListener('click', () => this.exportDiagram());
+        }
+      }
+
+      async startMetricsUpdate() {
+        // Initial update
+        await this.updateMetrics();
+
+        // Update every 2 seconds
+        this.updateInterval = setInterval(() => {
+          this.updateMetrics();
+        }, 2000);
+      }
+
+      async updateMetrics() {
+        try {
+          const response = await fetch('/metrics', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const result = await response.json();
+          const data = result.data || result;
+
+          // Store previous metrics for trend calculation
+          this.previousMetrics = { ...this.metrics };
+
+          // Update current metrics
+          this.metrics = {
+            ingestion: data.processing_rate || 0,
+            queue_depth: data.queue_depth || 0,
+            processing_rate: data.processing_rate || 0,
+            success_rate: ((data.delivered || 0) / (data.total_events || 1)) * 100,
+            storage: data.total_events || 0,
+            dlq: data.dlq_count || 0,
+            error_rate: ((data.failed || 0) / (data.total_events || 1)) * 100,
+            delivered: data.delivered || 0,
+            failed: data.failed || 0,
+            pending: data.pending || 0
+          };
+
+          // Add to history
+          this.addToHistory('ingestion', this.metrics.ingestion);
+          this.addToHistory('queue', this.metrics.queue_depth);
+          this.addToHistory('processing', this.metrics.success_rate);
+          this.addToHistory('storage', this.metrics.storage);
+          this.addToHistory('dlq', this.metrics.dlq);
+
+          this.updateDisplay();
+
+          // Show the flow section once we have data
+          const flowSection = document.getElementById('eventFlowSection');
+          if (flowSection && flowSection.style.display === 'none') {
+            flowSection.style.display = 'block';
+          }
+
+        } catch (error) {
+          console.error('Failed to fetch flow metrics:', error);
+        }
+      }
+
+      addToHistory(metric, value) {
+        if (!this.metricHistory[metric]) {
+          this.metricHistory[metric] = [];
+        }
+        this.metricHistory[metric].push(value);
+        if (this.metricHistory[metric].length > this.maxHistoryLength) {
+          this.metricHistory[metric].shift();
+        }
+      }
+
+      updateDisplay() {
+        // Update metric values with animation
+        this.updateMetricValue('flow-metric-ingestion', this.metrics.ingestion.toFixed(1));
+        this.updateMetricValue('flow-metric-queue', Math.round(this.metrics.queue_depth));
+        this.updateMetricValue('flow-metric-processing', this.metrics.success_rate.toFixed(1) + '%');
+        this.updateMetricValue('flow-metric-storage', Math.round(this.metrics.storage));
+        this.updateMetricValue('flow-metric-dlq', Math.round(this.metrics.dlq));
+
+        // Update throughput labels
+        this.updateElement('throughput-1', `${this.metrics.ingestion.toFixed(1)}/s`);
+        this.updateElement('throughput-2', `${this.metrics.processing_rate.toFixed(1)}/s`);
+        this.updateElement('throughput-3', `${(this.metrics.storage / 100).toFixed(1)}/s`);
+        this.updateElement('dlq-rate', `${(this.metrics.dlq / 10).toFixed(1)}/s`);
+
+        // Update status indicators
+        this.updateStageStatus('ingestion', this.metrics.ingestion);
+        this.updateStageStatus('queue', this.metrics.queue_depth);
+        this.updateStageStatus('processing', this.metrics.success_rate);
+        this.updateStageStatus('storage', this.metrics.storage);
+
+        // Update DLQ status and arrow
+        const dlqStage = document.getElementById('stage-dlq');
+        const dlqArrow = document.getElementById('arrow-dlq');
+        if (this.metrics.dlq > 0) {
+          dlqStage?.setAttribute('data-status', 'critical');
+          dlqArrow?.classList.add('active');
+          dlqArrow?.setAttribute('opacity', '1');
+        } else {
+          dlqStage?.setAttribute('data-status', 'normal');
+          dlqArrow?.classList.remove('active');
+          dlqArrow?.setAttribute('opacity', '0.3');
+        }
+
+        // Update trend indicators
+        this.updateTrendIndicators();
+
+        // Update arrow activity based on throughput
+        this.updateArrowActivity();
+
+        // Update comparison mode display if enabled
+        if (this.comparisonMode) {
+          this.updateComparisonDisplay();
+        }
+      }
+
+      updateMetricValue(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const oldValue = element.textContent;
+        if (oldValue !== value.toString()) {
+          element.textContent = value;
+          element.classList.add('updating');
+          setTimeout(() => element.classList.remove('updating'), 300);
+        }
+      }
+
+      updateElement(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.textContent = value;
+        }
+      }
+
+      updateStageStatus(stage, metricValue) {
+        const element = document.getElementById(`stage-${stage}`);
+        if (!element) return;
+
+        let status = 'normal';
+        let fill = 'url(#normalGradient)';
+
+        if (stage === 'queue') {
+          // Queue status based on depth
+          if (metricValue > 500) {
+            status = 'critical';
+            fill = 'url(#criticalGradient)';
+          } else if (metricValue > 100) {
+            status = 'degraded';
+            fill = 'url(#degradedGradient)';
+          }
+        } else if (stage === 'processing') {
+          // Processing status based on success rate
+          if (metricValue < 90) {
+            status = 'critical';
+            fill = 'url(#criticalGradient)';
+          } else if (metricValue < 95) {
+            status = 'degraded';
+            fill = 'url(#degradedGradient)';
+          }
+        } else if (stage === 'ingestion' || stage === 'storage') {
+          // Normal operation for ingestion/storage
+          status = 'normal';
+        }
+
+        element.setAttribute('data-status', status);
+        const rect = element.querySelector('.stage-rect');
+        if (rect) {
+          rect.setAttribute('fill', fill);
+        }
+      }
+
+      updateTrendIndicators() {
+        const trends = {
+          ingestion: this.calculateTrend(this.metrics.ingestion, this.previousMetrics.ingestion),
+          queue: this.calculateTrend(this.metrics.queue_depth, this.previousMetrics.queue_depth),
+          processing: this.calculateTrend(this.metrics.success_rate, this.previousMetrics.success_rate),
+          storage: this.calculateTrend(this.metrics.storage, this.previousMetrics.storage)
+        };
+
+        Object.entries(trends).forEach(([stage, trend]) => {
+          const indicator = document.getElementById(`trend-${stage}`);
+          if (indicator) {
+            let path = 'M 85 125 L 95 125'; // flat
+            let stroke = '#6b7280';
+
+            if (trend > 0) {
+              path = 'M 85 130 L 90 120 L 95 130'; // up arrow
+              stroke = '#10b981';
+            } else if (trend < 0) {
+              path = 'M 85 120 L 90 130 L 95 120'; // down arrow
+              stroke = '#ef4444';
+            }
+
+            indicator.setAttribute('d', path);
+            indicator.setAttribute('stroke', stroke);
+          }
+        });
+      }
+
+      calculateTrend(current, previous) {
+        if (!previous || previous === 0) return 0;
+        const change = current - previous;
+        if (Math.abs(change) < 0.1) return 0;
+        return change > 0 ? 1 : -1;
+      }
+
+      updateArrowActivity() {
+        // Activate arrows based on throughput
+        const arrows = [
+          { id: 'arrow-1', threshold: 0.1 },
+          { id: 'arrow-2', threshold: 0.1 },
+          { id: 'arrow-3', threshold: 0.1 }
+        ];
+
+        arrows.forEach(({ id, threshold }) => {
+          const arrow = document.getElementById(id);
+          if (arrow) {
+            if (this.metrics.ingestion > threshold) {
+              arrow.classList.add('active');
+            } else {
+              arrow.classList.remove('active');
+            }
+          }
+        });
+      }
+
+      startParticleAnimation() {
+        // Spawn particles periodically
+        this.particleInterval = setInterval(() => {
+          if (this.metrics.ingestion > 0.1) {
+            this.createParticle();
+          }
+        }, 3000); // Every 3 seconds
+      }
+
+      createParticle() {
+        const container = document.getElementById('particles-container');
+        if (!container) return;
+
+        // Create particle element
+        const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        particle.setAttribute('r', '5');
+        particle.setAttribute('cx', '230');
+        particle.setAttribute('cy', '150');
+        particle.classList.add('event-particle');
+
+        // Color based on success rate
+        const color = this.metrics.success_rate > 95 ? '#10b981' :
+                     this.metrics.success_rate > 90 ? '#f59e0b' : '#ef4444';
+        particle.setAttribute('fill', color);
+
+        container.appendChild(particle);
+
+        // Animate particle along the path
+        this.animateParticle(particle);
+      }
+
+      animateParticle(particle) {
+        const path = [
+          { x: 230, y: 150 },   // Start after Ingestion
+          { x: 410, y: 150 },   // Queue
+          { x: 680, y: 150 },   // Processing
+          { x: 950, y: 150 }    // Storage
+        ];
+
+        let step = 0;
+        const totalSteps = 60;
+        const duration = 3000;
+        const interval = duration / totalSteps;
+
+        const animation = setInterval(() => {
+          step++;
+          const progress = step / totalSteps;
+          const segmentIndex = Math.floor(progress * (path.length - 1));
+          const segmentProgress = (progress * (path.length - 1)) - segmentIndex;
+
+          if (segmentIndex < path.length - 1) {
+            const start = path[segmentIndex];
+            const end = path[segmentIndex + 1];
+            const x = start.x + (end.x - start.x) * segmentProgress;
+            const y = start.y + (end.y - start.y) * segmentProgress;
+
+            particle.setAttribute('cx', x);
+            particle.setAttribute('cy', y);
+          }
+
+          if (step >= totalSteps) {
+            clearInterval(animation);
+            particle.remove();
+          }
+        }, interval);
+      }
+
+      showDetailPopover(stageName, event) {
+        const popover = document.getElementById('flowDetailPopover');
+        if (!popover) return;
+
+        // Update popover content
+        document.getElementById('popover-title').textContent =
+          stageName.charAt(0).toUpperCase() + stageName.slice(1);
+
+        const stageData = this.getStageData(stageName);
+        document.getElementById('popover-value').textContent = stageData.value;
+        document.getElementById('popover-rate').textContent = stageData.rate;
+        document.getElementById('popover-trend').textContent = stageData.trend;
+        document.getElementById('popover-timestamp').textContent = new Date().toLocaleTimeString();
+
+        // Draw sparkline
+        this.drawSparkline(stageName);
+
+        // Position popover
+        const rect = event.currentTarget.getBoundingClientRect();
+        popover.style.left = `${rect.right + 20}px`;
+        popover.style.top = `${rect.top}px`;
+        popover.classList.remove('hidden');
+      }
+
+      getStageData(stage) {
+        const data = {
+          ingestion: {
+            value: this.metrics.ingestion.toFixed(1),
+            rate: `${this.metrics.ingestion.toFixed(1)} events/sec`,
+            trend: this.getTrendSymbol(this.metrics.ingestion, this.previousMetrics.ingestion)
+          },
+          queue: {
+            value: Math.round(this.metrics.queue_depth),
+            rate: `${Math.round(this.metrics.queue_depth)} pending`,
+            trend: this.getTrendSymbol(this.metrics.queue_depth, this.previousMetrics.queue_depth)
+          },
+          processing: {
+            value: this.metrics.success_rate.toFixed(1) + '%',
+            rate: `${this.metrics.success_rate.toFixed(1)}% success`,
+            trend: this.getTrendSymbol(this.metrics.success_rate, this.previousMetrics.success_rate)
+          },
+          storage: {
+            value: Math.round(this.metrics.storage),
+            rate: `${Math.round(this.metrics.storage)} persisted`,
+            trend: this.getTrendSymbol(this.metrics.storage, this.previousMetrics.storage)
+          },
+          dlq: {
+            value: Math.round(this.metrics.dlq),
+            rate: `${Math.round(this.metrics.dlq)} failed`,
+            trend: this.getTrendSymbol(this.metrics.dlq, this.previousMetrics.dlq)
+          }
+        };
+
+        return data[stage] || { value: '0', rate: '0/sec', trend: '→' };
+      }
+
+      getTrendSymbol(current, previous) {
+        if (!previous) return '→';
+        if (current > previous) return '↑';
+        if (current < previous) return '↓';
+        return '→';
+      }
+
+      drawSparkline(stage) {
+        const canvas = document.getElementById('popover-sparkline');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const history = this.metricHistory[stage] || [];
+
+        if (history.length < 2) return;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Calculate dimensions
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 5;
+        const dataMax = Math.max(...history, 1);
+        const dataMin = Math.min(...history, 0);
+        const range = dataMax - dataMin || 1;
+
+        // Draw line
+        ctx.beginPath();
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = 2;
+
+        history.forEach((value, index) => {
+          const x = padding + (index / (history.length - 1)) * (width - padding * 2);
+          const y = height - padding - ((value - dataMin) / range) * (height - padding * 2);
+
+          if (index === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        });
+
+        ctx.stroke();
+
+        // Draw area under line
+        ctx.lineTo(width - padding, height - padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+        ctx.fill();
+      }
+
+      hideDetailPopover() {
+        const popover = document.getElementById('flowDetailPopover');
+        if (popover) {
+          popover.classList.add('hidden');
+        }
+      }
+
+      calculateBaseline() {
+        // Calculate 24-hour average baseline (simplified)
+        this.baselineMetrics = { ...this.metrics };
+      }
+
+      updateComparisonDisplay() {
+        if (!this.baselineMetrics) return;
+
+        // Add percentage difference indicators
+        // This would show comparison vs baseline
+        // Implementation simplified for now
+      }
+
+      exportDiagram() {
+        const svg = document.getElementById('flowDiagram');
+        if (!svg) return;
+
+        try {
+          // Serialize SVG to string
+          const serializer = new XMLSerializer();
+          const svgString = serializer.serializeToString(svg);
+
+          // Create blob and download
+          const blob = new Blob([svgString], { type: 'image/svg+xml' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `event-flow-${new Date().toISOString()}.svg`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          // Show success message
+          if (window.toast) {
+            window.toast.success('Flow diagram exported successfully!');
+          }
+        } catch (error) {
+          console.error('Export failed:', error);
+          if (window.toast) {
+            window.toast.error('Failed to export diagram');
+          }
+        }
+      }
+
+      destroy() {
+        if (this.updateInterval) {
+          clearInterval(this.updateInterval);
+        }
+        if (this.particleInterval) {
+          clearInterval(this.particleInterval);
+        }
+      }
+    }
+
+    // Initialize Flow Visualization on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      window.flowVisualization = new FlowVisualization();
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (window.flowVisualization) {
+        window.flowVisualization.destroy();
+      }
+    });
+
+    /* ============================================
+       PHASE 3: JAVASCRIPT ENHANCEMENTS
+       ============================================ */
+
+    /**
+     * Health Check Function - Replaces fake "System Live" badge
+     * Pings /metrics endpoint every 30 seconds to verify system health
+     */
+    async function performHealthCheck() {
+      const healthCheckText = document.getElementById('healthCheckText');
+      if (!healthCheckText) return;
+
+      try {
+        const startTime = Date.now();
+        const token = document.getElementById('bearerToken')?.value || '';
+        const response = await fetch('/metrics', {
+          method: 'GET',
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+
+        const latency = Date.now() - startTime;
+
+        if (response.ok) {
+          healthCheckText.innerHTML = `<span style="color: var(--color-success);">● Healthy</span> <span style="font-size: 11px;">(${latency}ms)</span>`;
+        } else {
+          healthCheckText.innerHTML = `<span style="color: var(--color-warning);">⚠ Degraded</span>`;
+        }
+      } catch (error) {
+        healthCheckText.innerHTML = `<span style="color: var(--color-error);">● Offline</span>`;
+      }
+    }
+
+    /**
+     * Inbox Auto-Refresh - Updates inbox every 5 seconds
+     */
+    function startInboxAutoRefresh() {
+      setInterval(() => {
+        if (typeof fetchInboxEvents === 'function') {
+          fetchInboxEvents();
+        }
+      }, 5000);
+    }
+
+    // Initialize health check on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      performHealthCheck();
+      startInboxAutoRefresh();
+    });
+
+    // Run health check every 30 seconds
+    setInterval(performHealthCheck, 30000);
+
   </script>
   <script src="/ui/enhanced-charts.js"></script>
 </body>
