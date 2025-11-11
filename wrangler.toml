@@ -48,3 +48,13 @@ binding = "PROCESS_EVENT_WORKFLOW"
 name = "process-event-workflow"
 class_name = "ProcessEventWorkflow"
 script_name = "triggers-api"
+
+# Tail Worker Configuration
+# Epic 4.1: Capture all Worker executions, logs, and metrics
+[[tail_consumers]]
+service = "triggers-api"
+
+# Cron Triggers for Scheduled Tasks
+# Epic 4.3: Metrics calculation every 30 seconds
+[triggers]
+crons = ["*/1 * * * *"]  # Every minute (Cloudflare minimum frequency)

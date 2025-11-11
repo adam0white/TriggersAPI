@@ -16,10 +16,15 @@
 import { handlePostEvents } from './routes/events';
 import { handleDashboard } from './routes/dashboard';
 import { handleGetMetrics } from './routes/metrics';
+import { handleGetMetricsHistory } from './routes/metrics-history';
 import { handleInboxQuery, handleAckEvent, handleRetryEvent } from './routes/inbox';
+import { handleGetLogs } from './routes/logs-api';
 import { validateBearerToken, unauthorizedResponse, serviceErrorResponse } from './middleware/auth';
 import { processEventBatch } from './queue/consumer';
 import { ProcessEventWorkflow } from './workflows/process-event';
+import { processTailEvents } from './tail/worker';
+import { MetricsCalculator } from './lib/metrics-calculator';
+import { logger } from './lib/logger';
 
 /**
  * Export Workflow for Cloudflare Workers
@@ -56,6 +61,16 @@ export default {
 		// Metrics endpoint (public for dashboard)
 		if (path === '/metrics' && method === 'GET') {
 			return handleGetMetrics(request, env, correlationId);
+		}
+
+		// Logs API endpoint (public for dashboard)
+		if (path === '/api/logs' && method === 'GET') {
+			return handleGetLogs(request, env, correlationId);
+		}
+
+		// Metrics history API endpoint (public for dashboard charts)
+		if (path === '/api/metrics/history' && method === 'GET') {
+			return handleGetMetricsHistory(request, env, correlationId);
 		}
 
 		// Check if route requires auth
@@ -121,10 +136,36 @@ export default {
 	/**
 	 * Tail Worker handler
 	 * Captures logs, metrics, and traces for observability
-	 * Implemented in Epic 4
+	 * Implemented in Epic 4, Story 4.1
 	 */
 	async tail(events: TraceItem[], env: Env): Promise<void> {
-		// Tail Worker stub - will be implemented in Epic 4
-		console.log(`Tail Worker stub: received ${events.length} trace events`);
+		await processTailEvents(events, env);
+	},
+
+	/**
+	 * Scheduled handler for periodic tasks
+	 * Runs metrics calculations every 30 seconds
+	 * Implemented in Epic 4, Story 4.3
+	 */
+	async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+		try {
+			logger.info('Scheduled metrics calculation started', {
+				scheduledTime: new Date(controller.scheduledTime).toISOString(),
+				cron: controller.cron,
+			});
+
+			// Create metrics calculator instance
+			const calculator = new MetricsCalculator(env.DB, env.METRICS_KV, logger);
+
+			// Run all metrics calculations
+			await calculator.runAllMetricsCalculations();
+
+			logger.info('Scheduled metrics calculation completed');
+		} catch (error) {
+			logger.error('Scheduled metrics calculation failed', {
+				error: String(error),
+				message: error instanceof Error ? error.message : 'Unknown error',
+			});
+		}
 	},
 } satisfies ExportedHandler<Env>;

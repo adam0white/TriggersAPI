@@ -60,6 +60,12 @@ function sanitizeContext(context: LogContext): LogContext {
 function createLogEntry(level: BaseLogEntry['level'], message: string, context: LogContext = {}): BaseLogEntry {
 	const sanitized = sanitizeContext(context);
 
+	// Normalize correlationId to correlation_id for tail worker compatibility
+	if ('correlationId' in sanitized && !('correlation_id' in sanitized)) {
+		sanitized.correlation_id = sanitized.correlationId;
+		delete sanitized.correlationId;
+	}
+
 	return {
 		level,
 		message,
