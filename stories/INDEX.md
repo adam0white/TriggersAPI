@@ -32,10 +32,21 @@
 | 3.4 | Retry Endpoint: POST /inbox/{event_id}/retry | Ready for Development | `3.4-retry-endpoint.md` | 16 KB |
 | 3.5 | UI Event Inbox: Browse Events with Filters and Actions | Ready for Development | `3.5-ui-inbox.md` | 19 KB |
 
-**Total Content:** ~232 KB (8,000+ lines across all stories)
+## Epic 4: Observability & Tail Worker Logs Display (Ready - 5/5) ✓
+
+| # | Title | Status | File | Size |
+|---|-------|--------|------|------|
+| 4.1 | Tail Worker Setup: Capture All Worker Executions | Ready for Development | `4.1-tail-worker-setup.md` | 22 KB |
+| 4.2 | Log Processing: Parse and Store Request/Response/Error Data | Ready for Development | `4.2-log-processing.md` | 24 KB |
+| 4.3 | Metrics Calculation: Latency Percentiles, Error Rates, Queue Depth | Ready for Development | `4.3-metrics-calculation.md` | 26 KB |
+| 4.4 | UI Logs Display: Live Tail Logs Streaming, Error Highlighting, Filtering | Ready for Development | `4.4-ui-logs-display.md` | 28 KB |
+| 4.5 | UI Metrics Enhancement: Charts for Latency/Errors, Visual Indicators | Ready for Development | `4.5-ui-metrics-enhancement.md` | 25 KB |
+
+**Total Content:** ~398 KB (12,000+ lines across all stories)
 **Epic 1 Status:** ✓ Complete (1 Done, 5 Ready for Development)
 **Epic 2 Status:** ✓ Complete (All 6 Done)
 **Epic 3 Status:** ✓ Ready for Development (All 5 stories prepared)
+**Epic 4 Status:** ✓ Ready for Development (All 5 stories prepared)
 
 ## Epic 1 Story Summaries
 
@@ -94,6 +105,23 @@ POST /inbox/{event_id}/retry endpoint requeues failed events for reprocessing. V
 ### 3.5 - UI Event Inbox
 Comprehensive event management UI with table/card layouts, status filtering, date range picker, pagination, detail modal, and action buttons (ack/retry). Responsive design, real-time updates after actions, success/error feedback toasts.
 
+## Epic 4 Story Summaries
+
+### 4.1 - Tail Worker Setup
+Implement Cloudflare Tail Worker to capture all Worker executions: request/response data, console logs, exceptions, and timing metrics. Store parsed logs in D1 tail_logs table with structured schema. Supports correlation ID tracking for request tracing.
+
+### 4.2 - Log Processing
+Parse raw Tail Worker events into queryable log_entries with structured fields: method, path, status code, latency, error category, etc. Implement log parser with sanitization for sensitive data. Batch insert efficiently to D1 with deduplication and compression.
+
+### 4.3 - Metrics Calculation
+Compute latency percentiles (p50, p95, p99), error rates, throughput, queue depth from logs and system state. Update KV every 30 seconds. Store historical metrics in D1 for trend analysis. Efficient calculation using incremental updates and sorted windows.
+
+### 4.4 - UI Logs Display
+Create React component for live log streaming with real-time updates (1-2 second polling). Support filtering by level, worker, endpoint, status code, error type, and correlation ID. Text search with highlighting. Detail modal showing full log information. Export and sharing capabilities.
+
+### 4.5 - UI Metrics Enhancement
+Build beautiful dashboard with Recharts visualizations: latency percentiles line chart, error rate area chart, throughput bar chart, error breakdown pie chart, and health metric cards. Interactive time range selection (last hour/6h/24h). Auto-refresh every 5-30 seconds.
+
 ## Quick Links
 
 - [PRD](../docs/PRD.md) - Product Requirements
@@ -124,17 +152,26 @@ Comprehensive event management UI with table/card layouts, status filtering, dat
 4. 3.4 - Retry Endpoint (POST /retry - requeue failed events)
 5. 3.5 - UI Event Inbox (Browse, filter, and manage events)
 
+**Epic 4** (Observability & Tail Worker Logs):
+1. 4.1 - Tail Worker Setup (capture all executions)
+2. 4.2 - Log Processing (parse and store logs)
+3. 4.3 - Metrics Calculation (latency percentiles, error rates)
+4. 4.4 - UI Logs Display (live streaming with filters)
+5. 4.5 - UI Metrics Enhancement (charts and visualizations)
+
 **Estimated Total Time:**
 - Epic 1: 15-20 hours (1.1 done, 1.2-1.6: ~18 hours)
 - Epic 2: 20-25 hours (2.1-2.6: full epic implementation)
 - Epic 3: 15-20 hours (3.1-3.5: endpoint + UI implementation)
-- **Total: ~50-65 hours for all three epics complete**
+- Epic 4: 20-25 hours (4.1-4.5: observability + UI)
+- **Total: ~70-90 hours for all four epics complete**
 
 ## Status Tracking
 
 **Epic 1:** ✓ 1 Done, 5 Ready for Development
 **Epic 2:** ✓ All 6 Done (Complete & Verified)
 **Epic 3:** ✓ All 5 Ready for Development (Just Created)
+**Epic 4:** ✓ All 5 Ready for Development (Just Created)
 
 Each story includes:
 - ✓ Acceptance criteria (10-15 per story)
