@@ -18,9 +18,14 @@ database_name = "triggers-api"
 database_id = "66d5b9f6-4f3b-4512-a028-25816cf24554"
 migrations_dir = "src/db/migrations"
 
-# KV Binding (for auth tokens and metrics)
+# KV Binding for authentication tokens
 [[kv_namespaces]]
 binding = "AUTH_KV"
+id = "5c4d6577b0754ed990e0ead4e88ecbb4"
+
+# KV Binding for metrics tracking
+[[kv_namespaces]]
+binding = "METRICS_KV"
 id = "5c4d6577b0754ed990e0ead4e88ecbb4"
 
 # Queue Bindings

@@ -207,6 +207,72 @@ export class MetricsManager {
 	}
 
 	/**
+	 * Decrement a counter atomically (read-modify-write)
+	 * Prevents negative values (floor at 0)
+	 *
+	 * @param key - Counter key to decrement
+	 * @param delta - Amount to decrement (default: 1)
+	 * @returns New counter value
+	 */
+	async decrementCounter(key: string, delta: number = 1): Promise<number> {
+		try {
+			const current = await this.kv.get(key, 'text');
+			const currentValue = current ? parseInt(current, 10) : 0;
+			const newValue = Math.max(0, currentValue - delta);
+
+			await this.kv.put(key, String(newValue), {
+				metadata: {
+					updated_at: new Date().toISOString(),
+				},
+			});
+
+			return newValue;
+		} catch (error) {
+			logger.error('Failed to decrement counter', {
+				key,
+				delta,
+				error: error instanceof Error ? error.message : 'Unknown',
+			});
+			throw error;
+		}
+	}
+
+	/**
+	 * Decrement event status counter
+	 * Called when event is deleted/acknowledged
+	 *
+	 * @param status - Event status (pending, delivered, failed)
+	 */
+	async decrementEventStatus(status: 'pending' | 'delivered' | 'failed'): Promise<void> {
+		try {
+			await this.decrementCounter(`metrics:events:${status}`, 1);
+			logger.info('Event status metric decremented', { status });
+		} catch (error) {
+			logger.error('Failed to decrement event status', {
+				status,
+				error: error instanceof Error ? error.message : 'Unknown',
+			});
+			// Don't throw - metrics are secondary
+		}
+	}
+
+	/**
+	 * Decrement total events counter
+	 * Called when event is deleted/acknowledged
+	 */
+	async decrementTotalEvents(): Promise<void> {
+		try {
+			await this.decrementCounter('metrics:events:total', 1);
+			logger.info('Total events metric decremented');
+		} catch (error) {
+			logger.error('Failed to decrement total events', {
+				error: error instanceof Error ? error.message : 'Unknown',
+			});
+			// Don't throw - metrics are secondary
+		}
+	}
+
+	/**
 	 * Update queue depth metric
 	 *
 	 * Called by queue consumer when batch received

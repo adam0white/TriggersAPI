@@ -46,7 +46,7 @@ export async function handleGetMetrics(
 	});
 
 	try {
-		const metricsManager = new MetricsManager(env.AUTH_KV);
+		const metricsManager = new MetricsManager(env.METRICS_KV);
 		const metrics = await metricsManager.getAllMetrics();
 
 		logger.info('Metrics retrieved successfully', {

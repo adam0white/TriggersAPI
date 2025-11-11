@@ -83,3 +83,15 @@ export function validateEventRequest(
 		},
 	};
 }
+
+/**
+ * Validates UUID format
+ * Accepts both v4 UUIDs and similar UUID-like strings
+ *
+ * @param uuid - String to validate as UUID
+ * @returns true if valid UUID format, false otherwise
+ */
+export function isValidUUID(uuid: string): boolean {
+	const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+	return uuidRegex.test(uuid);
+}

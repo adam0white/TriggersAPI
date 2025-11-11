@@ -31,6 +31,12 @@ export interface Env {
 	AUTH_KV: KVNamespace;
 
 	/**
+	 * KV Namespace for metrics tracking
+	 * Stores event counts, processing stats, and performance metrics
+	 */
+	METRICS_KV: KVNamespace;
+
+	/**
 	 * Queue binding for event processing
 	 * Producer: API worker sends events
 	 * Consumer: Queue worker processes batches

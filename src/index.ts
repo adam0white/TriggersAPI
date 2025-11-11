@@ -16,6 +16,7 @@
 import { handlePostEvents } from './routes/events';
 import { handleDashboard } from './routes/dashboard';
 import { handleGetMetrics } from './routes/metrics';
+import { handleInboxQuery, handleAckEvent, handleRetryEvent } from './routes/inbox';
 import { validateBearerToken, unauthorizedResponse, serviceErrorResponse } from './middleware/auth';
 import { processEventBatch } from './queue/consumer';
 import { ProcessEventWorkflow } from './workflows/process-event';
@@ -76,6 +77,31 @@ export default {
 		// Route to handlers
 		if (method === 'POST' && path === '/events') {
 			return handlePostEvents(request, env, correlationId);
+		}
+
+		// GET /inbox - Query events with filtering and pagination
+		if (method === 'GET' && path === '/inbox') {
+			return handleInboxQuery(request, env, correlationId);
+		}
+
+		// POST /inbox/:eventId/ack - Acknowledge and delete event
+		if (method === 'POST' && path.startsWith('/inbox/') && path.endsWith('/ack')) {
+			const pathParts = path.split('/');
+			// Expected: ['', 'inbox', '{eventId}', 'ack']
+			if (pathParts.length === 4) {
+				const eventId = pathParts[2];
+				return handleAckEvent(request, env, ctx, eventId);
+			}
+		}
+
+		// POST /inbox/:eventId/retry - Retry failed event
+		if (method === 'POST' && path.startsWith('/inbox/') && path.endsWith('/retry')) {
+			const pathParts = path.split('/');
+			// Expected: ['', 'inbox', '{eventId}', 'retry']
+			if (pathParts.length === 4) {
+				const eventId = pathParts[2];
+				return handleRetryEvent(request, env, ctx, eventId);
+			}
 		}
 
 		// 404 - Not found

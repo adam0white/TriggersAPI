@@ -156,7 +156,7 @@ export class ProcessEventWorkflow extends WorkflowEntrypoint<Env, ProcessEventIn
 				});
 
 				try {
-					const metricsManager = new MetricsManager(this.env.AUTH_KV);
+					const metricsManager = new MetricsManager(this.env.METRICS_KV);
 
 					// Calculate processing time from event timestamp
 					const processingTimeMs = Date.now() - new Date(timestamp).getTime();
@@ -199,7 +199,7 @@ export class ProcessEventWorkflow extends WorkflowEntrypoint<Env, ProcessEventIn
 
 				try {
 					const queries = new EventQueries(this.env.DB);
-					const metricsManager = new MetricsManager(this.env.AUTH_KV);
+					const metricsManager = new MetricsManager(this.env.METRICS_KV);
 
 					// Update event status in D1 from 'pending' to 'delivered'
 					await queries.updateEventStatus(event_id, 'delivered');

@@ -21,6 +21,9 @@ export const ErrorCodes = {
 	MISSING_PAYLOAD_FIELD: "Required field 'payload' is missing",
 	INVALID_METADATA_TYPE: "'metadata' field must be a JSON object",
 	INVALID_PAYLOAD_TYPE: "'payload' field must be a JSON object",
+	INVALID_PARAMETER: 'Invalid query parameter value',
+	TOO_MANY_FILTERS: 'Maximum 10 filters allowed per query (DoS prevention)',
+	INVALID_CURSOR: 'Invalid or malformed cursor format',
 
 	// Authentication errors (401)
 	MISSING_AUTHORIZATION: 'Authorization header is required',

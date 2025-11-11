@@ -489,6 +489,467 @@
         gap: 12px;
       }
     }
+
+    /* Event Inbox Styles */
+    .inbox-section {
+      margin-top: 48px;
+      padding-top: 48px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .inbox-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 24px;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .filters-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .filter-input, .filter-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    .filter-input:focus, .filter-select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .inbox-info {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    /* Table Styles */
+    .events-table-container {
+      overflow-x: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
+    .events-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .events-table thead {
+      background: #f9fafb;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .events-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .events-table th:last-child {
+      text-align: right;
+    }
+
+    .events-table tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s;
+    }
+
+    .events-table tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .events-table td {
+      padding: 12px 16px;
+    }
+
+    .event-id {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-badge.pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .status-badge.delivered {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .status-badge.failed {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .payload-preview {
+      color: #666;
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-action {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-view {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+
+    .btn-view:hover:not(:disabled) {
+      background: #bfdbfe;
+    }
+
+    .btn-retry {
+      background: #fed7aa;
+      color: #ea580c;
+    }
+
+    .btn-retry:hover:not(:disabled) {
+      background: #fdba74;
+    }
+
+    .btn-ack {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .btn-ack:hover:not(:disabled) {
+      background: #a7f3d0;
+    }
+
+    /* Card Layout (Mobile) */
+    .events-cards {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .events-table-container {
+        display: none;
+      }
+
+      .events-cards {
+        display: block;
+      }
+    }
+
+    .event-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .event-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .event-card-body {
+      margin-bottom: 12px;
+    }
+
+    .event-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .event-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .event-card-actions .btn-action {
+      flex: 1;
+      padding: 8px 12px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .pagination-info {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .pagination-buttons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-page {
+      padding: 8px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-page:hover:not(:disabled) {
+      background: #f9fafb;
+    }
+
+    .btn-page:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.visible {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 24px;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .btn-close {
+      font-size: 24px;
+      color: #666;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-close:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .modal-body {
+      margin-bottom: 24px;
+    }
+
+    .detail-field {
+      margin-bottom: 20px;
+    }
+
+    .detail-field-label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .detail-field-value {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      color: #333;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .modal-actions .btn-action {
+      flex: 1;
+      padding: 12px 24px;
+      font-size: 14px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 2000;
+      display: none;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .toast.visible {
+      display: block;
+    }
+
+    .toast.success {
+      background: #d1fae5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+
+    .toast.error {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .inbox-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .inbox-empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .inbox-loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -664,7 +1125,120 @@
         </div>
       </div>
     </section>
+
+    <!-- Event Inbox Section -->
+    <section class="inbox-section" id="inboxSection">
+      <h2 class="inbox-title">Event Inbox</h2>
+
+      <!-- Filters -->
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label class="filter-label" for="statusFilter">Status</label>
+          <select id="statusFilter" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="delivered">Delivered</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="fromDate">From Date</label>
+          <input type="datetime-local" id="fromDate" class="filter-input" />
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="toDate">To Date</label>
+          <input type="datetime-local" id="toDate" class="filter-input" />
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label" for="limitSelect">Per Page</label>
+          <select id="limitSelect" class="filter-select">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Info Bar -->
+      <div class="inbox-info" id="inboxInfo">Loading events...</div>
+
+      <!-- Loading State -->
+      <div class="inbox-loading" id="inboxLoading">
+        <div class="spinner" style="width: 32px; height: 32px; margin: 0 auto 16px;"></div>
+        <p>Loading events...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div class="inbox-empty" id="inboxEmpty" style="display: none;">
+        <div class="inbox-empty-icon">📭</div>
+        <p>No events match your filters</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="metrics-error" id="inboxError" style="display: none;">
+        <div class="error-title">
+          <span>⚠️</span>
+          <span>Failed to Load Events</span>
+        </div>
+        <p class="error-message" id="inboxErrorMessage">Unable to fetch events</p>
+        <button class="btn-retry" onclick="fetchInboxEvents()">Retry</button>
+      </div>
+
+      <!-- Desktop Table -->
+      <div class="events-table-container" id="eventsTableContainer" style="display: none;">
+        <table class="events-table">
+          <thead>
+            <tr>
+              <th>Event ID</th>
+              <th>Status</th>
+              <th>Payload Preview</th>
+              <th>Created</th>
+              <th>Retries</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="eventsTableBody">
+            <!-- Rows inserted dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="events-cards" id="eventsCards">
+        <!-- Cards inserted dynamically -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination" style="display: none;">
+        <div class="pagination-info" id="paginationInfo">Showing 0-0 of 0</div>
+        <div class="pagination-buttons">
+          <button class="btn-page" id="btnPrev" onclick="goToPrevPage()" disabled>Previous</button>
+          <span class="pagination-info" id="pageInfo">Page 1 of 1</span>
+          <button class="btn-page" id="btnNext" onclick="goToNextPage()" disabled>Next</button>
+        </div>
+      </div>
+    </section>
   </div>
+
+  <!-- Event Detail Modal -->
+  <div class="modal-overlay" id="eventModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Event Details</h3>
+        <button class="btn-close" onclick="closeEventModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Content inserted dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
 
   <script>
     // Client-side form handling
@@ -928,6 +1502,426 @@
       } else {
         startMetricsAutoRefresh();
       }
+    });
+
+    // Event Inbox Logic
+    let inboxState = {
+      events: [],
+      total: 0,
+      limit: 50,
+      offset: 0,
+      status: '',
+      fromDate: '',
+      toDate: '',
+      loading: false,
+      actionInProgress: {}
+    };
+
+    /**
+     * Format relative time (e.g., "2 hours ago")
+     */
+    function formatRelativeTime(dateStr) {
+      const now = new Date();
+      const then = new Date(dateStr);
+      const diffMs = now - then;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      if (diffHours < 24) return `${diffHours}h ago`;
+      if (diffDays < 7) return `${diffDays}d ago`;
+      return then.toLocaleDateString();
+    }
+
+    /**
+     * Get status badge class
+     */
+    function getStatusBadgeClass(status) {
+      return `status-badge ${status}`;
+    }
+
+    /**
+     * Truncate payload for preview
+     */
+    function truncatePayload(payload) {
+      const str = JSON.stringify(payload);
+      return str.length > 100 ? str.substring(0, 100) + '...' : str;
+    }
+
+    /**
+     * Show toast notification
+     */
+    function showToast(type, message) {
+      const toast = document.getElementById('toast');
+      toast.className = `toast ${type} visible`;
+      toast.textContent = message;
+
+      setTimeout(() => {
+        toast.className = 'toast';
+      }, 3000);
+    }
+
+    /**
+     * Fetch inbox events from API
+     */
+    async function fetchInboxEvents() {
+      const inboxLoading = document.getElementById('inboxLoading');
+      const inboxEmpty = document.getElementById('inboxEmpty');
+      const inboxError = document.getElementById('inboxError');
+      const eventsTableContainer = document.getElementById('eventsTableContainer');
+      const eventsCards = document.getElementById('eventsCards');
+      const pagination = document.getElementById('pagination');
+      const inboxInfo = document.getElementById('inboxInfo');
+
+      // Show loading state
+      inboxState.loading = true;
+      inboxLoading.style.display = 'block';
+      inboxEmpty.style.display = 'none';
+      inboxError.style.display = 'none';
+      eventsTableContainer.style.display = 'none';
+      eventsCards.innerHTML = '';
+      pagination.style.display = 'none';
+
+      try {
+        // Build query params
+        const params = new URLSearchParams();
+        if (inboxState.status) params.append('status', inboxState.status);
+        if (inboxState.fromDate) params.append('from', new Date(inboxState.fromDate).toISOString());
+        if (inboxState.toDate) params.append('to', new Date(inboxState.toDate).toISOString());
+        params.append('limit', inboxState.limit.toString());
+        params.append('offset', inboxState.offset.toString());
+
+        // Get bearer token
+        const bearerToken = document.getElementById('bearerToken').value || 'sk_test_abc123xyz789';
+
+        // Fetch events
+        const res = await fetch(`/inbox?${params.toString()}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        inboxState.events = data.data || [];
+        inboxState.total = data.total || 0;
+
+        // Hide loading
+        inboxLoading.style.display = 'none';
+
+        // Show events or empty state
+        if (inboxState.events.length === 0) {
+          inboxEmpty.style.display = 'block';
+          inboxInfo.style.display = 'none';
+        } else {
+          renderEvents();
+          updatePagination();
+          inboxInfo.style.display = 'block';
+          eventsTableContainer.style.display = 'block';
+          pagination.style.display = 'flex';
+        }
+
+      } catch (error) {
+        console.error('Failed to fetch inbox events:', error);
+        inboxLoading.style.display = 'none';
+        inboxError.style.display = 'block';
+        document.getElementById('inboxErrorMessage').textContent = error.message;
+      } finally {
+        inboxState.loading = false;
+      }
+    }
+
+    /**
+     * Render events in table and cards
+     */
+    function renderEvents() {
+      const tableBody = document.getElementById('eventsTableBody');
+      const cardsContainer = document.getElementById('eventsCards');
+
+      // Clear existing content
+      tableBody.innerHTML = '';
+      cardsContainer.innerHTML = '';
+
+      // Render each event
+      inboxState.events.forEach(event => {
+        // Render table row (desktop)
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><span class="event-id">${event.event_id.substring(0, 12)}...</span></td>
+          <td><span class="${getStatusBadgeClass(event.status)}">${event.status}</span></td>
+          <td><div class="payload-preview">${truncatePayload(event.payload)}</div></td>
+          <td>${formatRelativeTime(event.created_at)}</td>
+          <td style="text-align: center;">${event.retry_count || 0}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-action btn-view" onclick="viewEventDetails('${event.event_id}')">View</button>
+              ${event.status === 'failed' ? `<button class="btn-action btn-retry" onclick="retryEvent('${event.event_id}')" ${inboxState.actionInProgress[event.event_id] ? 'disabled' : ''}>Retry</button>` : ''}
+              <button class="btn-action btn-ack" onclick="acknowledgeEvent('${event.event_id}')" ${inboxState.actionInProgress[event.event_id] ? 'disabled' : ''}>Ack</button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+
+        // Render card (mobile)
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        card.innerHTML = `
+          <div class="event-card-header">
+            <span class="event-id">${event.event_id.substring(0, 12)}...</span>
+            <span class="${getStatusBadgeClass(event.status)}">${event.status}</span>
+          </div>
+          <div class="event-card-body">
+            <div class="payload-preview">${truncatePayload(event.payload)}</div>
+          </div>
+          <div class="event-card-footer">
+            <span>${formatRelativeTime(event.created_at)}</span>
+            <span>Retries: ${event.retry_count || 0}</span>
+          </div>
+          <div class="event-card-actions">
+            <button class="btn-action btn-view" onclick="viewEventDetails('${event.event_id}')">View</button>
+            ${event.status === 'failed' ? `<button class="btn-action btn-retry" onclick="retryEvent('${event.event_id}')" ${inboxState.actionInProgress[event.event_id] ? 'disabled' : ''}>Retry</button>` : ''}
+            <button class="btn-action btn-ack" onclick="acknowledgeEvent('${event.event_id}')" ${inboxState.actionInProgress[event.event_id] ? 'disabled' : ''}>Ack</button>
+          </div>
+        `;
+        cardsContainer.appendChild(card);
+      });
+
+      // Update info bar
+      const showingFrom = inboxState.offset + 1;
+      const showingTo = Math.min(inboxState.offset + inboxState.events.length, inboxState.total);
+      document.getElementById('inboxInfo').textContent =
+        `Showing ${showingFrom}-${showingTo} of ${inboxState.total} events${inboxState.status ? ` (filtered by ${inboxState.status})` : ''}`;
+    }
+
+    /**
+     * Update pagination controls
+     */
+    function updatePagination() {
+      const currentPage = Math.floor(inboxState.offset / inboxState.limit) + 1;
+      const totalPages = Math.ceil(inboxState.total / inboxState.limit);
+      const showingFrom = inboxState.offset + 1;
+      const showingTo = Math.min(inboxState.offset + inboxState.limit, inboxState.total);
+
+      document.getElementById('paginationInfo').textContent = `Showing ${showingFrom}-${showingTo} of ${inboxState.total}`;
+      document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+
+      // Enable/disable buttons
+      document.getElementById('btnPrev').disabled = inboxState.offset === 0;
+      document.getElementById('btnNext').disabled = inboxState.offset + inboxState.limit >= inboxState.total;
+    }
+
+    /**
+     * Go to previous page
+     */
+    function goToPrevPage() {
+      if (inboxState.offset > 0) {
+        inboxState.offset = Math.max(0, inboxState.offset - inboxState.limit);
+        fetchInboxEvents();
+      }
+    }
+
+    /**
+     * Go to next page
+     */
+    function goToNextPage() {
+      if (inboxState.offset + inboxState.limit < inboxState.total) {
+        inboxState.offset += inboxState.limit;
+        fetchInboxEvents();
+      }
+    }
+
+    /**
+     * View event details in modal
+     */
+    function viewEventDetails(eventId) {
+      const event = inboxState.events.find(e => e.event_id === eventId);
+      if (!event) return;
+
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        <div class="detail-field">
+          <div class="detail-field-label">Event ID</div>
+          <div class="detail-field-value">${event.event_id}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Status</div>
+          <div><span class="${getStatusBadgeClass(event.status)}">${event.status}</span></div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Payload</div>
+          <div class="detail-field-value">${JSON.stringify(event.payload, null, 2)}</div>
+        </div>
+        ${event.metadata ? `
+          <div class="detail-field">
+            <div class="detail-field-label">Metadata</div>
+            <div class="detail-field-value">${JSON.stringify(event.metadata, null, 2)}</div>
+          </div>
+        ` : ''}
+        <div class="detail-grid">
+          <div class="detail-field">
+            <div class="detail-field-label">Created At</div>
+            <div class="detail-field-value">${new Date(event.created_at).toLocaleString()}</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-field-label">Updated At</div>
+            <div class="detail-field-value">${new Date(event.updated_at).toLocaleString()}</div>
+          </div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Retry Count</div>
+          <div class="detail-field-value">${event.retry_count || 0}</div>
+        </div>
+        <div class="modal-actions">
+          ${event.status === 'failed' ? `<button class="btn-action btn-retry" onclick="retryEvent('${event.event_id}'); closeEventModal();" ${inboxState.actionInProgress[event.event_id] ? 'disabled' : ''}>Retry Event</button>` : ''}
+          <button class="btn-action btn-ack" onclick="acknowledgeEvent('${event.event_id}'); closeEventModal();" ${inboxState.actionInProgress[event.event_id] ? 'disabled' : ''}>Acknowledge</button>
+        </div>
+      `;
+
+      document.getElementById('eventModal').classList.add('visible');
+    }
+
+    /**
+     * Close event detail modal
+     */
+    function closeEventModal() {
+      document.getElementById('eventModal').classList.remove('visible');
+    }
+
+    /**
+     * Acknowledge event (delete)
+     */
+    async function acknowledgeEvent(eventId) {
+      if (inboxState.actionInProgress[eventId]) return;
+
+      inboxState.actionInProgress[eventId] = true;
+
+      try {
+        const bearerToken = document.getElementById('bearerToken').value || 'sk_test_abc123xyz789';
+
+        const res = await fetch(`/inbox/${eventId}/ack`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        // Remove event from list
+        inboxState.events = inboxState.events.filter(e => e.event_id !== eventId);
+        inboxState.total -= 1;
+
+        // Re-render
+        renderEvents();
+        updatePagination();
+
+        showToast('success', `Event ${eventId.substring(0, 8)}... acknowledged`);
+
+      } catch (error) {
+        console.error('Failed to acknowledge event:', error);
+        showToast('error', `Failed to acknowledge: ${error.message}`);
+      } finally {
+        delete inboxState.actionInProgress[eventId];
+      }
+    }
+
+    /**
+     * Retry failed event
+     */
+    async function retryEvent(eventId) {
+      if (inboxState.actionInProgress[eventId]) return;
+
+      inboxState.actionInProgress[eventId] = true;
+
+      try {
+        const bearerToken = document.getElementById('bearerToken').value || 'sk_test_abc123xyz789';
+
+        const res = await fetch(`/inbox/${eventId}/retry`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${bearerToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+
+        // Update event in list (status might change to pending)
+        const eventIndex = inboxState.events.findIndex(e => e.event_id === eventId);
+        if (eventIndex !== -1) {
+          inboxState.events[eventIndex].retry_count = data.data?.new_attempt || inboxState.events[eventIndex].retry_count + 1;
+          inboxState.events[eventIndex].status = 'pending'; // Assume retry moves to pending
+        }
+
+        // Re-render
+        renderEvents();
+
+        showToast('success', `Event ${eventId.substring(0, 8)}... queued for retry`);
+
+      } catch (error) {
+        console.error('Failed to retry event:', error);
+        showToast('error', `Failed to retry: ${error.message}`);
+      } finally {
+        delete inboxState.actionInProgress[eventId];
+      }
+    }
+
+    /**
+     * Setup filter change handlers
+     */
+    function setupInboxFilters() {
+      document.getElementById('statusFilter').addEventListener('change', (e) => {
+        inboxState.status = e.target.value;
+        inboxState.offset = 0;
+        fetchInboxEvents();
+      });
+
+      document.getElementById('fromDate').addEventListener('change', (e) => {
+        inboxState.fromDate = e.target.value;
+        inboxState.offset = 0;
+        fetchInboxEvents();
+      });
+
+      document.getElementById('toDate').addEventListener('change', (e) => {
+        inboxState.toDate = e.target.value;
+        inboxState.offset = 0;
+        fetchInboxEvents();
+      });
+
+      document.getElementById('limitSelect').addEventListener('change', (e) => {
+        inboxState.limit = parseInt(e.target.value);
+        inboxState.offset = 0;
+        fetchInboxEvents();
+      });
+    }
+
+    /**
+     * Close modal when clicking outside
+     */
+    document.getElementById('eventModal').addEventListener('click', (e) => {
+      if (e.target.id === 'eventModal') {
+        closeEventModal();
+      }
+    });
+
+    // Initialize inbox on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      setupInboxFilters();
+      fetchInboxEvents();
     });
   </script>
 </body>
