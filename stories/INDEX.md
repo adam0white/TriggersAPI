@@ -52,19 +52,20 @@
 | 5.4 | UI Polish: Responsive Design, Dark Mode, Accessibility | Done | `5.4-ui-polish.md` | 26 KB |
 | 5.5 | Mock Data: Zapier Event Templates, One-Click Sample Generation | Done | `5.5-mock-data-generation.md` | 37 KB |
 
-## Epic 6: Performance Testing + Final Polish (Ready - 1/5+)
+## Epic 6: Performance Testing + Final Polish (Ready - 2/5+)
 
 | # | Title | Status | File | Size |
 |---|-------|--------|------|------|
-| 6.1 | Performance Testing: Load Simulation UI, Latency Injection, Metrics Capture | Ready for Development | `6.1-performance-testing.md` | 42 KB |
+| 6.1 | Performance Testing: Load Simulation UI, Latency Injection, Metrics Capture | Done | `6.1-performance-testing.md` | 42 KB |
+| 6.2 | API Documentation: Endpoint Specs, Examples, Error Codes, Authentication Guide | Ready for Development | `6.2-api-documentation.md` | 48 KB |
 
-**Total Content:** ~477 KB (15,000+ lines across all stories)
+**Total Content:** ~525 KB (15,000+ lines across all stories)
 **Epic 1 Status:** ✓ Complete (1 Done, 5 Ready for Development)
 **Epic 2 Status:** ✓ Complete (All 6 Done)
 **Epic 3 Status:** ✓ Ready for Development (All 5 stories prepared)
 **Epic 4 Status:** ✓ Ready for Development (All 5 stories prepared)
 **Epic 5 Status:** ✓ Complete (All 5 Done)
-**Epic 6 Status:** In Progress (1/5+ stories created)
+**Epic 6 Status:** In Progress (2/5 stories created, 1 Done, 1 Ready for Development)
 
 ## Epic 1 Story Summaries
 
