@@ -15,16 +15,27 @@
 
 | # | Title | Status | File | Size |
 |---|-------|--------|------|------|
-| 2.1 | D1 Schema: Create Events Table with Proper Indexes | Ready for Development | `2.1-d1-schema.md` | 15 KB |
-| 2.2 | Queue Consumer Worker: Consume Batches and Extract Events | Ready for Development | `2.2-queue-consumer.md` | 14 KB |
-| 2.3 | Workflow Implementation: Multi-Step Orchestration with Retries | Ready for Development | `2.3-workflow-orchestration.md` | 18 KB |
-| 2.4 | Event Storage: Write to D1 with Status Tracking | Ready for Development | `2.4-event-storage.md` | 12 KB |
-| 2.5 | Metrics Updates: KV Aggregate Counters and DLQ Routing | Ready for Development | `2.5-metrics-updates.md` | 16 KB |
-| 2.6 | UI Metrics Display: Real-Time Event Counts with Auto-Refresh | Ready for Development | `2.6-ui-metrics-display.md` | 17 KB |
+| 2.1 | D1 Schema: Create Events Table with Proper Indexes | Done | `2.1-d1-schema.md` | 15 KB |
+| 2.2 | Queue Consumer Worker: Consume Batches and Extract Events | Done | `2.2-queue-consumer.md` | 14 KB |
+| 2.3 | Workflow Implementation: Multi-Step Orchestration with Retries | Done | `2.3-workflow-orchestration.md` | 18 KB |
+| 2.4 | Event Storage: Write to D1 with Status Tracking | Done | `2.4-event-storage.md` | 12 KB |
+| 2.5 | Metrics Updates: KV Aggregate Counters and DLQ Routing | Done | `2.5-metrics-updates.md` | 16 KB |
+| 2.6 | UI Metrics Display: Real-Time Event Counts with Auto-Refresh | Done | `2.6-ui-metrics-display.md` | 17 KB |
 
-**Total Content:** ~152 KB (5,200+ lines across all stories)
+## Epic 3: Event Retrieval & Management + Inbox UI (Ready - 5/5) ✓
+
+| # | Title | Status | File | Size |
+|---|-------|--------|------|------|
+| 3.1 | Inbox Query Endpoint: GET /inbox with D1 Query Builder | Ready for Development | `3.1-inbox-query.md` | 18 KB |
+| 3.2 | Filtering & Pagination Refinement: Advanced Query Params & SQL Optimization | Ready for Development | `3.2-filtering-pagination.md` | 21 KB |
+| 3.3 | Acknowledgment Endpoint: POST /inbox/{event_id}/ack | Ready for Development | `3.3-acknowledgment-endpoint.md` | 15 KB |
+| 3.4 | Retry Endpoint: POST /inbox/{event_id}/retry | Ready for Development | `3.4-retry-endpoint.md` | 16 KB |
+| 3.5 | UI Event Inbox: Browse Events with Filters and Actions | Ready for Development | `3.5-ui-inbox.md` | 19 KB |
+
+**Total Content:** ~232 KB (8,000+ lines across all stories)
 **Epic 1 Status:** ✓ Complete (1 Done, 5 Ready for Development)
-**Epic 2 Status:** ✓ Ready for Development (All 6 stories prepared)
+**Epic 2 Status:** ✓ Complete (All 6 Done)
+**Epic 3 Status:** ✓ Ready for Development (All 5 stories prepared)
 
 ## Epic 1 Story Summaries
 
@@ -66,6 +77,23 @@ KV counter operations tracking event flow: total_events, pending, delivered, fai
 ### 2.6 - UI Metrics Display
 React dashboard component with real-time metrics visualization. Auto-refresh every 5 seconds, responsive grid layout (1/2/4 columns), color coding (pending=yellow, delivered=green, failed=red), progress bar for delivery rate, error state handling, accessibility features.
 
+## Epic 3 Story Summaries
+
+### 3.1 - Inbox Query Endpoint
+Implement GET /inbox endpoint with D1 query builder supporting status, timestamp range, and pagination filters. Uses composite indexes for efficient queries. Returns events with total count for pagination support.
+
+### 3.2 - Filtering & Pagination Refinement
+Advanced filtering via metadata/payload JSON fields, retry count ranges, date-only filtering, custom sorting, and cursor-based pagination. Validates queries, enforces DoS prevention (max 10 filters), optimizes with EXPLAIN QUERY PLAN.
+
+### 3.3 - Acknowledgment Endpoint
+POST /inbox/{event_id}/ack endpoint deletes events from D1 and updates KV metrics. Atomic deletion by PRIMARY KEY, eventual consistency for metrics updates, idempotent semantics (second ack returns 404).
+
+### 3.4 - Retry Endpoint
+POST /inbox/{event_id}/retry endpoint requeues failed events for reprocessing. Validates event status (must be 'failed'), increments retry_count, updates status to 'retrying', reposts to Queue. Enforces max 3 retries per event.
+
+### 3.5 - UI Event Inbox
+Comprehensive event management UI with table/card layouts, status filtering, date range picker, pagination, detail modal, and action buttons (ack/retry). Responsive design, real-time updates after actions, success/error feedback toasts.
+
 ## Quick Links
 
 - [PRD](../docs/PRD.md) - Product Requirements
@@ -82,22 +110,31 @@ React dashboard component with real-time metrics visualization. Auto-refresh eve
 6. 1.6 - UI Skeleton
 
 **Epic 2** (Processing & Metrics):
-1. 2.1 - D1 Schema (foundation for data storage)
-2. 2.2 - Queue Consumer (async processing)
-3. 2.3 - Workflow (orchestration)
-4. 2.4 - Event Storage (persistence)
-5. 2.5 - Metrics Updates (observability)
-6. 2.6 - UI Metrics Display (visualization)
+1. 2.1 - D1 Schema (foundation for data storage) ✓ (Done)
+2. 2.2 - Queue Consumer (async processing) ✓ (Done)
+3. 2.3 - Workflow (orchestration) ✓ (Done)
+4. 2.4 - Event Storage (persistence) ✓ (Done)
+5. 2.5 - Metrics Updates (observability) ✓ (Done)
+6. 2.6 - UI Metrics Display (visualization) ✓ (Done)
+
+**Epic 3** (Event Retrieval & Management):
+1. 3.1 - Inbox Query Endpoint (GET /inbox)
+2. 3.2 - Advanced Filtering & Pagination (JSON queries, cursor-based)
+3. 3.3 - Acknowledgment Endpoint (POST /ack - delete events)
+4. 3.4 - Retry Endpoint (POST /retry - requeue failed events)
+5. 3.5 - UI Event Inbox (Browse, filter, and manage events)
 
 **Estimated Total Time:**
 - Epic 1: 15-20 hours (1.1 done, 1.2-1.6: ~18 hours)
 - Epic 2: 20-25 hours (2.1-2.6: full epic implementation)
-- **Total: ~40 hours for both epics complete**
+- Epic 3: 15-20 hours (3.1-3.5: endpoint + UI implementation)
+- **Total: ~50-65 hours for all three epics complete**
 
 ## Status Tracking
 
 **Epic 1:** ✓ 1 Done, 5 Ready for Development
-**Epic 2:** ✓ All 6 Ready for Development
+**Epic 2:** ✓ All 6 Done (Complete & Verified)
+**Epic 3:** ✓ All 5 Ready for Development (Just Created)
 
 Each story includes:
 - ✓ Acceptance criteria (10-15 per story)
