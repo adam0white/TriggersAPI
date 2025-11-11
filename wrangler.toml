@@ -15,10 +15,13 @@ enabled = true
 [[d1_databases]]
 binding = "DB"
 database_name = "triggers-api"
+database_id = "66d5b9f6-4f3b-4512-a028-25816cf24554"
+migrations_dir = "src/db/migrations"
 
 # KV Binding (for auth tokens and metrics)
 [[kv_namespaces]]
 binding = "AUTH_KV"
+id = "5c4d6577b0754ed990e0ead4e88ecbb4"
 
 # Queue Bindings
 [[queues.producers]]
@@ -28,13 +31,15 @@ queue = "event-queue"
 [[queues.consumers]]
 queue = "event-queue"
 max_batch_size = 100
-max_batch_timeout = 30
+max_batch_timeout = 1
 max_retries = 3
 dead_letter_queue = "event-dlq"
+max_concurrency = 10
 
 # Workflow Binding
-# Commented out until Epic 2 implementation
-# [[workflows]]
-# binding = "PROCESS_EVENT_WORKFLOW"
-# name = "process-event-workflow"
-# class_name = "ProcessEventWorkflow"
+# Epic 2.3: ProcessEventWorkflow for durable event processing
+[[workflows]]
+binding = "PROCESS_EVENT_WORKFLOW"
+name = "process-event-workflow"
+class_name = "ProcessEventWorkflow"
+script_name = "triggers-api"

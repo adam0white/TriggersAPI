@@ -15,25 +15,16 @@
 
 import { handlePostEvents } from './routes/events';
 import { handleDashboard } from './routes/dashboard';
+import { handleGetMetrics } from './routes/metrics';
 import { validateBearerToken, unauthorizedResponse, serviceErrorResponse } from './middleware/auth';
-
-interface EventPayload {
-	payload: Record<string, any>;
-	metadata?: Record<string, any>;
-}
+import { processEventBatch } from './queue/consumer';
+import { ProcessEventWorkflow } from './workflows/process-event';
 
 /**
- * Workflow: Process Event
- * Durable workflow for event validation, storage, and metrics
- * Will be implemented in Epic 2 with proper Workflow API
- * Note: Workflow class export commented out until implementation
+ * Export Workflow for Cloudflare Workers
+ * Epic 2.3: ProcessEventWorkflow for durable event processing
  */
-// export class ProcessEventWorkflow extends WorkflowEntrypoint<Env, EventPayload> {
-// 	async run(event: WorkflowEvent<EventPayload>, step: WorkflowStep): Promise<void> {
-// 		// Workflow stub - will be implemented in Epic 2
-// 		console.log('ProcessEventWorkflow stub: workflow triggered');
-// 	}
-// }
+export { ProcessEventWorkflow };
 
 // Routes that require authentication
 const PROTECTED_ROUTES = ['/events', '/inbox'];
@@ -59,6 +50,11 @@ export default {
 		// Handle public routes (no auth required)
 		if (path === '/' && method === 'GET') {
 			return handleDashboard(request);
+		}
+
+		// Metrics endpoint (public for dashboard)
+		if (path === '/metrics' && method === 'GET') {
+			return handleGetMetrics(request, env, correlationId);
 		}
 
 		// Check if route requires auth
@@ -89,32 +85,11 @@ export default {
 	/**
 	 * Queue consumer handler
 	 * Processes batched events from Cloudflare Queue
-	 * Implemented in Epic 2
+	 * Implemented in Epic 2.2
 	 */
 	async queue(batch: MessageBatch<unknown>, env: Env): Promise<void> {
-		// Queue consumer stub - will be implemented in Epic 2
-		console.log(
-			JSON.stringify({
-				level: 'info',
-				message: 'Queue consumer received batch',
-				batch_size: batch.messages.length,
-				queue: batch.queue,
-				timestamp: new Date().toISOString(),
-			})
-		);
-
-		// Log each message for debugging
-		for (const message of batch.messages) {
-			console.log(
-				JSON.stringify({
-					level: 'debug',
-					message: 'Queue message received',
-					message_id: message.id,
-					message_timestamp: message.timestamp.toISOString(),
-					body: message.body,
-				})
-			);
-		}
+		// Cast batch to expected type (validation happens inside processEventBatch)
+		await processEventBatch(batch as MessageBatch<any>, env);
 	},
 
 	/**

@@ -201,6 +201,271 @@
       margin-top: 6px;
     }
 
+    /* Metrics Dashboard Styles */
+    .metrics-section {
+      margin-top: 48px;
+      padding-top: 48px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .metrics-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .metrics-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .refresh-indicator {
+      font-size: 12px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #e5e7eb;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .metrics-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .metric-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .metric-card.pending {
+      background: #fef3c7;
+      border-color: #fbbf24;
+    }
+
+    .metric-card.delivered {
+      background: #d1fae5;
+      border-color: #34d399;
+    }
+
+    .metric-card.failed {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    .metric-card.total {
+      background: #dbeafe;
+      border-color: #60a5fa;
+    }
+
+    .metric-value {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .metric-card.pending .metric-value {
+      color: #d97706;
+    }
+
+    .metric-card.delivered .metric-value {
+      color: #059669;
+    }
+
+    .metric-card.failed .metric-value {
+      color: #dc2626;
+    }
+
+    .metric-card.total .metric-value {
+      color: #2563eb;
+    }
+
+    .metric-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metrics-details {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .metrics-details {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .detail-card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .detail-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .detail-value {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .detail-value.blue {
+      color: #2563eb;
+    }
+
+    .detail-value.purple {
+      color: #9333ea;
+    }
+
+    .detail-value.green {
+      color: #059669;
+    }
+
+    .detail-value.red {
+      color: #dc2626;
+    }
+
+    .detail-timestamp {
+      font-size: 12px;
+      color: #666;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #059669;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .metrics-loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .metrics-error {
+      background: #fee2e2;
+      border: 1px solid #f87171;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .error-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #dc2626;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .error-message {
+      font-size: 14px;
+      color: #7f1d1d;
+      margin-bottom: 16px;
+    }
+
+    .btn-retry {
+      padding: 10px 20px;
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-retry:hover {
+      background: #b91c1c;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    }
+
     @media (max-width: 640px) {
       .container {
         padding: 20px;
@@ -212,6 +477,16 @@
 
       .button-group {
         flex-direction: column;
+      }
+
+      .metric-value {
+        font-size: 28px;
+      }
+
+      .metrics-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
       }
     }
   </style>
@@ -295,6 +570,100 @@
       <div class="response-title" id="responseTitle">Response</div>
       <div class="response-content" id="responseContent"></div>
     </div>
+
+    <!-- Metrics Dashboard -->
+    <section class="metrics-section" id="metricsSection">
+      <div class="metrics-header">
+        <h2 class="metrics-title">Real-Time Metrics</h2>
+        <div class="refresh-indicator" id="refreshIndicator">
+          <span id="lastUpdatedText">Loading...</span>
+          <span class="spinner" id="metricsSpinner" style="display: none;"></span>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="metrics-loading" id="metricsLoading">
+        <div class="spinner" style="width: 32px; height: 32px; margin: 0 auto 16px;"></div>
+        <p>Loading metrics...</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="metrics-error" id="metricsError" style="display: none;">
+        <div class="error-title">
+          <span>⚠️</span>
+          <span>Metrics Unavailable</span>
+        </div>
+        <p class="error-message" id="errorMessage">Failed to load metrics</p>
+        <button class="btn-retry" onclick="fetchMetrics()">Retry</button>
+      </div>
+
+      <!-- Metrics Content -->
+      <div id="metricsContent" style="display: none;">
+        <!-- Main Metrics Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card total" role="region" aria-label="Total events metric">
+            <div class="metric-value" id="metricTotalEvents">0</div>
+            <div class="metric-label">Total Events</div>
+          </div>
+          <div class="metric-card pending" role="region" aria-label="Pending events metric">
+            <div class="metric-value" id="metricPending">0</div>
+            <div class="metric-label">Pending</div>
+          </div>
+          <div class="metric-card delivered" role="region" aria-label="Delivered events metric">
+            <div class="metric-value" id="metricDelivered">0</div>
+            <div class="metric-label">Delivered</div>
+          </div>
+          <div class="metric-card failed" role="region" aria-label="Failed events metric">
+            <div class="metric-value" id="metricFailed">0</div>
+            <div class="metric-label">Failed</div>
+          </div>
+        </div>
+
+        <!-- Detailed Metrics -->
+        <div class="metrics-details">
+          <!-- Processing Status -->
+          <div class="detail-card" role="region" aria-label="Processing status details">
+            <h3 class="detail-card-title">Processing Status</h3>
+            <div class="detail-row">
+              <span class="detail-label">Queue Depth</span>
+              <span class="detail-value blue" id="detailQueueDepth">0</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Dead Letter Queue</span>
+              <span class="detail-value" id="detailDlqCount">0</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Processing Rate</span>
+              <span class="detail-value purple" id="detailProcessingRate">0 evt/min</span>
+            </div>
+          </div>
+
+          <!-- Delivery Analysis -->
+          <div class="detail-card" role="region" aria-label="Delivery analysis details">
+            <h3 class="detail-card-title">Delivery Analysis</h3>
+            <div class="detail-row">
+              <span class="detail-label">Delivery Rate</span>
+              <span class="detail-value green" id="detailDeliveryRate">0%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div
+                class="progress-bar"
+                id="deliveryProgressBar"
+                role="progressbar"
+                aria-valuenow="0"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-label="Delivery rate progress"
+                style="width: 0%;"
+              ></div>
+            </div>
+            <div class="detail-timestamp" id="lastProcessedTimestamp">
+              No events processed yet
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script>
@@ -391,6 +760,175 @@
       responseTitle.textContent = 'Error: ' + (code || 'Unknown');
       responseContent.textContent = message;
     }
+
+    // Metrics Dashboard Logic
+    let metricsInterval = null;
+
+    /**
+     * Fetch metrics from the API endpoint
+     */
+    async function fetchMetrics() {
+      const metricsLoading = document.getElementById('metricsLoading');
+      const metricsError = document.getElementById('metricsError');
+      const metricsContent = document.getElementById('metricsContent');
+      const metricsSpinner = document.getElementById('metricsSpinner');
+
+      // Show loading state on first load, spinner on refresh
+      if (metricsContent.style.display === 'none') {
+        metricsLoading.style.display = 'block';
+        metricsError.style.display = 'none';
+      } else {
+        metricsSpinner.style.display = 'inline-block';
+      }
+
+      try {
+        const res = await fetch('/metrics', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        updateMetricsDisplay(data.data);
+
+        // Hide loading/error, show content
+        metricsLoading.style.display = 'none';
+        metricsError.style.display = 'none';
+        metricsContent.style.display = 'block';
+        metricsSpinner.style.display = 'none';
+
+        // Update last updated timestamp
+        updateLastUpdatedText();
+
+      } catch (error) {
+        console.error('Failed to fetch metrics:', error);
+
+        // Show error state
+        metricsLoading.style.display = 'none';
+        metricsContent.style.display = 'none';
+        metricsError.style.display = 'block';
+        metricsSpinner.style.display = 'none';
+
+        document.getElementById('errorMessage').textContent =
+          error.message || 'Failed to load metrics. Please try again.';
+      }
+    }
+
+    /**
+     * Update the metrics display with new data
+     */
+    function updateMetricsDisplay(metrics) {
+      // Update main metric cards
+      document.getElementById('metricTotalEvents').textContent =
+        formatNumber(metrics.total_events || 0);
+      document.getElementById('metricPending').textContent =
+        formatNumber(metrics.pending || 0);
+      document.getElementById('metricDelivered').textContent =
+        formatNumber(metrics.delivered || 0);
+      document.getElementById('metricFailed').textContent =
+        formatNumber(metrics.failed || 0);
+
+      // Update detail metrics
+      document.getElementById('detailQueueDepth').textContent =
+        formatNumber(metrics.queue_depth || 0);
+
+      const dlqCount = metrics.dlq_count || 0;
+      const dlqElement = document.getElementById('detailDlqCount');
+      dlqElement.textContent = formatNumber(dlqCount);
+      dlqElement.className = 'detail-value ' + (dlqCount > 0 ? 'red' : 'green');
+
+      document.getElementById('detailProcessingRate').textContent =
+        formatNumber(metrics.processing_rate || 0) + ' evt/min';
+
+      // Calculate and update delivery rate
+      const totalEvents = metrics.total_events || 0;
+      const deliveredEvents = metrics.delivered || 0;
+      const deliveryRate = totalEvents > 0
+        ? Math.round((deliveredEvents / totalEvents) * 100)
+        : 0;
+
+      document.getElementById('detailDeliveryRate').textContent = deliveryRate + '%';
+
+      const progressBar = document.getElementById('deliveryProgressBar');
+      progressBar.style.width = deliveryRate + '%';
+      progressBar.setAttribute('aria-valuenow', deliveryRate);
+
+      // Update last processed timestamp
+      const lastProcessedElement = document.getElementById('lastProcessedTimestamp');
+      if (metrics.last_processed_at) {
+        const timestamp = new Date(metrics.last_processed_at);
+        lastProcessedElement.textContent =
+          'Last processed: ' + timestamp.toLocaleString();
+      } else {
+        lastProcessedElement.textContent = 'No events processed yet';
+      }
+    }
+
+    /**
+     * Format numbers with comma separators for readability
+     */
+    function formatNumber(num) {
+      return num.toLocaleString();
+    }
+
+    /**
+     * Update the "Last updated" text in the metrics header
+     */
+    function updateLastUpdatedText() {
+      const now = new Date();
+      document.getElementById('lastUpdatedText').textContent =
+        'Auto-refresh every 5s • Last updated: ' + now.toLocaleTimeString();
+    }
+
+    /**
+     * Start auto-refresh interval
+     */
+    function startMetricsAutoRefresh() {
+      // Clear any existing interval
+      if (metricsInterval) {
+        clearInterval(metricsInterval);
+      }
+
+      // Fetch immediately on start
+      fetchMetrics();
+
+      // Set up 5-second interval
+      metricsInterval = setInterval(fetchMetrics, 5000);
+    }
+
+    /**
+     * Stop auto-refresh (cleanup on page unload)
+     */
+    function stopMetricsAutoRefresh() {
+      if (metricsInterval) {
+        clearInterval(metricsInterval);
+        metricsInterval = null;
+      }
+    }
+
+    // Initialize metrics dashboard on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      startMetricsAutoRefresh();
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+      stopMetricsAutoRefresh();
+    });
+
+    // Optional: Pause auto-refresh when page is hidden, resume when visible
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        stopMetricsAutoRefresh();
+      } else {
+        startMetricsAutoRefresh();
+      }
+    });
   </script>
 </body>
 </html>

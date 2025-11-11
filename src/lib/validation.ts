@@ -9,7 +9,7 @@
  */
 
 interface EventRequest {
-	payload?: Record<string, any>;
+	payload: Record<string, any>;
 	metadata?: Record<string, any>;
 }
 
