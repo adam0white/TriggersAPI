@@ -42,11 +42,29 @@
 | 4.4 | UI Logs Display: Live Tail Logs Streaming, Error Highlighting, Filtering | Ready for Development | `4.4-ui-logs-display.md` | 28 KB |
 | 4.5 | UI Metrics Enhancement: Charts for Latency/Errors, Visual Indicators | Ready for Development | `4.5-ui-metrics-enhancement.md` | 25 KB |
 
-**Total Content:** ~398 KB (12,000+ lines across all stories)
+## Epic 5: Debug Control Panel + UI Polish (Complete - 5/5) ✓
+
+| # | Title | Status | File | Size |
+|---|-------|--------|------|------|
+| 5.1 | Debug Control Panel: Conditional Rendering, Control Layout, Animations | Done | `5.1-debug-control-panel.md` | 29 KB |
+| 5.2 | Visual Feedback System: Toast Notifications, Loading States, Animations | Done | `5.2-visual-feedback.md` | 20 KB |
+| 5.3 | Event Flow Visualization: Real-Time Event Trace, Status Timeline | Done | `5.3-event-flow-visualization.md` | 22 KB |
+| 5.4 | UI Polish: Responsive Design, Dark Mode, Accessibility | Done | `5.4-ui-polish.md` | 26 KB |
+| 5.5 | Mock Data: Zapier Event Templates, One-Click Sample Generation | Done | `5.5-mock-data-generation.md` | 37 KB |
+
+## Epic 6: Performance Testing + Final Polish (Ready - 1/5+)
+
+| # | Title | Status | File | Size |
+|---|-------|--------|------|------|
+| 6.1 | Performance Testing: Load Simulation UI, Latency Injection, Metrics Capture | Ready for Development | `6.1-performance-testing.md` | 42 KB |
+
+**Total Content:** ~477 KB (15,000+ lines across all stories)
 **Epic 1 Status:** ✓ Complete (1 Done, 5 Ready for Development)
 **Epic 2 Status:** ✓ Complete (All 6 Done)
 **Epic 3 Status:** ✓ Ready for Development (All 5 stories prepared)
 **Epic 4 Status:** ✓ Ready for Development (All 5 stories prepared)
+**Epic 5 Status:** ✓ Complete (All 5 Done)
+**Epic 6 Status:** In Progress (1/5+ stories created)
 
 ## Epic 1 Story Summaries
 
@@ -121,6 +139,28 @@ Create React component for live log streaming with real-time updates (1-2 second
 
 ### 4.5 - UI Metrics Enhancement
 Build beautiful dashboard with Recharts visualizations: latency percentiles line chart, error rate area chart, throughput bar chart, error breakdown pie chart, and health metric cards. Interactive time range selection (last hour/6h/24h). Auto-refresh every 5-30 seconds.
+
+## Epic 5 Story Summaries
+
+### 5.1 - Debug Control Panel
+Create interactive debug panel with conditional rendering based on DEBUG_MODE flag. Include sections for: real-time metrics summary, event submission, tail logs viewer, performance insights, and control toggles. Smooth animations, proper layout with tabs, and visual hierarchy. Status: COMPLETE.
+
+### 5.2 - Visual Feedback System
+Implement comprehensive toast notification system with: success/error/warning/info types, auto-dismiss timers, stacking behavior, detailed error messages, loading states, and visual animations. Integrate throughout UI for user feedback on all operations. Status: COMPLETE.
+
+### 5.3 - Event Flow Visualization
+Create visual timeline showing event journey: Received → Queued → Processing → Stored. Real-time status updates with animations, color coding for different states, and detailed event information. Shows latency at each step and helps debug processing issues. Status: COMPLETE.
+
+### 5.4 - UI Polish
+Apply responsive design across all components (mobile/tablet/desktop). Implement dark mode toggle with persistent state. Improve accessibility with ARIA labels, keyboard navigation, and contrast ratios. Add loading animations, transitions, and visual refinements. Status: COMPLETE.
+
+### 5.5 - Mock Data Generation
+Create comprehensive library of 17+ realistic Zapier event templates. Implement one-click generation with batch support (1-100 events), realistic data randomization, and scenario-based sequences. Provides instant demo data for presentations. Status: COMPLETE.
+
+## Epic 6 Story Summaries
+
+### 6.1 - Performance Testing
+Comprehensive performance testing module with load simulation UI (1-1000 evt/s), latency injection controls (network simulation), and real-time metrics capture. Build performance dashboard with throughput gauges, latency charts, error tracking, and benchmark results. Allows stress testing the system and validating production readiness.
 
 ## Quick Links
 
