@@ -92,11 +92,7 @@ export class MetricsManager {
 	 * @param status - Event status (pending, delivered, failed)
 	 * @param processingTimeMs - Time taken to process event
 	 */
-	async recordEventStored(
-		eventId: string,
-		status: 'pending' | 'delivered' | 'failed',
-		processingTimeMs: number
-	): Promise<void> {
+	async recordEventStored(eventId: string, status: 'pending' | 'delivered' | 'failed', processingTimeMs: number): Promise<void> {
 		try {
 			// Increment total and status-specific counters in parallel
 			await Promise.all([
@@ -137,7 +133,7 @@ export class MetricsManager {
 	async recordStatusChange(
 		eventId: string,
 		previousStatus: 'pending' | 'delivered' | 'failed',
-		newStatus: 'pending' | 'delivered' | 'failed'
+		newStatus: 'pending' | 'delivered' | 'failed',
 	): Promise<void> {
 		try {
 			// Decrement old status counter (prevent negative values)
@@ -188,7 +184,7 @@ export class MetricsManager {
 						reason,
 						correlation_id: correlationId,
 						failed_at: new Date().toISOString(),
-					})
+					}),
 				),
 			]);
 

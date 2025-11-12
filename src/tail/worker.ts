@@ -44,7 +44,7 @@ export async function processTailEvents(events: TailItem[], env: Env): Promise<v
 						traces: events.length,
 						logs: allLogs.length,
 					},
-				})
+				}),
 			);
 		}
 	} catch (error) {
@@ -75,7 +75,7 @@ async function batchInsertLogs(logs: TailLogEntry[], db: D1Database): Promise<vo
 					.prepare(
 						`INSERT INTO tail_logs (log_id, worker_name, request_id, correlation_id,
               log_level, message, context_json, timestamp, execution_time_ms)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 					)
 					.bind(
 						log.log_id,
@@ -86,7 +86,7 @@ async function batchInsertLogs(logs: TailLogEntry[], db: D1Database): Promise<vo
 						log.message,
 						log.context_json,
 						log.timestamp,
-						log.execution_time_ms
+						log.execution_time_ms,
 					);
 			});
 
@@ -104,11 +104,7 @@ async function batchInsertLogs(logs: TailLogEntry[], db: D1Database): Promise<vo
  * Retry batch insertion with exponential backoff
  * Implements 3 retry attempts with increasing delays
  */
-async function retryBatchInsert(
-	logs: TailLogEntry[],
-	db: D1Database,
-	maxRetries: number = 3
-): Promise<void> {
+async function retryBatchInsert(logs: TailLogEntry[], db: D1Database, maxRetries: number = 3): Promise<void> {
 	let retries = 0;
 
 	while (retries < maxRetries) {

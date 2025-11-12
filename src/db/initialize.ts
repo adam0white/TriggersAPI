@@ -12,7 +12,7 @@
  * @throws Error if schema creation fails
  */
 export async function initializeDatabase(db: D1Database): Promise<void> {
-  const schema = `
+	const schema = `
     -- Events Table
     CREATE TABLE IF NOT EXISTS events (
       event_id TEXT PRIMARY KEY,
@@ -32,10 +32,10 @@ export async function initializeDatabase(db: D1Database): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_events_status_created ON events(status, created_at);
   `;
 
-  try {
-    await db.exec(schema);
-  } catch (error) {
-    console.error('Failed to initialize database:', error);
-    throw new Error(`Database initialization failed: ${error}`);
-  }
+	try {
+		await db.exec(schema);
+	} catch (error) {
+		console.error('Failed to initialize database:', error);
+		throw new Error(`Database initialization failed: ${error}`);
+	}
 }

@@ -34,7 +34,7 @@ export class LogBatchProcessor {
 	constructor(
 		private readonly db: D1Database,
 		private readonly logger: Logger,
-		config: LogBatchProcessorConfig = {}
+		config: LogBatchProcessorConfig = {},
 	) {
 		this.maxBatchSize = config.maxBatchSize || 100;
 		this.flushIntervalMs = config.flushIntervalMs || 5000;
@@ -158,34 +158,36 @@ export class LogBatchProcessor {
 
 		// Use D1 batch API for efficiency
 		const batch = logs.map((log) => {
-			return this.db.prepare(insertStatement).bind(
-				log.log_id,
-				log.correlation_id,
-				log.request_id,
-				log.timestamp,
-				log.method,
-				log.path,
-				log.endpoint,
-				log.query_params,
-				log.request_headers,
-				log.request_body_size,
-				log.status_code,
-				log.status_class,
-				log.response_headers,
-				log.response_body_size,
-				log.duration_ms,
-				log.cpu_ms,
-				log.db_query_ms,
-				log.queue_wait_ms,
-				log.error_code,
-				log.error_message,
-				log.error_category,
-				log.error_stack,
-				log.worker_name,
-				log.debug_flag,
-				log.environment,
-				log.version
-			);
+			return this.db
+				.prepare(insertStatement)
+				.bind(
+					log.log_id,
+					log.correlation_id,
+					log.request_id,
+					log.timestamp,
+					log.method,
+					log.path,
+					log.endpoint,
+					log.query_params,
+					log.request_headers,
+					log.request_body_size,
+					log.status_code,
+					log.status_class,
+					log.response_headers,
+					log.response_body_size,
+					log.duration_ms,
+					log.cpu_ms,
+					log.db_query_ms,
+					log.queue_wait_ms,
+					log.error_code,
+					log.error_message,
+					log.error_category,
+					log.error_stack,
+					log.worker_name,
+					log.debug_flag,
+					log.environment,
+					log.version,
+				);
 		});
 
 		// Execute batch insert

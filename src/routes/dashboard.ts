@@ -286,6 +286,39 @@ const dashboardHTML = `<!DOCTYPE html>
     .header-right {
       flex-shrink: 0;
       text-align: right;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-base);
+    }
+
+    .header-link {
+      color: white;
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      padding: var(--spacing-sm) var(--spacing-base);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius-md);
+      transition: all 0.2s ease;
+      font-weight: var(--font-weight-medium);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-link:active {
+      transform: translateY(0);
+    }
+
+    .header-link svg {
+      width: 16px;
+      height: 16px;
     }
 
     /* ============================================
@@ -3309,8 +3342,18 @@ const dashboardHTML = `<!DOCTYPE html>
         </p>
       </div>
       <div class="header-right">
+        <a href="/api/docs" class="header-link" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          API Docs
+        </a>
         <!-- PHASE 2: Real health check replaces fake "System Live" badge -->
-        <div id="healthStatus" style="font-size: 12px; color: var(--color-text-secondary);">
+        <div id="healthStatus" style="font-size: 12px; color: white;">
           <span id="healthCheckText">Checking status...</span>
         </div>
       </div>

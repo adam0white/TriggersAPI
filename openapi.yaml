@@ -1,0 +1,747 @@
+openapi: 3.0.3
+info:
+  title: TriggersAPI
+  description: |
+    Edge-native event ingestion and management API built on Cloudflare Workers.
+
+    TriggersAPI provides a robust, scalable solution for capturing, processing, and managing events with automatic retry logic, dead letter queue handling, and comprehensive observability.
+
+    ## Key Features
+    - Event ingestion with metadata support
+    - Inbox query with advanced filtering and pagination
+    - Event acknowledgment and retry capabilities
+    - Debug modes for testing error scenarios
+    - Real-time metrics and observability
+
+    ## Authentication
+    All API endpoints (except the root dashboard `/`) require authentication using Bearer tokens.
+    Include your API key in the Authorization header:
+    ```
+    Authorization: Bearer sk-test-xxxxx
+    ```
+
+  version: 1.0.0
+  contact:
+    name: TriggersAPI Support
+    url: https://triggersapi.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://triggers-api.yourdomain.workers.dev
+    description: Production API
+  - url: http://localhost:8787
+    description: Local Development
+
+tags:
+  - name: Events
+    description: Event ingestion and submission
+  - name: Inbox
+    description: Event retrieval and management
+  - name: Metrics
+    description: System metrics and observability
+
+security:
+  - BearerAuth: []
+
+paths:
+  /events:
+    post:
+      tags:
+        - Events
+      summary: Submit an event
+      description: |
+        Submit an event to TriggersAPI for asynchronous processing. Events are queued and processed in the background with automatic retry logic.
+
+        ## Debug Modes
+        You can test error scenarios using debug query parameters:
+        - `?debug=validation_error` - Force validation error (400)
+        - `?debug=processing_error` - Force processing error (500)
+        - `?debug=dlq_routing` - Force event to dead letter queue
+
+      operationId: postEvent
+      parameters:
+        - name: debug
+          in: query
+          description: Debug mode for testing error scenarios
+          required: false
+          schema:
+            type: string
+            enum:
+              - validation_error
+              - processing_error
+              - dlq_routing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+            examples:
+              minimal:
+                summary: Minimal event
+                value:
+                  payload:
+                    event_type: user.created
+                    user_id: "12345"
+                    email: user@example.com
+              withMetadata:
+                summary: Event with metadata
+                value:
+                  payload:
+                    event_type: order.placed
+                    order_id: ord_xyz789
+                    customer_id: cust_abc123
+                    total: 99.99
+                    items:
+                      - sku: PRODUCT-1
+                        qty: 2
+                  metadata:
+                    tags:
+                      - production
+                      - high-priority
+                    priority: high
+                    correlation_id: corr_abc123xyz
+      responses:
+        '200':
+          description: Event accepted and queued for processing
+          headers:
+            X-Correlation-ID:
+              schema:
+                type: string
+                format: uuid
+              description: Request correlation ID for tracing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+              examples:
+                success:
+                  value:
+                    data:
+                      event_id: evt_1234567890abcdef
+                      status: accepted
+                      timestamp: "2025-11-11T14:30:00Z"
+                    timestamp: "2025-11-11T14:30:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /inbox:
+    get:
+      tags:
+        - Inbox
+      summary: Query events
+      description: |
+        Retrieve events from your inbox with powerful filtering, sorting, and pagination capabilities.
+
+        ## Filtering
+        - Filter by status (pending, delivered, failed)
+        - Filter by date range (from/to timestamps or created_date)
+        - Filter by retry count (min_retries/max_retries)
+        - Filter by metadata fields (metadata.key=value)
+        - Filter by payload fields (payload.key=value)
+
+        ## Pagination
+        Supports both offset-based and cursor-based pagination.
+
+      operationId: getInbox
+      parameters:
+        - name: status
+          in: query
+          description: Filter by event status (comma-separated for multiple)
+          required: false
+          schema:
+            type: string
+            example: pending,failed
+        - name: from
+          in: query
+          description: Start timestamp filter (ISO-8601)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: End timestamp filter (ISO-8601)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: created_date
+          in: query
+          description: Filter by specific date (YYYY-MM-DD)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: min_retries
+          in: query
+          description: Minimum retry count
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: max_retries
+          in: query
+          description: Maximum retry count
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: sort
+          in: query
+          description: Sort field
+          required: false
+          schema:
+            type: string
+            enum:
+              - created_at
+              - updated_at
+              - retry_count
+            default: created_at
+        - name: order
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: limit
+          in: query
+          description: Maximum results per page (max 1000)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 50
+        - name: offset
+          in: query
+          description: Pagination offset
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: cursor
+          in: query
+          description: Cursor for cursor-based pagination (base64-encoded)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Events retrieved successfully
+          headers:
+            X-Correlation-ID:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxResponse'
+              examples:
+                success:
+                  value:
+                    data:
+                      - event_id: evt_001
+                        status: delivered
+                        payload:
+                          event_type: user.created
+                          user_id: "12345"
+                        metadata:
+                          tags:
+                            - production
+                        created_at: "2025-11-11T14:00:00Z"
+                        processed_at: "2025-11-11T14:00:05Z"
+                        retry_count: 0
+                    total: 156
+                    limit: 50
+                    offset: 0
+                    timestamp: "2025-11-11T14:30:00Z"
+                    _metadata:
+                      filters_applied: 0
+                      sort_field: created_at
+                      sort_order: desc
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /inbox/{eventId}/ack:
+    post:
+      tags:
+        - Inbox
+      summary: Acknowledge event
+      description: |
+        Acknowledge and permanently delete an event from the inbox. This operation cannot be undone.
+
+        Use this endpoint when you have successfully processed an event and want to remove it from your inbox.
+
+      operationId: acknowledgeEvent
+      parameters:
+        - name: eventId
+          in: path
+          description: Event ID to acknowledge (UUID format)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Event acknowledged and deleted
+          headers:
+            X-Correlation-ID:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      event_id:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        enum:
+                          - deleted
+                      timestamp:
+                        type: string
+                        format: date-time
+                  timestamp:
+                    type: string
+                    format: date-time
+              examples:
+                success:
+                  value:
+                    data:
+                      event_id: evt_001
+                      status: deleted
+                      timestamp: "2025-11-11T14:30:00Z"
+                    timestamp: "2025-11-11T14:30:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /inbox/{eventId}/retry:
+    post:
+      tags:
+        - Inbox
+      summary: Retry failed event
+      description: |
+        Retry a failed event by re-queuing it for processing. Only events with 'failed' status can be retried.
+
+        ## Retry Limits
+        Events can be retried up to 3 times. After reaching the maximum retry count, events must be handled manually.
+
+      operationId: retryEvent
+      parameters:
+        - name: eventId
+          in: path
+          description: Event ID to retry (UUID format)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Event queued for retry
+          headers:
+            X-Correlation-ID:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      event_id:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        enum:
+                          - retrying
+                      new_attempt:
+                        type: integer
+                        description: Retry attempt number
+                      timestamp:
+                        type: string
+                        format: date-time
+                  timestamp:
+                    type: string
+                    format: date-time
+              examples:
+                success:
+                  value:
+                    data:
+                      event_id: evt_001
+                      status: retrying
+                      new_attempt: 2
+                      timestamp: "2025-11-11T14:30:00Z"
+                    timestamp: "2025-11-11T14:30:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Conflict - Event cannot be retried
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidState:
+                  summary: Invalid event status
+                  value:
+                    error:
+                      code: INVALID_STATE
+                      message: "Event status is 'delivered', only 'failed' events can be retried"
+                      timestamp: "2025-11-11T14:30:00Z"
+                      correlation_id: 550e8400-e29b-41d4-a716-446655440000
+                maxRetriesExceeded:
+                  summary: Max retries reached
+                  value:
+                    error:
+                      code: MAX_RETRIES_EXCEEDED
+                      message: "Event has already been retried 3 times (max: 3)"
+                      timestamp: "2025-11-11T14:30:00Z"
+                      correlation_id: 550e8400-e29b-41d4-a716-446655440000
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        API authentication using Bearer tokens. Include your API key in the Authorization header.
+
+        Token format:
+        - Test tokens: `sk-test-{32+ alphanumeric characters}`
+        - Production tokens: `sk-live-{32+ alphanumeric characters}`
+
+        Example:
+        ```
+        Authorization: Bearer sk-test-abc123def456ghi789jkl012mno345
+        ```
+
+  schemas:
+    EventRequest:
+      type: object
+      required:
+        - payload
+      properties:
+        payload:
+          type: object
+          description: The event payload containing your event data
+          additionalProperties: true
+          example:
+            event_type: user.created
+            user_id: "12345"
+            email: user@example.com
+        metadata:
+          type: object
+          description: Optional metadata for categorization and filtering
+          properties:
+            tags:
+              type: array
+              items:
+                type: string
+              description: Event tags for categorization (max 10)
+              maxItems: 10
+            priority:
+              type: string
+              enum:
+                - low
+                - medium
+                - high
+                - critical
+              description: Event priority level
+              default: medium
+            correlation_id:
+              type: string
+              description: Correlation ID for tracing related events
+            idempotency_key:
+              type: string
+              description: Idempotency key for duplicate prevention
+          additionalProperties: true
+
+    EventResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            event_id:
+              type: string
+              format: uuid
+              description: Unique event identifier
+            status:
+              type: string
+              enum:
+                - accepted
+              description: Event acceptance status
+            timestamp:
+              type: string
+              format: date-time
+              description: When the event was received
+        timestamp:
+          type: string
+          format: date-time
+
+    Event:
+      type: object
+      properties:
+        event_id:
+          type: string
+          format: uuid
+          description: Unique event identifier
+        status:
+          type: string
+          enum:
+            - pending
+            - delivered
+            - failed
+            - retrying
+          description: Current event status
+        payload:
+          type: object
+          description: Event payload data
+          additionalProperties: true
+        metadata:
+          type: object
+          description: Event metadata
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+          description: When the event was created
+        updated_at:
+          type: string
+          format: date-time
+          description: When the event was last updated
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the event was processed (null if not yet processed)
+        retry_count:
+          type: integer
+          minimum: 0
+          description: Number of retry attempts
+        error_message:
+          type: string
+          nullable: true
+          description: Error message if event failed
+
+    InboxResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        total:
+          type: integer
+          description: Total number of events matching filters
+        limit:
+          type: integer
+          description: Maximum results per page
+        offset:
+          type: integer
+          description: Pagination offset
+        next_cursor:
+          type: string
+          description: Cursor for next page (cursor-based pagination)
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+        _metadata:
+          type: object
+          properties:
+            filters_applied:
+              type: integer
+              description: Number of filters applied to query
+            sort_field:
+              type: string
+              description: Field used for sorting
+            sort_order:
+              type: string
+              enum:
+                - asc
+                - desc
+              description: Sort order
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+            message:
+              type: string
+              description: Human-readable error message
+            timestamp:
+              type: string
+              format: date-time
+              description: When the error occurred
+            correlation_id:
+              type: string
+              format: uuid
+              description: Request correlation ID for debugging
+
+  responses:
+    BadRequest:
+      description: Bad Request - Invalid request parameters or payload
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalidJson:
+              summary: Invalid JSON
+              value:
+                error:
+                  code: INVALID_JSON
+                  message: Request body must be valid JSON
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+            missingPayload:
+              summary: Missing payload field
+              value:
+                error:
+                  code: INVALID_PAYLOAD
+                  message: Request body must contain payload field as JSON object
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+            invalidParameter:
+              summary: Invalid parameter
+              value:
+                error:
+                  code: INVALID_PARAMETER
+                  message: "Invalid status: invalid. Must be one of: pending, delivered, failed"
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+
+    Unauthorized:
+      description: Unauthorized - Missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            missingAuth:
+              summary: Missing authorization header
+              value:
+                error:
+                  code: MISSING_AUTHORIZATION
+                  message: Authorization header is required
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+            invalidToken:
+              summary: Invalid bearer token
+              value:
+                error:
+                  code: INVALID_TOKEN
+                  message: Bearer token not found or invalid
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+
+    NotFound:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            eventNotFound:
+              summary: Event not found
+              value:
+                error:
+                  code: NOT_FOUND
+                  message: Event evt_001 not found
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+
+    PayloadTooLarge:
+      description: Payload Too Large - Request body exceeds 1MB limit
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            payloadTooLarge:
+              value:
+                error:
+                  code: PAYLOAD_TOO_LARGE
+                  message: Request body exceeds maximum size of 1MB
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            internalError:
+              value:
+                error:
+                  code: INTERNAL_ERROR
+                  message: An unexpected error occurred
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000
+
+    ServiceUnavailable:
+      description: Service Unavailable - Temporary service outage
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            queueUnavailable:
+              value:
+                error:
+                  code: QUEUE_SERVICE_ERROR
+                  message: Queue service temporarily unavailable
+                  timestamp: "2025-11-11T14:30:00Z"
+                  correlation_id: 550e8400-e29b-41d4-a716-446655440000

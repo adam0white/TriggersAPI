@@ -19,6 +19,7 @@ import { handleGetMetrics } from './routes/metrics';
 import { handleGetMetricsHistory } from './routes/metrics-history';
 import { handleInboxQuery, handleAckEvent, handleRetryEvent } from './routes/inbox';
 import { handleGetLogs } from './routes/logs-api';
+import { handleApiDocs, handleOpenApiSpec } from './routes/api-docs';
 import { validateBearerToken, unauthorizedResponse, serviceErrorResponse } from './middleware/auth';
 import { processEventBatch } from './queue/consumer';
 import { ProcessEventWorkflow } from './workflows/process-event';
@@ -71,6 +72,16 @@ export default {
 		// Metrics history API endpoint (public for dashboard charts)
 		if (path === '/api/metrics/history' && method === 'GET') {
 			return handleGetMetricsHistory(request, env, correlationId);
+		}
+
+		// API Documentation routes (public)
+		if (path === '/api/docs' && method === 'GET') {
+			return handleApiDocs();
+		}
+
+		// Serve OpenAPI spec file (public)
+		if (path === '/openapi.yaml' && method === 'GET') {
+			return handleOpenApiSpec();
 		}
 
 		// Check if route requires auth

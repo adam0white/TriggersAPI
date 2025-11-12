@@ -36,11 +36,7 @@ import { logger } from '../lib/logger';
  * @param correlationId - Request correlation ID for tracing
  * @returns JSON response with metrics data or error
  */
-export async function handleGetMetrics(
-	request: Request,
-	env: Env,
-	correlationId: string
-): Promise<Response> {
+export async function handleGetMetrics(request: Request, env: Env, correlationId: string): Promise<Response> {
 	logger.info('GET /metrics request received', {
 		correlation_id: correlationId,
 	});
@@ -66,7 +62,7 @@ export async function handleGetMetrics(
 					'Content-Type': 'application/json',
 					'X-Correlation-ID': correlationId,
 				},
-			}
+			},
 		);
 	} catch (error) {
 		logger.error('Failed to retrieve metrics', {
@@ -88,7 +84,7 @@ export async function handleGetMetrics(
 					'Content-Type': 'application/json',
 					'X-Correlation-ID': correlationId,
 				},
-			}
+			},
 		);
 	}
 }

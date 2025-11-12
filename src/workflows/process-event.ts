@@ -118,13 +118,7 @@ export class ProcessEventWorkflow extends WorkflowEntrypoint<Env, ProcessEventIn
 				const queries = new EventQueries(this.env.DB);
 
 				try {
-					const storedEvent = await queries.createEvent(
-						event_id,
-						payload,
-						metadata,
-						timestamp,
-						retry_attempt
-					);
+					const storedEvent = await queries.createEvent(event_id, payload, metadata, timestamp, retry_attempt);
 
 					logger.info('Event stored successfully', {
 						correlation_id,
@@ -255,4 +249,3 @@ export class ProcessEventWorkflow extends WorkflowEntrypoint<Env, ProcessEventIn
 		}
 	}
 }
-

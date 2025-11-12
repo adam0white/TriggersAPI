@@ -92,11 +92,7 @@ export function createErrorResponse(context: ErrorContext): Response {
  * @param defaultMessage - Optional custom error message (defaults to INTERNAL_ERROR)
  * @returns 500 Response with structured error body
  */
-export function handleError(
-	error: unknown,
-	correlationId: string,
-	defaultMessage = ErrorCodes.INTERNAL_ERROR
-): Response {
+export function handleError(error: unknown, correlationId: string, defaultMessage = ErrorCodes.INTERNAL_ERROR): Response {
 	// Log the full error with stack trace for debugging
 	logError({
 		message: 'Unhandled error occurred',

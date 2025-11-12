@@ -29,7 +29,7 @@ export class MetricsCalculator {
 	constructor(
 		private db: D1Database,
 		private kv: KVNamespace,
-		private loggerInstance = logger
+		private loggerInstance = logger,
 	) {}
 
 	/**
@@ -49,7 +49,7 @@ export class MetricsCalculator {
           WHERE endpoint = ? AND status_code < 500 AND duration_ms > 0
           ORDER BY timestamp DESC
           LIMIT 1000
-        `
+        `,
 					)
 					.bind(endpoint)
 					.all();
@@ -125,7 +125,7 @@ export class MetricsCalculator {
         FROM log_entries
         WHERE timestamp > ?
         GROUP BY status_code, error_category
-      `
+      `,
 				)
 				.bind(fiveMinutesAgo)
 				.all();
@@ -210,7 +210,7 @@ export class MetricsCalculator {
           SUM(CASE WHEN status_code >= 200 AND status_code < 300 THEN 1 ELSE 0 END) as success_count
         FROM log_entries
         WHERE timestamp > ?
-      `
+      `,
 				)
 				.bind(fiveMinutesAgo)
 				.first();
@@ -266,7 +266,7 @@ export class MetricsCalculator {
         FROM log_entries
         WHERE timestamp > ?
         GROUP BY endpoint
-      `
+      `,
 				)
 				.bind(oneMinuteAgo)
 				.all();
@@ -311,7 +311,7 @@ export class MetricsCalculator {
 				.prepare(
 					`
         SELECT COUNT(*) as pending_count FROM events WHERE status = 'pending'
-      `
+      `,
 				)
 				.first();
 
@@ -322,7 +322,7 @@ export class MetricsCalculator {
 				.prepare(
 					`
         SELECT COUNT(*) as failed_count FROM events WHERE status = 'failed'
-      `
+      `,
 				)
 				.first();
 
@@ -366,7 +366,7 @@ export class MetricsCalculator {
           SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed_events,
           AVG(CASE WHEN status = 'delivered' THEN retry_count ELSE NULL END) as avg_retries
         FROM events
-      `
+      `,
 				)
 				.first();
 
@@ -423,7 +423,7 @@ export class MetricsCalculator {
         WHERE cpu_ms > 0 AND cpu_ms < 60000
         ORDER BY timestamp DESC
         LIMIT 1000
-      `
+      `,
 				)
 				.all();
 
@@ -477,7 +477,7 @@ export class MetricsCalculator {
           MAX(response_body_size) as max_response_size
         FROM log_entries
         WHERE timestamp > ?
-      `
+      `,
 				)
 				.bind(new Date(Date.now() - 60 * 60 * 1000).toISOString()) // Last hour
 				.first();
@@ -524,7 +524,7 @@ export class MetricsCalculator {
           COUNT(*) as total_queries
         FROM log_entries
         WHERE db_query_ms > 0 AND timestamp > ?
-      `
+      `,
 				)
 				.bind(new Date(Date.now() - 60 * 60 * 1000).toISOString()) // Last hour
 				.first();
@@ -547,13 +547,7 @@ export class MetricsCalculator {
 			});
 
 			// Store in history
-			await this.storeMetricHistory(
-				'db_avg_query_time',
-				null,
-				metrics.avg_query_time,
-				'ms',
-				metrics.total_queries
-			);
+			await this.storeMetricHistory('db_avg_query_time', null, metrics.avg_query_time, 'ms', metrics.total_queries);
 
 			this.loggerInstance.info('Database metrics calculated', metrics);
 		} catch (error) {
@@ -619,7 +613,7 @@ export class MetricsCalculator {
 		endpoint: string | null,
 		value: number,
 		unit: string,
-		dataPoints: number = 0
+		dataPoints: number = 0,
 	): Promise<void> {
 		try {
 			const now = new Date().toISOString();
@@ -631,7 +625,7 @@ export class MetricsCalculator {
 					`
         INSERT INTO metrics_history (metric_id, metric_type, endpoint, value, unit, timestamp, data_points, confidence)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `
+      `,
 				)
 				.bind(metricId, type, endpoint, value, unit, now, dataPoints, confidence)
 				.run();

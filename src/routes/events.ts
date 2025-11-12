@@ -31,11 +31,7 @@ interface EventPayload {
  * @param correlationId - Request correlation ID for tracing
  * @returns JSON response (200 success, 400/413 error)
  */
-export async function handlePostEvents(
-	request: Request,
-	env: Env,
-	correlationId: string
-): Promise<Response> {
+export async function handlePostEvents(request: Request, env: Env, correlationId: string): Promise<Response> {
 	// Debug flag support - force validation error for testing
 	if (new URL(request.url).searchParams.get('debug') === 'validation_error') {
 		return badRequest('INVALID_PAYLOAD', correlationId, 'Debug: Forced validation error');
@@ -98,7 +94,7 @@ export async function handlePostEvents(
 					'Content-Type': 'application/json',
 					'X-Correlation-ID': correlationId,
 				},
-			}
+			},
 		);
 	}
 
@@ -136,6 +132,6 @@ export async function handlePostEvents(
 				'Content-Type': 'application/json',
 				'X-Correlation-ID': correlationId,
 			},
-		}
+		},
 	);
 }

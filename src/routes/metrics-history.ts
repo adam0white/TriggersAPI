@@ -44,6 +44,7 @@
 
 import { MetricsManager } from '../lib/metrics';
 import { logger } from '../lib/logger';
+import type { ExtendedMetrics } from '../types/metrics';
 
 /**
  * Handle GET /api/metrics/history request
@@ -56,11 +57,7 @@ import { logger } from '../lib/logger';
  * @param correlationId - Request correlation ID for tracing
  * @returns JSON response with historical and current metrics or error
  */
-export async function handleGetMetricsHistory(
-	request: Request,
-	env: Env,
-	correlationId: string
-): Promise<Response> {
+export async function handleGetMetricsHistory(request: Request, env: Env, correlationId: string): Promise<Response> {
 	const url = new URL(request.url);
 	const timeRange = url.searchParams.get('time_range') || 'last-hour';
 
@@ -87,7 +84,7 @@ export async function handleGetMetricsHistory(
 				unit
 			FROM metrics_history
 			WHERE timestamp > ?
-			ORDER BY timestamp ASC`
+			ORDER BY timestamp ASC`,
 		)
 			.bind(startTime)
 			.all();
@@ -107,7 +104,7 @@ export async function handleGetMetricsHistory(
 			FROM log_entries
 			WHERE timestamp > ?
 				AND error_category IS NOT NULL
-			GROUP BY error_category`
+			GROUP BY error_category`,
 		)
 			.bind(startTime)
 			.all();
@@ -130,16 +127,18 @@ export async function handleGetMetricsHistory(
 		}
 
 		// Calculate current metrics with success rate
+		// Cast to ExtendedMetrics for additional computed properties
+		const extendedMetrics = currentMetrics as unknown as ExtendedMetrics;
 		const current = {
-			latency_p50: currentMetrics.latency_p50 || 0,
-			latency_p95: currentMetrics.latency_p95 || 0,
-			latency_p99: currentMetrics.latency_p99 || 0,
-			error_rate: calculateErrorRate(currentMetrics),
-			success_rate: 100 - calculateErrorRate(currentMetrics),
-			throughput_rps: currentMetrics.throughput_rps || 0,
+			latency_p50: extendedMetrics.latency_p50 || 0,
+			latency_p95: extendedMetrics.latency_p95 || 0,
+			latency_p99: extendedMetrics.latency_p99 || 0,
+			error_rate: calculateErrorRate(extendedMetrics),
+			success_rate: 100 - calculateErrorRate(extendedMetrics),
+			throughput_rps: extendedMetrics.throughput_rps || 0,
 			queue_depth: currentMetrics.queue_depth || 0,
-			cpu_p50: currentMetrics.cpu_p50 || 0,
-			cpu_p95: currentMetrics.cpu_p95 || 0,
+			cpu_p50: extendedMetrics.cpu_p50 || 0,
+			cpu_p95: extendedMetrics.cpu_p95 || 0,
 		};
 
 		logger.info('Metrics history retrieved successfully', {
@@ -161,7 +160,7 @@ export async function handleGetMetricsHistory(
 					'Content-Type': 'application/json',
 					'X-Correlation-ID': correlationId,
 				},
-			}
+			},
 		);
 	} catch (error) {
 		logger.error('Failed to retrieve metrics history', {
@@ -184,7 +183,7 @@ export async function handleGetMetricsHistory(
 					'Content-Type': 'application/json',
 					'X-Correlation-ID': correlationId,
 				},
-			}
+			},
 		);
 	}
 }
@@ -218,10 +217,10 @@ function transformHistoricalData(rows: any[]): any[] {
  * Calculate error rate from metrics
  * Error rate = (failed / total_events) * 100
  *
- * @param metrics - Current metrics object
+ * @param metrics - Current metrics object (base Metrics type)
  * @returns Error rate as percentage
  */
-function calculateErrorRate(metrics: any): number {
+function calculateErrorRate(metrics: ExtendedMetrics): number {
 	const total = metrics.total_events || 0;
 	const failed = metrics.failed || 0;
 

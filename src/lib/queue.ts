@@ -30,7 +30,7 @@ export async function sendEventToQueue(
 	eventId: string,
 	payload: Record<string, any>,
 	metadata: Record<string, any> | undefined,
-	correlationId: string
+	correlationId: string,
 ): Promise<{ success: boolean; error?: string }> {
 	try {
 		const queuedEvent: QueuedEvent = {
@@ -50,7 +50,7 @@ export async function sendEventToQueue(
 				event_id: eventId,
 				correlation_id: correlationId,
 				timestamp: new Date().toISOString(),
-			})
+			}),
 		);
 
 		return { success: true };
@@ -64,7 +64,7 @@ export async function sendEventToQueue(
 				error: errorMessage,
 				correlation_id: correlationId,
 				timestamp: new Date().toISOString(),
-			})
+			}),
 		);
 
 		return {

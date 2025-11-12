@@ -196,3 +196,24 @@ export interface AggregatedMetrics {
 	database?: DatabaseMetrics;
 	last_updated: string;
 }
+
+/**
+ * Extended metrics with additional computed properties
+ * Used by metrics history API for enhanced dashboard visualization
+ */
+export interface ExtendedMetrics {
+	// Latency metrics
+	latency_p50?: number;
+	latency_p95?: number;
+	latency_p99?: number;
+
+	// CPU metrics
+	cpu_p50?: number;
+	cpu_p95?: number;
+
+	// Throughput metrics
+	throughput_rps?: number;
+
+	// All other base metrics
+	[key: string]: any;
+}

@@ -175,7 +175,7 @@ export function logQueueOperation(
 	correlationId: string,
 	eventId: string,
 	success: boolean,
-	error?: string
+	error?: string,
 ): void {
 	const level = success ? 'info' : 'error';
 	const message = `Queue ${operation} ${success ? 'succeeded' : 'failed'}`;
@@ -207,13 +207,7 @@ export function logQueueOperation(
  * @param statusCode - Response status code
  * @param duration - Request duration in milliseconds
  */
-export function logRequest(
-	method: string,
-	path: string,
-	correlationId: string,
-	statusCode: number,
-	duration?: number
-): void {
+export function logRequest(method: string, path: string, correlationId: string, statusCode: number, duration?: number): void {
 	logInfo('Request processed', {
 		method,
 		path,

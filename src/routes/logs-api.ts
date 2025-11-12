@@ -75,7 +75,9 @@ export async function handleGetLogs(request: Request, env: Env, correlationId: s
 		const { query, bindings } = buildLogsQuery(params);
 
 		// Execute query
-		const result = await env.DB.prepare(query).bind(...bindings).all<LogEntry>();
+		const result = await env.DB.prepare(query)
+			.bind(...bindings)
+			.all<LogEntry>();
 
 		// Return response
 		return new Response(
@@ -90,7 +92,7 @@ export async function handleGetLogs(request: Request, env: Env, correlationId: s
 					'Content-Type': 'application/json',
 					'x-correlation-id': correlationId,
 				},
-			}
+			},
 		);
 	} catch (error) {
 		logger.error('Failed to fetch logs', {
@@ -110,7 +112,7 @@ export async function handleGetLogs(request: Request, env: Env, correlationId: s
 					'Content-Type': 'application/json',
 					'x-correlation-id': correlationId,
 				},
-			}
+			},
 		);
 	}
 }

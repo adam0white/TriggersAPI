@@ -20,7 +20,7 @@ export class MetricsScheduler {
 
 	constructor(
 		private calculator: MetricsCalculator,
-		private loggerInstance = logger
+		private loggerInstance = logger,
 	) {}
 
 	/**

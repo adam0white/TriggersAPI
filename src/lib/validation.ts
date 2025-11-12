@@ -24,9 +24,7 @@ interface ValidationError {
  * @param body - Unknown input from request.json()
  * @returns Success with validated data OR failure with error details
  */
-export function validateEventRequest(
-	body: unknown
-): { valid: true; data: EventRequest } | { valid: false; error: ValidationError } {
+export function validateEventRequest(body: unknown): { valid: true; data: EventRequest } | { valid: false; error: ValidationError } {
 	// Check if body is object
 	if (typeof body !== 'object' || body === null || Array.isArray(body)) {
 		return {

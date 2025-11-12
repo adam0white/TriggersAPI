@@ -37,11 +37,7 @@ export interface AuthContext {
  * @param correlationId - Request correlation ID for tracing
  * @returns AuthContext with authentication status and optional error
  */
-export async function validateBearerToken(
-	request: Request,
-	env: Env,
-	correlationId: string
-): Promise<AuthContext> {
+export async function validateBearerToken(request: Request, env: Env, correlationId: string): Promise<AuthContext> {
 	const authHeader = request.headers.get('Authorization');
 
 	// Check header exists
@@ -144,10 +140,7 @@ export async function validateBearerToken(
  * @param correlationId - Request correlation ID
  * @returns 401 Response with structured error body
  */
-export function unauthorizedResponse(
-	error: { code: string; message: string },
-	correlationId: string
-): Response {
+export function unauthorizedResponse(error: { code: string; message: string }, correlationId: string): Response {
 	return unauthorized(error.code as ErrorCode, correlationId, error.message);
 }
 
@@ -159,9 +152,6 @@ export function unauthorizedResponse(
  * @param correlationId - Request correlation ID
  * @returns 503 Response with structured error body
  */
-export function serviceErrorResponse(
-	error: { code: string; message: string },
-	correlationId: string
-): Response {
+export function serviceErrorResponse(error: { code: string; message: string }, correlationId: string): Response {
 	return serviceUnavailable(error.code as ErrorCode, correlationId, error.message);
 }

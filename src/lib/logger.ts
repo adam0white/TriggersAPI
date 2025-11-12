@@ -31,7 +31,7 @@ export const logger = {
 				message,
 				timestamp: new Date().toISOString(),
 				...context,
-			})
+			}),
 		);
 	},
 
@@ -46,7 +46,7 @@ export const logger = {
 				message,
 				timestamp: new Date().toISOString(),
 				...context,
-			})
+			}),
 		);
 	},
 
@@ -61,7 +61,7 @@ export const logger = {
 				message,
 				timestamp: new Date().toISOString(),
 				...context,
-			})
+			}),
 		);
 	},
 
@@ -76,7 +76,7 @@ export const logger = {
 				message,
 				timestamp: new Date().toISOString(),
 				...context,
-			})
+			}),
 		);
 	},
 };

@@ -10,13 +10,7 @@
  * - Structured JSON formatting
  */
 
-import type {
-	TailItem,
-	TailLog,
-	TailException,
-	TailLogEntry,
-	StructuredConsoleLog,
-} from '../types/tail';
+import type { TailItem, TailLog, TailException, TailLogEntry, StructuredConsoleLog } from '../types/tail';
 
 export class TailEventProcessor {
 	/**
@@ -76,12 +70,7 @@ export class TailEventProcessor {
 	/**
 	 * Process console log into structured entry
 	 */
-	private static processConsoleLog(
-		log: TailLog,
-		trace: TailItem,
-		workerName: string,
-		requestId: string | null
-	): TailLogEntry {
+	private static processConsoleLog(log: TailLog, trace: TailItem, workerName: string, requestId: string | null): TailLogEntry {
 		// Parse message - TraceLog.message is any[], not unknown[]
 		const message = (log.message || []) as unknown[];
 		const parsedLog = this.parseLogMessage(message);
@@ -135,12 +124,7 @@ export class TailEventProcessor {
 	/**
 	 * Process exception into structured entry
 	 */
-	private static processException(
-		exception: TailException,
-		trace: TailItem,
-		workerName: string,
-		requestId: string | null
-	): TailLogEntry {
+	private static processException(exception: TailException, trace: TailItem, workerName: string, requestId: string | null): TailLogEntry {
 		// Build context with exception details
 		const context: Record<string, unknown> = {
 			outcome: trace.outcome,
@@ -174,11 +158,7 @@ export class TailEventProcessor {
 	/**
 	 * Create summary entry for invocation with no logs/exceptions
 	 */
-	private static createSummaryEntry(
-		trace: TailItem,
-		workerName: string,
-		requestId: string | null
-	): TailLogEntry {
+	private static createSummaryEntry(trace: TailItem, workerName: string, requestId: string | null): TailLogEntry {
 		const context: Record<string, unknown> = {
 			outcome: trace.outcome,
 			scriptName: trace.scriptName,
