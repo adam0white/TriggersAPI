@@ -6,8 +6,17 @@ main = "src/index.ts"
 compatibility_date = "2025-11-11"
 compatibility_flags = ["nodejs_compat"]
 
+workers_dev = false
+
+[[routes]]
+pattern = "triggers.adamwhite.work"
+custom_domain = true
+
 # Observability settings
 [observability]
+enabled = true
+
+[observability.traces]
 enabled = true
 
 # D1 Database Binding
