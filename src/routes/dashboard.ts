@@ -22,11 +22,11 @@ const dashboardHTML = `<!DOCTYPE html>
 
     /* CSS Custom Properties (Design Tokens) */
     :root {
-      /* Primary Color Palette - WCAG AA Compliant */
-      --color-primary: #2563eb;
-      --color-primary-dark: #1d4ed8;
-      --color-primary-light: #dbeafe;
-      --color-primary-hover: #1e40af;
+      /* Primary Color Palette - Zapier Orange - WCAG AA Compliant */
+      --color-primary: #ff4f00;
+      --color-primary-dark: #e64600;
+      --color-primary-light: rgba(255, 79, 0, 0.1);
+      --color-primary-hover: #cc3f00;
 
       /* Success Colors - WCAG AA Compliant */
       --color-success: #059669;

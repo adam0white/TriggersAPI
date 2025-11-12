@@ -52,14 +52,29 @@
 | 5.4 | UI Polish: Responsive Design, Dark Mode, Accessibility | Done | `5.4-ui-polish.md` | 26 KB |
 | 5.5 | Mock Data: Zapier Event Templates, One-Click Sample Generation | Done | `5.5-mock-data-generation.md` | 37 KB |
 
-## Epic 6: Performance Testing + Final Polish (Ready - 2/5+)
+## Epic 6: Performance Testing + Final Polish (Complete - 5/5) ✓
 
 | # | Title | Status | File | Size |
 |---|-------|--------|------|------|
 | 6.1 | Performance Testing: Load Simulation UI, Latency Injection, Metrics Capture | Done | `6.1-performance-testing.md` | 42 KB |
-| 6.2 | API Documentation: Endpoint Specs, Examples, Error Codes, Authentication Guide | Ready for Development | `6.2-api-documentation.md` | 48 KB |
+| 6.2 | API Documentation: Endpoint Specs, Examples, Error Codes, Authentication Guide | Done | `6.2-api-documentation.md` | 48 KB |
+| 6.3 | Setup Documentation: Installation, Configuration, Deployment Guide | Done | `6.3-setup-documentation.md` | 40 KB |
+| 6.4 | Architecture Documentation: System Diagram, Data Flow, Component Descriptions | Done | `6.4-architecture-documentation.md` | 66 KB |
+| 6.5 | Final Polish: Code Review, Optimization, Edge Cases, Production Readiness | Done | `6.5-final-polish.md` | 51 KB |
 
-**Total Content:** ~525 KB (15,000+ lines across all stories)
+## Epic 7: Mission-Control Pulse Dashboard (In Progress - 1/7)
+
+| # | Title | Status | File | Size |
+|---|-------|--------|------|------|
+| 7.1 | Design Tokens & Layout Shell: Zapier Palette, Typography, Spacing, Responsive Grid | TODO | `7.1-design-tokens-layout-shell.md` | 28 KB |
+| 7.2 | Run Command Panel: Default Run Controls, Live Status Pulse, Debug Toggles | TODO | `7.2-run-command-panel.md` | TBD |
+| 7.3 | Event Timeline Canvas: Stage Cards, Animated Transitions, Inline Log Drawer | TODO | `7.3-event-timeline-canvas.md` | TBD |
+| 7.4 | Telemetry Panels Upgrade: Logs, Inbox, Metrics Sync with Active Run | TODO | `7.4-telemetry-panels-upgrade.md` | TBD |
+| 7.5 | Metrics Pulse & Delivery Analysis: Real-Time Tiles, Run History, Comparisons | TODO | `7.5-metrics-pulse-delivery-analysis.md` | TBD |
+| 7.6 | UX Pattern Implementation: Toasts, Confirmations, Command Palette, Empty States | TODO | `7.6-ux-pattern-implementation.md` | TBD |
+| 7.7 | Responsive & Accessibility Polish: Tablet/Mobile Stacking, axe-core, Keyboard Nav | TODO | `7.7-responsive-accessibility-polish.md` | TBD |
+
+**Total Content:** ~650+ KB (18,000+ lines across all stories)
 **Epic 1 Status:** ✓ Complete (1 Done, 5 Ready for Development)
 **Epic 2 Status:** ✓ Complete (All 6 Done)
 **Epic 3 Status:** ✓ Ready for Development (All 5 stories prepared)
@@ -163,6 +178,41 @@ Create comprehensive library of 17+ realistic Zapier event templates. Implement 
 ### 6.1 - Performance Testing
 Comprehensive performance testing module with load simulation UI (1-1000 evt/s), latency injection controls (network simulation), and real-time metrics capture. Build performance dashboard with throughput gauges, latency charts, error tracking, and benchmark results. Allows stress testing the system and validating production readiness.
 
+### 6.2 - API Documentation
+Complete API endpoint specifications including method, path, auth, request/response examples, error codes, rate limiting, webhooks, and authentication guide. Supports both REST API exploration and integration tutorials for developers.
+
+### 6.3 - Setup Documentation
+Installation, configuration, and deployment guide covering: monorepo setup, environment variables, Cloudflare Workers deployment, D1 schema initialization, KV bucket creation, Queue setup, and local development workflow.
+
+### 6.4 - Architecture Documentation
+Comprehensive system documentation: architecture diagram, data flow visualization, component descriptions, design patterns, performance considerations, scalability notes, and operational runbooks for production support.
+
+### 6.5 - Final Polish
+Complete code review, performance optimization, edge case handling, and production readiness certification. Ensures TypeScript strict mode compliance, accessibility compliance (WCAG 2.1 AA), browser compatibility, and deployment readiness.
+
+## Epic 7 Story Summaries
+
+### 7.1 - Design Tokens & Layout Shell
+Establish visual foundation with Zapier design tokens (10-color palette, Degular/Inter typography, 8px spacing grid, elevation system). Build responsive two-column dashboard layout shell: Column 1 (Run Command + Timeline), Column 2 (Telemetry panels). Support desktop (1440px), laptop (1200px), tablet (768px), and mobile (<768px) breakpoints.
+
+### 7.2 - Run Command Panel
+Create hero Run Command panel with default event submission form, live status pulse, debug flag toggles (Validation Error, Queue Delay, Processing Failure, Retry Exhaustion), batch controls, and inline status messaging. Supports both single-event and bulk-run modes.
+
+### 7.3 - Event Timeline Canvas
+Build animated timeline showing pipeline stages (Ingress, Queue, Processing, Inbox) with status chips, connecting progress bar, and inline log drawer triggers. Support single-run and batch aggregation modes with color-coded states and failure expansion.
+
+### 7.4 - Telemetry Panels Upgrade
+Refresh Logs and Inbox panels to mirror active run from timeline, highlight new entries, surface retry actions. Implement table semantics, keyboard navigation, real-time updates, and status filtering. Ensure accessibility standards (ARIA labels, screen reader support).
+
+### 7.5 - Metrics Pulse & Delivery Analysis
+Implement real-time metric tiles (total events, queue depth, avg latency, success rate) with delta badges and comparisons. Add Run History panel with replay controls, filter by run type (default/debug/bulk), and export batch summary functionality.
+
+### 7.6 - UX Pattern Implementation
+Integrate dashboard-wide UX patterns: toast/notification stack, confirmation dialogs, command palette shortcuts (⌘K), empty states with CTAs, reduced-motion preferences, ARIA live regions, and consistent feedback messaging across all interactions.
+
+### 7.7 - Responsive & Accessibility Polish
+Validate tablet/mobile stacking, sticky behaviors, accordion fallbacks. Run axe-core/Lighthouse checks, conduct manual keyboard/screen reader sweeps. Ensure WCAG 2.1 AA compliance, reduced-motion support, browser compatibility across Chrome/Firefox/Safari.
+
 ## Quick Links
 
 - [PRD](../docs/PRD.md) - Product Requirements
@@ -209,10 +259,13 @@ Comprehensive performance testing module with load simulation UI (1-1000 evt/s),
 
 ## Status Tracking
 
-**Epic 1:** ✓ 1 Done, 5 Ready for Development
-**Epic 2:** ✓ All 6 Done (Complete & Verified)
-**Epic 3:** ✓ All 5 Ready for Development (Just Created)
-**Epic 4:** ✓ All 5 Ready for Development (Just Created)
+**Epic 1:** ✓ Complete (1 Done, 5 Ready for Development)
+**Epic 2:** ✓ Complete (All 6 Done)
+**Epic 3:** ✓ Complete (All 5 Done)
+**Epic 4:** ✓ Complete (All 5 Done)
+**Epic 5:** ✓ Complete (All 5 Done)
+**Epic 6:** ✓ Complete (All 5 Done)
+**Epic 7:** In Progress (Story 7.1 Created - TODO)
 
 Each story includes:
 - ✓ Acceptance criteria (10-15 per story)

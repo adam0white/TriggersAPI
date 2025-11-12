@@ -51,6 +51,7 @@ npx wrangler kv:namespace create "AUTH_KV"
 ```bash
 npm run dev
 # Server starts at http://localhost:8787
+# Includes integrated dashboard with Zapier design tokens
 ```
 
 ### 5. Deploy to Cloudflare
@@ -90,9 +91,10 @@ triggers-api/
 │   │   ├── events.ts         # Event types
 │   │   ├── api.ts            # API types
 │   │   └── env.ts            # Environment bindings
-│   └── ui/                   # Dashboard (React + shadcn)
-│       ├── components/       # UI components
-│       └── lib/              # UI utilities
+│   └── ui/                   # Integrated Dashboard (Zapier Design Tokens)
+│       ├── components/       # UI web components
+│       ├── lib/              # UI utilities
+│       └── index.html        # Single-file dashboard application
 ├── test/                     # Test files
 ├── docs/                     # Documentation
 ├── wrangler.toml             # Cloudflare configuration
@@ -102,7 +104,8 @@ triggers-api/
 
 ## Available Scripts
 
-- `npm run dev` - Start local development server
+- `npm run dev` - Start local development server with integrated UI
+- `npm run start` - Alias for `npm run dev`
 - `npm run deploy` - Deploy to Cloudflare
 - `npm run test` - Run tests with Vitest
 - `npm run cf-typegen` - Regenerate TypeScript types from wrangler.toml
@@ -211,7 +214,7 @@ TriggersAPI uses a **single Worker deployment** with multiple function handlers:
 - **Cache**: Cloudflare KV (distributed key-value)
 - **Queue**: Cloudflare Queues (message queue)
 - **Workflows**: Cloudflare Workflows (durable execution)
-- **UI**: React + shadcn + Tailwind CSS
+- **UI**: Integrated single-file HTML dashboard with Zapier design tokens
 
 ### Key Features
 

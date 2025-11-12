@@ -28,6 +28,33 @@ import { MetricsCalculator } from './lib/metrics-calculator';
 import { logger } from './lib/logger';
 
 /**
+ * CORS Configuration
+ */
+const CORS_HEADERS = {
+	'Access-Control-Allow-Origin': '*', // In production, specify exact origin
+	'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+	'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-correlation-id',
+	'Access-Control-Max-Age': '86400', // 24 hours
+};
+
+/**
+ * Add CORS headers to a response
+ * @param response Original response
+ * @returns Response with CORS headers
+ */
+function addCorsHeaders(response: Response): Response {
+	const newHeaders = new Headers(response.headers);
+	Object.entries(CORS_HEADERS).forEach(([key, value]) => {
+		newHeaders.set(key, value);
+	});
+	return new Response(response.body, {
+		status: response.status,
+		statusText: response.statusText,
+		headers: newHeaders,
+	});
+}
+
+/**
  * Export Workflow for Cloudflare Workers
  * Epic 2.3: ProcessEventWorkflow for durable event processing
  */
@@ -45,6 +72,15 @@ export default {
 	 * Handles API routes for event ingestion, retrieval, and dashboard
 	 */
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		// Handle CORS preflight requests (OPTIONS)
+		// CRITICAL: This must be handled BEFORE any authentication checks
+		if (request.method === 'OPTIONS') {
+			return new Response(null, {
+				status: 204,
+				headers: CORS_HEADERS,
+			});
+		}
+
 		// Generate or extract correlation ID for request tracing
 		const correlationIdHeader = 'x-correlation-id';
 		const correlationId = request.headers.get(correlationIdHeader) || crypto.randomUUID();
@@ -56,32 +92,32 @@ export default {
 
 		// Handle public routes (no auth required)
 		if (path === '/' && method === 'GET') {
-			return handleDashboard(request);
+			return addCorsHeaders(await handleDashboard(request));
 		}
 
 		// Metrics endpoint (public for dashboard)
 		if (path === '/metrics' && method === 'GET') {
-			return handleGetMetrics(request, env, correlationId);
+			return addCorsHeaders(await handleGetMetrics(request, env, correlationId));
 		}
 
 		// Logs API endpoint (public for dashboard)
 		if (path === '/api/logs' && method === 'GET') {
-			return handleGetLogs(request, env, correlationId);
+			return addCorsHeaders(await handleGetLogs(request, env, correlationId));
 		}
 
 		// Metrics history API endpoint (public for dashboard charts)
 		if (path === '/api/metrics/history' && method === 'GET') {
-			return handleGetMetricsHistory(request, env, correlationId);
+			return addCorsHeaders(await handleGetMetricsHistory(request, env, correlationId));
 		}
 
 		// API Documentation routes (public)
 		if (path === '/api/docs' && method === 'GET') {
-			return handleApiDocs();
+			return addCorsHeaders(await handleApiDocs());
 		}
 
 		// Serve OpenAPI spec file (public)
 		if (path === '/openapi.yaml' && method === 'GET') {
-			return handleOpenApiSpec();
+			return addCorsHeaders(await handleOpenApiSpec());
 		}
 
 		// Check if route requires auth
@@ -94,20 +130,20 @@ export default {
 			if (!authContext.isAuthenticated) {
 				// Distinguish between auth errors and service errors
 				if (authContext.error?.code === 'AUTH_SERVICE_ERROR') {
-					return serviceErrorResponse(authContext.error, correlationId);
+					return addCorsHeaders(serviceErrorResponse(authContext.error, correlationId));
 				}
-				return unauthorizedResponse(authContext.error!, correlationId);
+				return addCorsHeaders(unauthorizedResponse(authContext.error!, correlationId));
 			}
 		}
 
 		// Route to handlers
 		if (method === 'POST' && path === '/events') {
-			return handlePostEvents(request, env, correlationId);
+			return addCorsHeaders(await handlePostEvents(request, env, correlationId));
 		}
 
 		// GET /inbox - Query events with filtering and pagination
 		if (method === 'GET' && path === '/inbox') {
-			return handleInboxQuery(request, env, correlationId);
+			return addCorsHeaders(await handleInboxQuery(request, env, correlationId));
 		}
 
 		// POST /inbox/:eventId/ack - Acknowledge and delete event
@@ -116,7 +152,7 @@ export default {
 			// Expected: ['', 'inbox', '{eventId}', 'ack']
 			if (pathParts.length === 4) {
 				const eventId = pathParts[2];
-				return handleAckEvent(request, env, ctx, eventId);
+				return addCorsHeaders(await handleAckEvent(request, env, ctx, eventId));
 			}
 		}
 
@@ -126,12 +162,12 @@ export default {
 			// Expected: ['', 'inbox', '{eventId}', 'retry']
 			if (pathParts.length === 4) {
 				const eventId = pathParts[2];
-				return handleRetryEvent(request, env, ctx, eventId);
+				return addCorsHeaders(await handleRetryEvent(request, env, ctx, eventId));
 			}
 		}
 
 		// 404 - Not found
-		return new Response('Not found', { status: 404 });
+		return addCorsHeaders(new Response('Not found', { status: 404 }));
 	},
 
 	/**

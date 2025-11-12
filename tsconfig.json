@@ -15,6 +15,12 @@
 		"moduleResolution": "Bundler",
 		/* Enable importing .json files */
 		"resolveJsonModule": true,
+		/* Base URL for relative module names */
+		"baseUrl": ".",
+		/* Path mapping for @ alias */
+		"paths": {
+			"@/*": ["./src/ui-app/*"]
+		},
 
 		/* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
 		"allowJs": true,
@@ -41,5 +47,5 @@
 		]
 	},
 	"exclude": ["test"],
-	"include": ["worker-configuration.d.ts", "src/**/*.ts"]
+	"include": ["worker-configuration.d.ts", "src/**/*.ts", "src/**/*.tsx"]
 }
