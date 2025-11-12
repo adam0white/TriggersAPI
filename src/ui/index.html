@@ -14,25 +14,25 @@
 			/* CSS Custom Properties (Design Tokens) */
 			:root {
 				/* Primary Color Palette - WCAG AA Compliant */
-				--color-primary: #2563eb;
-				--color-primary-dark: #1d4ed8;
-				--color-primary-light: #dbeafe;
-				--color-primary-hover: #1e40af;
+				--color-primary: #ff4f00;
+				--color-primary-dark: #e64600;
+				--color-primary-light: rgba(255, 79, 0, 0.1);
+				--color-primary-hover: #cc3f00;
 
 				/* Success Colors - WCAG AA Compliant */
-				--color-success: #059669;
-				--color-success-dark: #047857;
-				--color-success-light: #d1fae5;
+				--color-success: #1f3121;
+				--color-success-dark: #162319;
+				--color-success-light: rgba(31, 49, 33, 0.1);
 
 				/* Warning Colors - WCAG AA Compliant */
-				--color-warning: #d97706;
-				--color-warning-dark: #b45309;
-				--color-warning-light: #fef3c7;
+				--color-warning: #ffbf6e;
+				--color-warning-dark: #e6a855;
+				--color-warning-light: rgba(255, 191, 110, 0.1);
 
 				/* Error Colors - WCAG AA Compliant */
-				--color-error: #dc2626;
-				--color-error-dark: #b91c1c;
-				--color-error-light: #fee2e2;
+				--color-error: #e74c3c;
+				--color-error-dark: #c0392b;
+				--color-error-light: rgba(231, 76, 60, 0.1);
 
 				/* Neutral Colors */
 				--color-neutral: #6b7280;
@@ -43,37 +43,47 @@
 				--color-text-primary: #1f2937;
 				--color-text-secondary: #4b5563; /* Improved from #6b7280 for better contrast */
 				--color-text-tertiary: #6b7280; /* Improved from #9ca3af for better contrast */
-				--color-text-inverse: #ffffff;
+				--color-text-inverse: #fffdf9;
 				--color-text-disabled: #9ca3af;
 				--color-text-placeholder: #6b7280; /* Explicit placeholder color */
 
 				/* Background Colors */
-				--color-bg-primary: #ffffff;
-				--color-bg-secondary: #f9fafb;
+				--color-bg-primary: #fffdf9;
+				--color-bg-secondary: #fff3e6;
 				--color-bg-tertiary: #f3f4f6;
-				--color-bg-canvas: #f9fafb;
+				--color-bg-canvas: #fffdf9;
 				--color-bg-overlay: rgba(0, 0, 0, 0.5);
 
 				/* Border Colors */
 				--color-border-primary: #e5e7eb;
 				--color-border-secondary: #d1d5db;
-				--color-border-focus: #2563eb;
+				--color-border-focus: #ff4f00;
+			--color-border-active: #ff4f00;
+
+			/* Zapier Extended Palette */
+			--color-moss: #1f3121;
+			--color-peach: #ffbf6e;
+			--color-earth: #201515;
+			--color-surface: #fffdf9;
+			--color-surface-elevated: #2b2358;
+			--color-accent-1: #c1b7ff;
+			--color-accent-2: #cde4e1;
 
 				/* Typography */
-				--font-family-primary:
+				--font-family-primary: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 					-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
 					'Helvetica Neue', sans-serif;
-				--font-family-mono: 'Monaco', 'Menlo', 'Courier New', monospace;
+				--font-family-mono: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
 
 				/* Font Sizes */
-				--font-size-xs: 12px;
-				--font-size-sm: 13px;
-				--font-size-base: 14px;
-				--font-size-md: 16px;
-				--font-size-lg: 18px;
-				--font-size-xl: 20px;
-				--font-size-2xl: 24px;
-				--font-size-3xl: 28px;
+				--font-size-xs: 0.75rem;
+				--font-size-sm: 0.875rem;
+				--font-size-base: 1rem;
+				--font-size-md: 1rem;
+				--font-size-lg: 1.125rem;
+				--font-size-xl: 1.5rem;
+				--font-size-2xl: 1.75rem;
+				--font-size-3xl: 2.5rem;
 
 				/* Font Weights */
 				--font-weight-normal: 400;
@@ -86,16 +96,14 @@
 				--line-height-normal: 1.5;
 				--line-height-relaxed: 1.6;
 
-				/* Spacing Scale (16px base) */
+				/* Spacing Scale (8px base - Zapier System) */
 				--spacing-xs: 4px;
 				--spacing-sm: 8px;
 				--spacing-md: 12px;
-				--spacing-base: 16px;
-				--spacing-lg: 20px;
-				--spacing-xl: 24px;
-				--spacing-2xl: 32px;
-				--spacing-3xl: 40px;
-				--spacing-4xl: 48px;
+				--spacing-lg: 16px;
+			--spacing-xl: 24px;
+			--spacing-2xl: 32px;
+				--spacing-3xl: 48px;
 
 				/* Border Radius */
 				--radius-sm: 4px;
@@ -106,11 +114,21 @@
 				--radius-full: 9999px;
 
 				/* Shadows */
+				--shadow-card-base: 0 1px 3px rgba(0, 0, 0, 0.1);
 				--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-				--shadow-base: 0 4px 6px rgba(0, 0, 0, 0.1);
 				--shadow-md: 0 6px 12px rgba(0, 0, 0, 0.1);
 				--shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 				--shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.3);
+			--shadow-card-active: 0 0 20px rgba(255, 79, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+			--shadow-modal: 0 20px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.2);
+			--shadow-tooltip: 0 4px 6px rgba(0, 0, 0, 0.2);
+			--shadow-dropdown: 0 10px 15px rgba(0, 0, 0, 0.2);
+
+			/* Glow Effects - Zapier Orange Accents */
+			--glow-primary: 0 0 20px rgba(255, 79, 0, 0.3);
+			--glow-success: 0 0 20px rgba(31, 49, 33, 0.3);
+			--glow-warning: 0 0 20px rgba(255, 191, 110, 0.3);
+			--glow-error: 0 0 20px rgba(231, 76, 60, 0.3);
 
 				/* Transitions */
 				--transition-fast: 0.15s ease;
