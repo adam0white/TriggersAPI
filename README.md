@@ -349,27 +349,15 @@ Events sent to Zapier follow this structure:
 - **Workflow Automation:** Connect to 6,000+ apps for unlimited automation possibilities
 - **Multi-step Workflows:** Chain multiple actions per event for complex workflows
 
-### Demo Zaps
+### Example Integrations
 
-Three ready-to-use demo Zaps showcase the integration:
+TriggersAPI works with any Zapier app. Popular use cases include:
 
-- **Slack DM** - Send real-time event notifications to Slack channels or direct messages
-- **Gmail Email** - Email receipts/logs of events with HTML formatting and attachments
-- **Notion Database** - Log events to Notion databases for tracking and analytics
-
-### Test Scripts
-
-Automated test scripts verify each integration:
-
-```bash
-# Make executable
-chmod +x test-slack-zap.sh test-gmail-zap.sh test-notion-zap.sh
-
-# Run tests
-./test-slack-zap.sh      # 4 tests for Slack integration
-./test-gmail-zap.sh      # 5 tests for Gmail integration
-./test-notion-zap.sh     # 6 tests for Notion integration
-```
+- **Slack** - Send real-time event notifications to channels or direct messages
+- **Gmail** - Email receipts/logs of events with HTML formatting
+- **Notion** - Log events to databases for tracking and analytics
+- **HubSpot** - Create contacts or deals from user events
+- **Google Sheets** - Track events in spreadsheets for analysis
 
 ### Architecture
 
@@ -400,16 +388,9 @@ The Zapier integration uses REST Hooks for real-time event delivery:
 
 ### Documentation
 
-**Getting Started:**
-- [Quick Start Guide](docs/ZAPIER_DEMO_QUICK_START.md) - Get started in 45 minutes
-- [Complete Integration Guide](docs/ZAPIER_INTEGRATION.md) - Full integration documentation
-- [Demo Zaps & Use Cases](docs/ZAPIER_DEMO_ZAPS.md) - Step-by-step Zap creation
-
-**Advanced:**
-- [Webhook Monitoring & Operations](docs/ZAPIER_WEBHOOK_MONITORING.md) - For DevOps/SRE teams
-- [Zapier App Setup](docs/ZAPIER_APP_SETUP.md) - Create the Zapier app
-- [Verification Checklist](docs/ZAPIER_VERIFICATION_CHECKLIST.md) - Ensure everything works
-- [CLI Setup](docs/ZAPIER_CLI_SETUP.md) - Optional CLI authentication
+- [Integration Guide](docs/ZAPIER_INTEGRATION.md) - Complete setup and API reference
+- [Webhook Monitoring](docs/ZAPIER_WEBHOOK_MONITORING.md) - Operations and troubleshooting
+- [App Setup](docs/ZAPIER_APP_SETUP.md) - Create your own Zapier app integration
 
 ### Support
 
