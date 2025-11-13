@@ -20,6 +20,7 @@ import { handleGetMetricsHistory } from './routes/metrics-history';
 import { handleInboxQuery, handleAckEvent, handleRetryEvent } from './routes/inbox';
 import { handleGetLogs } from './routes/logs-api';
 import { handleApiDocs, handleOpenApiSpec } from './routes/api-docs';
+import { handleZapierSubscribe, handleZapierTest, handleZapierUnsubscribe } from './routes/zapier';
 import { validateBearerToken, unauthorizedResponse, serviceErrorResponse } from './middleware/auth';
 import { processEventBatch } from './queue/consumer';
 import { ProcessEventWorkflow } from './workflows/process-event';
@@ -61,7 +62,7 @@ function addCorsHeaders(response: Response): Response {
 export { ProcessEventWorkflow };
 
 // Routes that require authentication
-const PROTECTED_ROUTES = ['/events', '/inbox'];
+const PROTECTED_ROUTES = ['/events', '/inbox', '/zapier', '/health'];
 
 // Public routes (no auth required)
 const PUBLIC_ROUTES = ['/'];
@@ -137,6 +138,26 @@ export default {
 		}
 
 		// Route to handlers
+		// GET /health - Health check endpoint (for Zapier auth test)
+		if (method === 'GET' && path === '/health') {
+			return addCorsHeaders(
+				new Response(
+					JSON.stringify({
+						status: 'ok',
+						message: 'TriggersAPI is running',
+						timestamp: new Date().toISOString(),
+					}),
+					{
+						status: 200,
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Correlation-ID': correlationId,
+						},
+					}
+				)
+			);
+		}
+
 		if (method === 'POST' && path === '/events') {
 			return addCorsHeaders(await handlePostEvents(request, env, correlationId));
 		}
@@ -164,6 +185,27 @@ export default {
 				const eventId = pathParts[2];
 				return addCorsHeaders(await handleRetryEvent(request, env, ctx, eventId));
 			}
+		}
+
+		// Zapier webhook subscription endpoints
+		// POST /zapier/hook - Subscribe to webhooks
+		if (method === 'POST' && path === '/zapier/hook') {
+			return addCorsHeaders(await handleZapierSubscribe(request, env));
+		}
+
+		// GET /zapier/hook - Test webhook with sample data
+		if (method === 'GET' && path === '/zapier/hook') {
+			return addCorsHeaders(await handleZapierTest(request, env));
+		}
+
+		// GET /zapier/hook/sample - Alias for test webhook (Zapier CLI compatibility)
+		if (method === 'GET' && path === '/zapier/hook/sample') {
+			return addCorsHeaders(await handleZapierTest(request, env));
+		}
+
+		// DELETE /zapier/hook - Unsubscribe from webhooks
+		if (method === 'DELETE' && path === '/zapier/hook') {
+			return addCorsHeaders(await handleZapierUnsubscribe(request, env));
 		}
 
 		// 404 - Not found
