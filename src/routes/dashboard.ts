@@ -3413,7 +3413,7 @@ const dashboardHTML = `<!DOCTYPE html>
       </div>
     </header>
 
-    <form id="eventForm">
+    <form id="eventForm" class="card-full">
       <!-- Bearer Token Input -->
       <div class="form-group">
         <label for="bearerToken">Authorization Token</label>
@@ -3474,7 +3474,7 @@ const dashboardHTML = `<!DOCTYPE html>
     -->
 
     <!-- Debug Control Panel -->
-    <div id="debug-panel" class="debug-panel">
+    <div id="debug-panel" class="debug-panel card-full">
       <div class="debug-header">
         <div class="debug-header-left">
           <h2>Debug Control Panel</h2>
@@ -3654,7 +3654,7 @@ const dashboardHTML = `<!DOCTYPE html>
     </div>
 
     <!-- Metrics Dashboard -->
-    <section class="metrics-section" id="metricsSection">
+    <section class="metrics-section card-full" id="metricsSection">
       <div class="metrics-header">
         <h2 class="metrics-title">Real-Time Metrics</h2>
         <div class="refresh-indicator" id="refreshIndicator">
@@ -3980,7 +3980,7 @@ const dashboardHTML = `<!DOCTYPE html>
     </section>
 
     <!-- Live Logs Section -->
-    <section class="inbox-section" id="logsSection">
+    <section class="inbox-section card-full" id="logsSection">
       <div class="metrics-header">
         <h2 class="inbox-title">Live Tail Logs</h2>
         <div class="refresh-indicator" id="logsRefreshIndicator">
@@ -4102,7 +4102,7 @@ const dashboardHTML = `<!DOCTYPE html>
     </section>
 
     <!-- Event Inbox Section -->
-    <section class="inbox-section" id="inboxSection">
+    <section class="inbox-section card-full" id="inboxSection">
       <h2 class="inbox-title">Event Inbox</h2>
 
       <!-- Filters -->
