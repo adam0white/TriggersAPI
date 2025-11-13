@@ -131,7 +131,7 @@ const dashboardHTML = `<!DOCTYPE html>
       --z-tooltip: 10000;
 
       /* Layout */
-      --container-max-width: 1400px;
+      --container-max-width: 1920px;
       --grid-gap: var(--spacing-base);
     }
 
@@ -215,7 +215,7 @@ const dashboardHTML = `<!DOCTYPE html>
     /* PHASE 1: Layout Transformation - New Dashboard Container System */
     .dashboard-container {
       background: transparent;
-      max-width: var(--container-max-width); /* 1400px */
+      max-width: min(96%, 1920px); /* Fluid for ultra-wide screens */
       width: 100%;
       padding: var(--spacing-xl);
       margin: 0 auto;
@@ -253,12 +253,12 @@ const dashboardHTML = `<!DOCTYPE html>
 
     .card-full { grid-column: 1 / -1; }
 
-    /* Updated container with wider max-width */
+    /* Legacy container for backward compatibility */
     .container {
       background: var(--color-bg-primary);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-xl);
-      max-width: 1400px;
+      max-width: 1200px;
       width: 100%;
       padding: var(--spacing-3xl);
     }
@@ -3025,11 +3025,11 @@ const dashboardHTML = `<!DOCTYPE html>
     /* Mobile-first: 320px - 767px */
     @media (max-width: 767px) {
       body {
-        padding: var(--spacing-md);
+        padding: var(--spacing-sm);
       }
 
       .container {
-        padding: var(--spacing-lg);
+        padding: var(--spacing-sm);
         max-width: 100%;
       }
 
