@@ -251,6 +251,24 @@ const dashboardHTML = `<!DOCTYPE html>
       hyphens: auto;
     }
 
+    /* Form and debug panel inherit card styling */
+    #eventForm,
+    #debug-panel {
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-xl);
+      transition: all var(--transition-base);
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    #eventForm:hover,
+    #debug-panel:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
     .card-full { grid-column: 1 / -1; }
 
     /* Legacy container for backward compatibility */
@@ -264,14 +282,22 @@ const dashboardHTML = `<!DOCTYPE html>
     }
 
     header {
-      margin-bottom: var(--spacing-3xl);
-      border-bottom: 2px solid var(--color-border-primary);
-      padding-bottom: var(--spacing-lg);
+      /* Full-width top row header spanning entire grid */
+      grid-column: 1 / -1;
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-xl);
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
       gap: var(--spacing-lg);
+      transition: box-shadow var(--transition-base);
+    }
+
+    header:hover {
+      box-shadow: var(--shadow-lg);
     }
 
     header h1 {
@@ -292,24 +318,25 @@ const dashboardHTML = `<!DOCTYPE html>
     }
 
     .header-link {
-      color: white;
+      color: var(--color-primary);
       text-decoration: none;
       font-size: var(--font-size-sm);
       padding: var(--spacing-sm) var(--spacing-base);
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: var(--border-radius-md);
-      transition: all 0.2s ease;
+      background: var(--color-primary-light);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-base);
       font-weight: var(--font-weight-medium);
       display: inline-flex;
       align-items: center;
       gap: var(--spacing-xs);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid var(--color-primary);
     }
 
     .header-link:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
       transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-sm);
     }
 
     .header-link:active {
@@ -665,9 +692,18 @@ const dashboardHTML = `<!DOCTYPE html>
 
     /* Metrics Dashboard Styles */
     .metrics-section {
-      margin-top: 48px;
-      padding-top: 48px;
-      border-top: 2px solid var(--color-bg-tertiary);
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-xl);
+      transition: all var(--transition-base);
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .metrics-section:hover {
+      box-shadow: var(--shadow-lg);
     }
 
     .metrics-header {
@@ -959,9 +995,18 @@ const dashboardHTML = `<!DOCTYPE html>
 
     /* Event Inbox Styles */
     .inbox-section {
-      margin-top: 48px;
-      padding-top: 48px;
-      border-top: 2px solid var(--color-bg-tertiary);
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-xl);
+      transition: all var(--transition-base);
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .inbox-section:hover {
+      box-shadow: var(--shadow-lg);
     }
 
     .inbox-title {
@@ -3157,11 +3202,20 @@ const dashboardHTML = `<!DOCTYPE html>
         padding: var(--spacing-base);
       }
 
+      /* Form and debug panel reduced padding on mobile */
+      #eventForm,
+      #debug-panel,
+      .metrics-section,
+      .inbox-section {
+        padding: var(--spacing-base);
+      }
+
       /* Stack header vertically on mobile */
       header {
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing-md);
+        padding: var(--spacing-base);
       }
 
       .header-left,
@@ -3353,7 +3407,7 @@ const dashboardHTML = `<!DOCTYPE html>
           API Docs
         </a>
         <!-- PHASE 2: Real health check replaces fake "System Live" badge -->
-        <div id="healthStatus" style="font-size: 12px; color: white;">
+        <div id="healthStatus" style="font-size: 12px; color: var(--color-text-secondary); font-weight: var(--font-weight-medium);">
           <span id="healthCheckText">Checking status...</span>
         </div>
       </div>
