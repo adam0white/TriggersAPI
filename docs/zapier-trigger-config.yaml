@@ -1,0 +1,404 @@
+# Zapier REST Hook Trigger Configuration
+# This file defines the complete configuration for the TriggersAPI "Event Received" trigger
+# Use this as reference when configuring via Zapier Platform UI or CLI
+
+version: "1.0.0"
+last_updated: "2025-11-12"
+
+# ============================================================================
+# APP METADATA
+# ============================================================================
+app:
+  name: "TriggersAPI"
+  title: "TriggersAPI"
+  description: "Real-time event notifications from TriggersAPI"
+  category: "Developer Tools"
+  intended_audience: "Private"
+  homepage_url: "https://github.com/yourusername/triggers-api"
+  logo_url: ""  # Optional: Add logo URL
+  role: "triggers"  # This app sends data TO Zapier
+
+# ============================================================================
+# AUTHENTICATION
+# ============================================================================
+authentication:
+  type: "api_key"
+  placement: "header"
+
+  fields:
+    - key: "api_key"
+      label: "API Key"
+      type: "string"
+      required: true
+      help_text: "Enter your TriggersAPI Bearer token. You can find this in your TriggersAPI dashboard or environment variables."
+      placeholder: "sk_live_..."
+      input_format: "password"  # Masks the token input
+
+  test:
+    method: "GET"
+    url: "{{process.env.BASE_URL}}/inbox"
+    headers:
+      Authorization: "Bearer {{bundle.authData.api_key}}"
+    expected_status: 200
+    expected_body_contains: []  # Just verify 200 OK
+
+  connection_label:
+    template: "TriggersAPI ({{bundle.authData.api_key | slice:-4}})"
+    # Shows: "TriggersAPI (...abc123)"
+
+# ============================================================================
+# TRIGGERS
+# ============================================================================
+triggers:
+  - key: "event"
+    noun: "Event"
+
+    display:
+      label: "Event Received"
+      description: "Triggers when a new event is received by TriggersAPI"
+      help_text: "Subscribe to real-time event notifications from your TriggersAPI instance. Events are delivered instantly when they occur."
+      important: true  # Featured trigger (shows at top of list)
+      hidden: false
+      directions: |
+        This trigger will subscribe to events from your TriggersAPI instance.
+        When an event is sent to the /events endpoint, it will be delivered
+        to this Zap in real-time.
+
+    operation:
+      type: "hook"  # REST Hook trigger type
+
+      # --------------------------------------------------------------------
+      # SUBSCRIBE (Setup Hook)
+      # --------------------------------------------------------------------
+      perform_subscribe:
+        method: "POST"
+        url: "{{process.env.BASE_URL}}/zapier/hook"
+        headers:
+          Authorization: "Bearer {{bundle.authData.api_key}}"
+          Content-Type: "application/json"
+        body:
+          url: "{{bundle.targetUrl}}"
+
+        response:
+          expected_status: [200, 201]
+          sample:
+            status: "success"
+            url: "https://hooks.zapier.com/hooks/catch/..."
+            created_at: "2025-11-12T14:30:00.000Z"
+
+      # --------------------------------------------------------------------
+      # UNSUBSCRIBE (Teardown Hook)
+      # --------------------------------------------------------------------
+      perform_unsubscribe:
+        method: "DELETE"
+        url: "{{process.env.BASE_URL}}/zapier/hook"
+        headers:
+          Authorization: "Bearer {{bundle.authData.api_key}}"
+          Content-Type: "application/json"
+        body:
+          url: "{{bundle.targetUrl}}"
+
+        response:
+          expected_status: [200, 204]
+          sample:
+            status: "deleted"
+            url: "https://hooks.zapier.com/hooks/catch/..."
+
+      # --------------------------------------------------------------------
+      # PERFORM (Get Recent/Sample Events)
+      # --------------------------------------------------------------------
+      perform:
+        method: "GET"
+        url: "{{process.env.BASE_URL}}/zapier/hook/sample"
+        headers:
+          Authorization: "Bearer {{bundle.authData.api_key}}"
+
+        response:
+          expected_status: 200
+          expected_format: "array"  # Must return array of events
+
+      # --------------------------------------------------------------------
+      # PERFORM LIST (Used during setup/testing)
+      # --------------------------------------------------------------------
+      perform_list:
+        method: "GET"
+        url: "{{process.env.BASE_URL}}/zapier/hook/sample"
+        headers:
+          Authorization: "Bearer {{bundle.authData.api_key}}"
+        params:
+          limit: 3  # Only need a few for testing
+
+        response:
+          expected_status: 200
+          expected_format: "array"
+
+      # --------------------------------------------------------------------
+      # OUTPUT FIELDS (Schema of delivered events)
+      # --------------------------------------------------------------------
+      output_fields:
+        - key: "id"
+          label: "Event ID"
+          type: "string"
+          required: true
+          help_text: "Unique identifier for this event. Used for deduplication."
+
+        - key: "event_id"
+          label: "Event ID (Alias)"
+          type: "string"
+          help_text: "Alias for 'id' field for backward compatibility"
+
+        - key: "event_type"
+          label: "Event Type"
+          type: "string"
+          help_text: "Type of event (e.g., 'user.signup', 'order.completed')"
+
+        - key: "timestamp"
+          label: "Timestamp"
+          type: "string"
+          help_text: "ISO-8601 timestamp of when the event occurred"
+
+        - key: "payload"
+          label: "Payload"
+          type: "object"
+          help_text: "Raw event payload data containing event-specific information"
+
+        - key: "payload__event_type"
+          label: "Payload Event Type"
+          type: "string"
+          help_text: "Event type from payload (if present)"
+
+        - key: "payload__user_id"
+          label: "Payload User ID"
+          type: "string"
+          help_text: "User ID from payload (if present)"
+
+        - key: "payload__message"
+          label: "Payload Message"
+          type: "string"
+          help_text: "Message from payload (if present)"
+
+        - key: "metadata"
+          label: "Metadata"
+          type: "object"
+          help_text: "Event metadata including correlation_id, source_ip, user_agent"
+
+        - key: "metadata__correlation_id"
+          label: "Correlation ID"
+          type: "string"
+          help_text: "Correlation ID for tracing related events"
+
+        - key: "metadata__source_ip"
+          label: "Source IP"
+          type: "string"
+          help_text: "IP address of event source"
+
+        - key: "metadata__user_agent"
+          label: "User Agent"
+          type: "string"
+          help_text: "User agent string of event source"
+
+        - key: "created_at"
+          label: "Created At"
+          type: "string"
+          help_text: "ISO-8601 timestamp of when event was stored in TriggersAPI"
+
+      # --------------------------------------------------------------------
+      # SAMPLE DATA (Used for testing and Zap Editor preview)
+      # --------------------------------------------------------------------
+      sample:
+        id: "evt_12345abcde"
+        event_id: "evt_12345abcde"
+        event_type: "test_event"
+        timestamp: "2025-11-12T14:30:00.000Z"
+        payload:
+          event_type: "test_event"
+          message: "Sample test event from TriggersAPI"
+          source: "zapier"
+          test: true
+          user_id: "user_sample_123"
+        metadata:
+          correlation_id: "corr_abc123"
+          source_ip: "192.0.2.1"
+          user_agent: "Zapier/1.0"
+        created_at: "2025-11-12T14:30:00.500Z"
+
+      # --------------------------------------------------------------------
+      # INPUT FIELDS (Optional filters for trigger)
+      # --------------------------------------------------------------------
+      input_fields:
+        - key: "event_type_filter"
+          label: "Event Type Filter (Optional)"
+          type: "string"
+          required: false
+          help_text: "Only trigger for events matching this type (e.g., 'user.signup'). Leave blank for all events."
+          placeholder: "user.signup"
+          altersDynamicFields: false
+
+# ============================================================================
+# WEBHOOK PAYLOAD STRUCTURE
+# ============================================================================
+webhook_payload:
+  description: "Structure of events POSTed to Zapier webhook URLs"
+  content_type: "application/json"
+
+  schema:
+    type: "object"
+    required: ["id", "event_id", "timestamp", "payload", "created_at"]
+    properties:
+      id:
+        type: "string"
+        description: "Unique event identifier"
+        example: "evt_67890xyz"
+
+      event_id:
+        type: "string"
+        description: "Alias for id field"
+        example: "evt_67890xyz"
+
+      event_type:
+        type: "string"
+        description: "Type/category of event"
+        example: "user.signup"
+
+      timestamp:
+        type: "string"
+        format: "date-time"
+        description: "When event occurred (ISO-8601)"
+        example: "2025-11-12T15:45:00.000Z"
+
+      payload:
+        type: "object"
+        description: "Event-specific data"
+        example:
+          user_id: "user_123"
+          email: "user@example.com"
+          plan: "pro"
+
+      metadata:
+        type: "object"
+        description: "Event metadata"
+        properties:
+          correlation_id:
+            type: "string"
+            example: "corr_xyz789"
+          source_ip:
+            type: "string"
+            example: "203.0.113.45"
+          user_agent:
+            type: "string"
+            example: "Mozilla/5.0..."
+
+      created_at:
+        type: "string"
+        format: "date-time"
+        description: "When event was stored (ISO-8601)"
+        example: "2025-11-12T15:45:00.250Z"
+
+# ============================================================================
+# DEDUPLICATION
+# ============================================================================
+deduplication:
+  method: "id"
+  field: "id"
+  description: "Events are deduplicated using the 'id' field. Zapier will not trigger multiple times for the same event_id."
+
+# ============================================================================
+# POLLING FALLBACK (Not used for REST Hooks, but required for testing)
+# ============================================================================
+polling_fallback:
+  enabled: false
+  reason: "REST Hooks provide real-time delivery. Polling not needed."
+
+# ============================================================================
+# VERSIONING
+# ============================================================================
+versions:
+  - version: "1.0.0"
+    date: "2025-11-12"
+    status: "draft"
+    changelog: "Initial REST Hook trigger implementation"
+    breaking_changes: false
+
+# ============================================================================
+# TESTING CHECKLIST
+# ============================================================================
+testing_checklist:
+  - description: "Authentication test passes"
+    command: "curl -H 'Authorization: Bearer TOKEN' {{BASE_URL}}/inbox"
+    expected: "200 OK"
+
+  - description: "Subscribe hook creates webhook"
+    command: "curl -X POST -H 'Authorization: Bearer TOKEN' -d '{\"url\":\"https://test.com\"}' {{BASE_URL}}/zapier/hook"
+    expected: "{\"status\":\"success\"}"
+
+  - description: "Sample endpoint returns array"
+    command: "curl -H 'Authorization: Bearer TOKEN' {{BASE_URL}}/zapier/hook/sample"
+    expected: "[{...}]"
+
+  - description: "Unsubscribe hook removes webhook"
+    command: "curl -X DELETE -H 'Authorization: Bearer TOKEN' -d '{\"url\":\"https://test.com\"}' {{BASE_URL}}/zapier/hook"
+    expected: "{\"status\":\"deleted\"}"
+
+  - description: "Event delivery works end-to-end"
+    steps:
+      - "Create test Zap"
+      - "Send event to /events"
+      - "Verify Zap receives event"
+
+# ============================================================================
+# NOTES
+# ============================================================================
+notes:
+  - "This configuration is for Zapier Platform UI/CLI setup"
+  - "Backend endpoints (/zapier/hook) implemented in Story 8.2"
+  - "Event delivery logic implemented in Story 8.3"
+  - "Security/signature verification in Story 8.4"
+  - "App is private/draft until ready for public submission"
+  - "Replace {{process.env.BASE_URL}} with actual deployed URL"
+  - "For local testing, use ngrok or Cloudflare Tunnel"
+
+# ============================================================================
+# RELATED FILES
+# ============================================================================
+related_files:
+  - "docs/ZAPIER_APP_SETUP.md"
+  - "docs/zapier-handshake-protocol.md"
+  - "docs/zapier-event-schema.json"
+  - "docs/zapier-auth-config.md"
+  - "src/routes/zapier-hook.ts"  # To be created in Story 8.2
+
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+environment_variables:
+  required:
+    - name: "BASE_URL"
+      description: "Base URL of TriggersAPI instance"
+      example: "https://triggers-api.yourdomain.workers.dev"
+      used_in: ["subscribe_url", "unsubscribe_url", "poll_url"]
+
+    - name: "AUTH_TOKEN"
+      description: "Bearer token for API authentication"
+      example: "sk_live_abc123def456"
+      used_in: ["authentication_test", "webhook_endpoints"]
+
+  optional:
+    - name: "ZAPIER_WEBHOOK_TIMEOUT"
+      description: "Timeout for webhook delivery (milliseconds)"
+      default: "5000"
+      example: "10000"
+
+    - name: "ZAPIER_MAX_RETRIES"
+      description: "Max retry attempts for failed webhook delivery"
+      default: "3"
+      example: "5"
+
+# ============================================================================
+# ZAPIER PLATFORM URLS
+# ============================================================================
+platform_urls:
+  dashboard: "https://platform.zapier.com"
+  app_directory: "https://zapier.com/apps"
+  documentation: "https://platform.zapier.com/docs"
+  rest_hooks_guide: "https://platform.zapier.com/build/rest-hooks"
+  cli_docs: "https://github.com/zapier/zapier-platform"

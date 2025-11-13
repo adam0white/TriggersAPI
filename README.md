@@ -284,11 +284,146 @@ npx wrangler deploy --env production
 4. Push to branch: `git push origin feature/my-feature`
 5. Open a Pull Request
 
+## Zapier Integration
+
+### Overview
+
+TriggersAPI integrates with [Zapier](https://zapier.com) via REST Hook triggers, enabling seamless integration with 6,000+ apps including Slack, Gmail, Notion, HubSpot, and more. When an event is ingested, it automatically triggers Zaps to send notifications, log data, or perform actions across your entire app ecosystem.
+
+### Quick Start
+
+1. **Create a Zapier Zap:**
+   - Go to https://zapier.com/app/dashboard
+   - Click "Create Zap"
+   - Choose "TriggersAPI" as trigger → "Event Received"
+   - Connect your TriggersAPI instance
+   - Choose an action (e.g., "Slack" → "Send Direct Message")
+   - Configure action using event fields
+   - Turn on Zap
+
+2. **Send an Event:**
+   ```bash
+   curl -X POST https://your-triggersapi.com/events \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "event_type": "payment_received",
+       "payload": {
+         "amount": 100,
+         "currency": "USD",
+         "customer": "John Doe"
+       }
+     }'
+   ```
+
+3. **See the Action Execute:**
+   Within seconds, your configured action (Slack message, email, database entry, etc.) executes automatically.
+
+### Event Schema
+
+Events sent to Zapier follow this structure:
+
+```json
+{
+  "event_id": "evt_12345",
+  "event_type": "payment_received",
+  "timestamp": "2025-11-12T14:30:00Z",
+  "payload": {
+    "amount": 100,
+    "currency": "USD",
+    "customer": "John Doe"
+  },
+  "metadata": {
+    "correlation_id": "req_abc123",
+    "source_ip": "203.0.113.42"
+  },
+  "created_at": "2025-11-12T14:30:00Z"
+}
+```
+
+### Use Cases
+
+- **Real-time Notifications:** Send Slack messages or emails for critical events
+- **CRM Integration:** Create HubSpot contacts or deals from user events
+- **Database Logging:** Automatically log events to Notion, Airtable, or Google Sheets
+- **Workflow Automation:** Connect to 6,000+ apps for unlimited automation possibilities
+- **Multi-step Workflows:** Chain multiple actions per event for complex workflows
+
+### Demo Zaps
+
+Three ready-to-use demo Zaps showcase the integration:
+
+- **Slack DM** - Send real-time event notifications to Slack channels or direct messages
+- **Gmail Email** - Email receipts/logs of events with HTML formatting and attachments
+- **Notion Database** - Log events to Notion databases for tracking and analytics
+
+### Test Scripts
+
+Automated test scripts verify each integration:
+
+```bash
+# Make executable
+chmod +x test-slack-zap.sh test-gmail-zap.sh test-notion-zap.sh
+
+# Run tests
+./test-slack-zap.sh      # 4 tests for Slack integration
+./test-gmail-zap.sh      # 5 tests for Gmail integration
+./test-notion-zap.sh     # 6 tests for Notion integration
+```
+
+### Architecture
+
+The Zapier integration uses REST Hooks for real-time event delivery:
+
+```
+1. Zap Created → Zapier subscribes via POST /zapier/hook
+   ↓
+2. Event Ingested → TriggersAPI stores event in D1
+   ↓
+3. Webhook Delivery → Event POSTed to all active Zapier webhooks
+   ↓
+4. Zap Executes → Slack message sent, email sent, Notion entry created
+```
+
+**Key Features:**
+- REST Hook triggers for real-time event delivery
+- Automatic retry with exponential backoff
+- Webhook health monitoring and auto-recovery
+- Rate limiting for security (100 subscriptions/hour/IP)
+- HTTPS-only webhook URLs for security
+
+### API Endpoints
+
+- `POST /zapier/hook` - Subscribe to events (create webhook)
+- `GET /zapier/hook` - Test webhook connectivity (returns sample event)
+- `DELETE /zapier/hook` - Unsubscribe from events (delete webhook)
+
+### Documentation
+
+**Getting Started:**
+- [Quick Start Guide](docs/ZAPIER_DEMO_QUICK_START.md) - Get started in 45 minutes
+- [Complete Integration Guide](docs/ZAPIER_INTEGRATION.md) - Full integration documentation
+- [Demo Zaps & Use Cases](docs/ZAPIER_DEMO_ZAPS.md) - Step-by-step Zap creation
+
+**Advanced:**
+- [Webhook Monitoring & Operations](docs/ZAPIER_WEBHOOK_MONITORING.md) - For DevOps/SRE teams
+- [Zapier App Setup](docs/ZAPIER_APP_SETUP.md) - Create the Zapier app
+- [Verification Checklist](docs/ZAPIER_VERIFICATION_CHECKLIST.md) - Ensure everything works
+- [CLI Setup](docs/ZAPIER_CLI_SETUP.md) - Optional CLI authentication
+
+### Support
+
+For issues or questions:
+- Check the [troubleshooting guide](docs/ZAPIER_INTEGRATION.md#troubleshooting)
+- Review Zapier task history for specific errors
+- View [webhook monitoring guide](docs/ZAPIER_WEBHOOK_MONITORING.md) for operational issues
+- Contact support with webhook IDs and timestamps
+
 ## Documentation
 
-- [PRD](../docs/PRD.md) - Product Requirements Document
-- [Architecture](../docs/architecture.md) - Technical Architecture
-- [API Documentation](../docs/api.md) - API Reference
+- [PRD](docs/PRD.md) - Product Requirements Document
+- [Architecture](docs/architecture.md) - Technical Architecture
+- [API Documentation](docs/api.md) - API Reference
 
 ## Resources
 

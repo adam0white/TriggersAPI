@@ -6,6 +6,7 @@
  * - Step 2: Store event to D1 database with status='pending'
  * - Step 3: Update KV metrics counters (increment pending, total)
  * - Step 4: Mark event as delivered (update status, adjust metrics)
+ * - Step 5: Deliver event to Zapier webhooks (Epic 8.3)
  *
  * Workflow Features:
  * - Durable execution with automatic state persistence
@@ -13,6 +14,7 @@
  * - Exponential backoff on failures
  * - Idempotent operations for safe retries
  * - Correlation ID propagation for request tracing
+ * - Non-blocking webhook delivery (failures don't affect event processing)
  *
  * Configuration (wrangler.toml):
  * - binding: PROCESS_EVENT_WORKFLOW
@@ -24,6 +26,8 @@ import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from 'cloudflare:work
 import { logger } from '../lib/logger';
 import { EventQueries } from '../db/queries';
 import { MetricsManager } from '../lib/metrics';
+import { WebhookDeliveryService } from '../lib/webhook-delivery';
+import { ZapierTestResponse } from '../types/api';
 
 /**
  * Input payload for ProcessEventWorkflow
@@ -218,6 +222,54 @@ export class ProcessEventWorkflow extends WorkflowEntrypoint<Env, ProcessEventIn
 					// Log but don't fail entire workflow
 					return {
 						status_updated: false,
+					};
+				}
+			});
+
+			// Step 5: Deliver event to Zapier webhooks (Epic 8.3)
+			// Non-blocking delivery - failures don't affect event processing
+			await step.do('deliver-to-webhooks', async () => {
+				logger.debug('Delivering event to Zapier webhooks', {
+					correlation_id,
+					event_id,
+				});
+
+				try {
+					// Format event data for Zapier webhook delivery
+					const webhookEvent: ZapierTestResponse = {
+						event_id,
+						event_type: (payload as any).event_type || 'event',
+						timestamp,
+						payload,
+						metadata: metadata || {},
+						created_at: timestamp,
+					};
+
+					// Deliver to all active webhooks
+					await WebhookDeliveryService.deliverEventToWebhooks(
+						webhookEvent,
+						this.env,
+						event_id,
+						correlation_id
+					);
+
+					logger.info('Webhook delivery completed', {
+						correlation_id,
+						event_id,
+					});
+
+					return {
+						webhooks_notified: true,
+					};
+				} catch (error) {
+					logger.error('Webhook delivery failed', {
+						correlation_id,
+						event_id,
+						error: error instanceof Error ? error.message : 'Unknown',
+					});
+					// Log but don't fail entire workflow - webhook delivery is best-effort
+					return {
+						webhooks_notified: false,
 					};
 				}
 			});

@@ -1,0 +1,347 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://triggersapi.com/schemas/zapier-event.json",
+  "title": "Zapier Event Schema",
+  "description": "JSON Schema for events delivered to Zapier webhooks from TriggersAPI",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "id",
+    "event_id",
+    "timestamp",
+    "payload",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this event. Used by Zapier for deduplication.",
+      "pattern": "^evt_[a-zA-Z0-9]{10,}$",
+      "examples": [
+        "evt_12345abcde",
+        "evt_67890xyz",
+        "evt_2025111215450012345"
+      ]
+    },
+    "event_id": {
+      "type": "string",
+      "description": "Alias for 'id' field. Provided for backward compatibility.",
+      "pattern": "^evt_[a-zA-Z0-9]{10,}$",
+      "examples": [
+        "evt_12345abcde",
+        "evt_67890xyz"
+      ]
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Category or type of event. Useful for filtering in Zapier.",
+      "minLength": 1,
+      "maxLength": 255,
+      "examples": [
+        "user.signup",
+        "user.login",
+        "order.completed",
+        "payment.succeeded",
+        "test_event",
+        "webhook.test"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of when the event occurred",
+      "examples": [
+        "2025-11-12T14:30:00.000Z",
+        "2025-11-12T15:45:30.123Z"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific data containing the actual event information",
+      "additionalProperties": true,
+      "examples": [
+        {
+          "user_id": "user_123",
+          "email": "user@example.com",
+          "plan": "pro"
+        },
+        {
+          "order_id": "order_456",
+          "total": 99.99,
+          "currency": "USD"
+        },
+        {
+          "event_type": "test_event",
+          "message": "Sample test event from TriggersAPI",
+          "source": "zapier",
+          "test": true
+        }
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string",
+          "description": "Event type can also be nested in payload"
+        },
+        "message": {
+          "type": "string",
+          "description": "Optional message describing the event"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "User ID if event is user-related"
+        },
+        "source": {
+          "type": "string",
+          "description": "Source system or service that generated the event"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata about the event (correlation, source info, etc)",
+      "additionalProperties": true,
+      "properties": {
+        "correlation_id": {
+          "type": "string",
+          "description": "Correlation ID for tracing related events across systems",
+          "examples": [
+            "corr_abc123",
+            "corr_xyz789abc"
+          ]
+        },
+        "source_ip": {
+          "type": "string",
+          "description": "IP address of the event source",
+          "format": "ipv4",
+          "examples": [
+            "192.0.2.1",
+            "203.0.113.45"
+          ]
+        },
+        "user_agent": {
+          "type": "string",
+          "description": "User agent string of the client that sent the event",
+          "examples": [
+            "Zapier/1.0",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+          ]
+        },
+        "request_id": {
+          "type": "string",
+          "description": "Request ID from the original API call",
+          "examples": [
+            "req_abcdef123456"
+          ]
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of when the event was stored in TriggersAPI",
+      "examples": [
+        "2025-11-12T14:30:00.500Z",
+        "2025-11-12T15:45:30.456Z"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "id": "evt_12345abcde",
+      "event_id": "evt_12345abcde",
+      "event_type": "test_event",
+      "timestamp": "2025-11-12T14:30:00.000Z",
+      "payload": {
+        "event_type": "test_event",
+        "message": "Sample test event from TriggersAPI",
+        "source": "zapier",
+        "test": true
+      },
+      "metadata": {
+        "correlation_id": "corr_abc123",
+        "source_ip": "192.0.2.1",
+        "user_agent": "Zapier/1.0"
+      },
+      "created_at": "2025-11-12T14:30:00.500Z"
+    },
+    {
+      "id": "evt_67890xyz",
+      "event_id": "evt_67890xyz",
+      "event_type": "user.signup",
+      "timestamp": "2025-11-12T15:45:00.000Z",
+      "payload": {
+        "user_id": "user_123",
+        "email": "user@example.com",
+        "name": "John Doe",
+        "plan": "pro",
+        "trial_end": "2025-12-12T15:45:00.000Z",
+        "metadata": {
+          "referral_code": "FRIEND10",
+          "utm_source": "google",
+          "utm_campaign": "summer_sale"
+        }
+      },
+      "metadata": {
+        "correlation_id": "corr_xyz789abc",
+        "source_ip": "203.0.113.45",
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "request_id": "req_abcdef123456"
+      },
+      "created_at": "2025-11-12T15:45:00.250Z"
+    },
+    {
+      "id": "evt_order_completed_123",
+      "event_id": "evt_order_completed_123",
+      "event_type": "order.completed",
+      "timestamp": "2025-11-12T16:20:15.000Z",
+      "payload": {
+        "order_id": "order_789",
+        "customer_id": "cust_456",
+        "total": 149.99,
+        "currency": "USD",
+        "items": [
+          {
+            "product_id": "prod_001",
+            "name": "Premium Widget",
+            "quantity": 2,
+            "price": 74.99
+          }
+        ],
+        "shipping": {
+          "method": "express",
+          "tracking_number": "1Z999AA10123456784"
+        },
+        "status": "completed"
+      },
+      "metadata": {
+        "correlation_id": "corr_order_789",
+        "source_ip": "198.51.100.42",
+        "user_agent": "ShopifyApp/1.0"
+      },
+      "created_at": "2025-11-12T16:20:15.123Z"
+    },
+    {
+      "id": "evt_payment_succeeded_456",
+      "event_id": "evt_payment_succeeded_456",
+      "event_type": "payment.succeeded",
+      "timestamp": "2025-11-12T17:05:30.000Z",
+      "payload": {
+        "payment_id": "pay_xyz123",
+        "amount": 9999,
+        "currency": "USD",
+        "customer": {
+          "id": "cust_abc789",
+          "email": "customer@example.com"
+        },
+        "payment_method": {
+          "type": "card",
+          "last4": "4242",
+          "brand": "visa"
+        },
+        "description": "Subscription renewal - Pro Plan"
+      },
+      "metadata": {
+        "correlation_id": "corr_payment_456",
+        "source_ip": "203.0.113.67",
+        "user_agent": "Stripe-Webhook/1.0"
+      },
+      "created_at": "2025-11-12T17:05:30.789Z"
+    }
+  ],
+  "definitions": {
+    "webhook_subscription": {
+      "title": "Zapier Webhook Subscription",
+      "description": "Structure for subscribing/unsubscribing to events",
+      "type": "object",
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Zapier webhook URL to send events to",
+          "pattern": "^https://hooks\\.zapier\\.com/hooks/catch/",
+          "examples": [
+            "https://hooks.zapier.com/hooks/catch/123456/abcdef/",
+            "https://hooks.zapier.com/hooks/catch/789012/xyz123/"
+          ]
+        }
+      }
+    },
+    "webhook_subscription_response": {
+      "title": "Webhook Subscription Response",
+      "description": "Response from subscribe/unsubscribe endpoints",
+      "type": "object",
+      "required": ["status", "url"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["success", "deleted", "error"],
+          "description": "Status of the subscription operation"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The webhook URL that was subscribed/unsubscribed"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when subscription was created (subscribe only)"
+        },
+        "error": {
+          "type": "string",
+          "description": "Error message if status is 'error'"
+        }
+      }
+    },
+    "sample_event_response": {
+      "title": "Sample Event Response",
+      "description": "Response from sample/test endpoint",
+      "type": "array",
+      "items": {
+        "$ref": "#"
+      },
+      "minItems": 1,
+      "maxItems": 3
+    }
+  },
+  "notes": [
+    "All timestamps MUST be in ISO-8601 format with UTC timezone (Z suffix)",
+    "The 'id' field is used by Zapier for deduplication - ensure uniqueness",
+    "The 'payload' object can contain any event-specific data",
+    "The 'metadata' object should contain request-level information",
+    "Zapier expects webhook deliveries to complete within 30 seconds",
+    "Events should be delivered via POST to registered webhook URLs",
+    "Webhook delivery should retry on 5xx errors with exponential backoff"
+  ],
+  "validation_rules": {
+    "id_format": "Must start with 'evt_' followed by alphanumeric characters",
+    "timestamp_format": "ISO-8601 with UTC timezone (Z suffix)",
+    "payload_size": "Recommended max 1MB per event",
+    "deduplication": "Events with same 'id' will be deduplicated by Zapier",
+    "delivery_timeout": "Webhook delivery should complete within 5 seconds",
+    "retry_policy": "Retry up to 3 times with exponential backoff on 5xx errors"
+  },
+  "related_endpoints": {
+    "subscribe": {
+      "method": "POST",
+      "path": "/zapier/hook",
+      "description": "Register a new webhook subscription"
+    },
+    "unsubscribe": {
+      "method": "DELETE",
+      "path": "/zapier/hook",
+      "description": "Remove a webhook subscription"
+    },
+    "sample": {
+      "method": "GET",
+      "path": "/zapier/hook/sample",
+      "description": "Get sample events for testing"
+    },
+    "delivery": {
+      "method": "POST",
+      "path": "https://hooks.zapier.com/hooks/catch/{id}/{key}/",
+      "description": "Deliver event to Zapier webhook"
+    }
+  }
+}

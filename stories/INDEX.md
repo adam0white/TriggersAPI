@@ -74,6 +74,17 @@
 | 7.6 | UX Pattern Implementation: Toasts, Confirmations, Command Palette, Empty States | TODO | `7.6-ux-pattern-implementation.md` | TBD |
 | 7.7 | Responsive & Accessibility Polish: Tablet/Mobile Stacking, axe-core, Keyboard Nav | TODO | `7.7-responsive-accessibility-polish.md` | TBD |
 
+## Epic 8: Zapier Integration - REST Hook Trigger (Draft - 0/6)
+
+| # | Title | Status | File | Size |
+|---|-------|--------|------|------|
+| 8.1 | Zapier App Setup: Create REST Hook Trigger | Draft | `8.1-zapier-app-setup.md` | 18 KB |
+| 8.2 | Webhook Subscription Management: Store & Handle Zapier Subscriptions | Draft | `8.2-webhook-subscription-mgmt.md` | 22 KB |
+| 8.3 | Event Delivery: Push Events to Zapier Webhooks | Draft | `8.3-zapier-event-delivery.md` | 28 KB |
+| 8.4 | Security & Validation: Payload Verification & Error Handling | Draft | `8.4-zapier-security.md` | 26 KB |
+| 8.5 | Demo Zap Creation: Build Slack/Gmail/Notion Showcase | Draft | `8.5-demo-zap-creation.md` | 24 KB |
+| 8.6 | Documentation: Zapier Integration Guide & API Reference | Draft | `8.6-zapier-documentation.md` | 32 KB |
+
 **Total Content:** ~650+ KB (18,000+ lines across all stories)
 **Epic 1 Status:** ✓ Complete (1 Done, 5 Ready for Development)
 **Epic 2 Status:** ✓ Complete (All 6 Done)
@@ -283,3 +294,33 @@ Each story includes:
 - TypeScript types and interfaces provided
 - Error handling strategies detailed
 - Testing verification steps included
+
+## Epic 8 Story Summaries
+
+### 8.1 - Zapier App Setup
+Create private Zapier app with REST Hook trigger pointing to /events endpoint. Configure trigger definition, handshake protocol, and test webhook registration. Foundation for Zapier integration.
+
+### 8.2 - Webhook Subscription Management
+Implement POST/GET/DELETE /zapier/hook endpoints to handle Zapier's subscribe/test/unsubscribe lifecycle. Store webhook URLs in D1 with status tracking (active/failing/inactive). Enforce HTTPS + zapier.com domain validation.
+
+### 8.3 - Event Delivery
+Push events to all active Zapier webhooks automatically when events arrive. Implement retry logic (exponential backoff: 2s, 4s, 8s, 16s) with max 4 retries. Non-blocking delivery with status tracking and DLQ for failed deliveries.
+
+### 8.4 - Security & Validation
+Add HMAC-SHA256 signature verification (X-Zapier-Signature header). Implement JSON schema validation for event payloads. Add rate limiting (100 subscriptions per IP per hour), content-type validation, and helpful 4xx error responses.
+
+### 8.5 - Demo Zap Creation
+Build 3 real, working demo Zaps showcasing integration:
+1. Slack notification (send DM with event details)
+2. Gmail email (archive events)
+3. Notion database (log events to database)
+
+Document step-by-step creation process and include troubleshooting guide.
+
+### 8.6 - Documentation
+Create comprehensive integration guides:
+1. `docs/ZAPIER_INTEGRATION.md` - Complete integration guide with API reference
+2. `docs/ZAPIER_WEBHOOK_MONITORING.md` - Operations, monitoring, and debugging
+3. Update `README.md` with Zapier section and quick start
+
+Include examples, field mapping, best practices, and troubleshooting.

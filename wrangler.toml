@@ -67,3 +67,10 @@ service = "triggers-api"
 # Epic 4.3: Metrics calculation every 30 seconds
 [triggers]
 crons = ["*/1 * * * *"]  # Every minute (Cloudflare minimum frequency)
+
+# Environment Variables
+# Epic 8.4: Zapier Security & Validation
+[vars]
+# ZAPIER_SIGNING_SECRET - Set via: wrangler secret put ZAPIER_SIGNING_SECRET
+# Development: Use any string for testing (e.g., "dev-secret-do-not-use-in-production")
+# Production: Generate secure random secret (e.g., openssl rand -hex 32)

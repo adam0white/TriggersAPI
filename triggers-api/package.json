@@ -1,0 +1,24 @@
+{
+  "name": "triggers-api",
+  "version": "1.0.0",
+  "description": "Real-time event notifications from TriggersAPI",
+  "main": "index.js",
+  "zapier": {
+    "title": "TriggersAPI",
+    "description": "Real-time event notifications from TriggersAPI",
+    "category": "Developer Tools",
+    "platformVersion": "16.0.0"
+  },
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --testTimeout 10000"
+  },
+  "dependencies": {
+    "zapier-platform-core": "18.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.6.0"
+  },
+  "private": true,
+  "exports": "./index.js",
+  "type": "module"
+}

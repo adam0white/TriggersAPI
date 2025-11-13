@@ -15,6 +15,7 @@ import { validateEventRequest } from '../lib/validation';
 import { sendEventToQueue } from '../lib/queue';
 import { badRequest, payloadTooLarge, serviceUnavailable, internalError } from '../middleware/error-handler';
 import { logInfo } from '../middleware/logger';
+import { WebhookDeliveryStatus } from '../types/api';
 
 const MAX_PAYLOAD_SIZE = 1024 * 1024; // 1MB
 
@@ -116,6 +117,35 @@ export async function handlePostEvents(request: Request, env: Env, correlationId
 	// Queue send succeeded, return 200 acceptance
 	logInfo('Event queued successfully', { eventId, correlationId });
 
+	// Check for active webhooks to include delivery status (Epic 8.3)
+	let webhookDeliveryStatus: WebhookDeliveryStatus;
+	try {
+		const webhookCount = await env.DB.prepare(
+			`SELECT COUNT(*) as count FROM zapier_webhooks WHERE status = 'active'`
+		).first<{ count: number }>();
+
+		const activeWebhooks = webhookCount?.count || 0;
+
+		if (activeWebhooks > 0) {
+			webhookDeliveryStatus = {
+				subscribed_webhooks: activeWebhooks,
+				status: 'queued_for_delivery',
+				estimated_delivery_time: '5-30 seconds',
+			};
+		} else {
+			webhookDeliveryStatus = {
+				subscribed_webhooks: 0,
+				status: 'no_webhooks',
+			};
+		}
+	} catch (error) {
+		// If webhook check fails, don't block event acceptance
+		webhookDeliveryStatus = {
+			subscribed_webhooks: 0,
+			status: 'delivery_error',
+		};
+	}
+
 	const timestamp = new Date().toISOString();
 	return new Response(
 		JSON.stringify({
@@ -123,6 +153,7 @@ export async function handlePostEvents(request: Request, env: Env, correlationId
 				event_id: eventId,
 				status: 'accepted',
 				timestamp,
+				zapier_delivery: webhookDeliveryStatus,
 			},
 			timestamp,
 		}),
