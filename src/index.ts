@@ -25,8 +25,10 @@ import { validateBearerToken, unauthorizedResponse, serviceErrorResponse } from 
 import { processEventBatch } from './queue/consumer';
 import { ProcessEventWorkflow } from './workflows/process-event';
 import { processTailEvents } from './tail/worker';
-import { MetricsCalculator } from './lib/metrics-calculator';
+// import { MetricsCalculator } from './lib/metrics-calculator'; // Scheduled calculation disabled
 import { logger } from './lib/logger';
+import { handleCalculateMetrics } from './routes/calculate-metrics';
+import { handleDataCleanup } from './routes/cleanup';
 
 /**
  * CORS Configuration
@@ -62,7 +64,7 @@ function addCorsHeaders(response: Response): Response {
 export { ProcessEventWorkflow };
 
 // Routes that require authentication
-const PROTECTED_ROUTES = ['/events', '/inbox', '/zapier', '/health'];
+const PROTECTED_ROUTES = ['/events', '/inbox', '/zapier', '/health', '/metrics/calculate', '/admin/cleanup'];
 
 // Public routes (no auth required)
 const PUBLIC_ROUTES = ['/'];
@@ -109,6 +111,16 @@ export default {
 		// Metrics history API endpoint (public for dashboard charts)
 		if (path === '/api/metrics/history' && method === 'GET') {
 			return addCorsHeaders(await handleGetMetricsHistory(request, env, correlationId));
+		}
+
+		// On-demand metrics calculation
+		if (path === '/metrics/calculate' && method === 'POST') {
+			return addCorsHeaders(await handleCalculateMetrics(request, env, correlationId));
+		}
+
+		// Data cleanup (admin)
+		if (path === '/admin/cleanup' && method === 'POST') {
+			return addCorsHeaders(await handleDataCleanup(request, env, correlationId));
 		}
 
 		// API Documentation routes (public)
@@ -235,26 +247,27 @@ export default {
 	 * Scheduled handler for periodic tasks
 	 * Runs metrics calculations every 30 seconds
 	 * Implemented in Epic 4, Story 4.3
+	 * DISABLED: To save resources when idle
 	 */
-	async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-		try {
-			logger.info('Scheduled metrics calculation started', {
-				scheduledTime: new Date(controller.scheduledTime).toISOString(),
-				cron: controller.cron,
-			});
+	// async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+	// 	try {
+	// 		logger.info('Scheduled metrics calculation started', {
+	// 			scheduledTime: new Date(controller.scheduledTime).toISOString(),
+	// 			cron: controller.cron,
+	// 		});
 
-			// Create metrics calculator instance
-			const calculator = new MetricsCalculator(env.DB, env.METRICS_KV, logger);
+	// 		// Create metrics calculator instance
+	// 		const calculator = new MetricsCalculator(env.DB, env.METRICS_KV, logger);
 
-			// Run all metrics calculations
-			await calculator.runAllMetricsCalculations();
+	// 		// Run all metrics calculations
+	// 		await calculator.runAllMetricsCalculations();
 
-			logger.info('Scheduled metrics calculation completed');
-		} catch (error) {
-			logger.error('Scheduled metrics calculation failed', {
-				error: String(error),
-				message: error instanceof Error ? error.message : 'Unknown error',
-			});
-		}
-	},
+	// 		logger.info('Scheduled metrics calculation completed');
+	// 	} catch (error) {
+	// 		logger.error('Scheduled metrics calculation failed', {
+	// 			error: String(error),
+	// 			message: error instanceof Error ? error.message : 'Unknown error',
+	// 		});
+	// 	}
+	// },
 } satisfies ExportedHandler<Env>;

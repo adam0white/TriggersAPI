@@ -65,8 +65,9 @@ service = "triggers-api"
 
 # Cron Triggers for Scheduled Tasks
 # Epic 4.3: Metrics calculation every 30 seconds
-[triggers]
-crons = ["*/1 * * * *"]  # Every minute (Cloudflare minimum frequency)
+# [triggers]
+# crons = ["*/1 * * * *"]  # Every minute (Cloudflare minimum frequency)
+
 
 # Environment Variables
 # Epic 8.4: Zapier Security & Validation
