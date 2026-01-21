@@ -12,7 +12,7 @@
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.11.0",
-		"@cloudflare/vitest-pool-workers": "^0.8.19",
+		"@cloudflare/vitest-pool-workers": "^0.12.5",
 		"@playwright/test": "^1.56.1",
 		"@radix-ui/react-accordion": "^1.2.12",
 		"@radix-ui/react-dialog": "^1.1.15",
@@ -47,7 +47,7 @@
 		"vite": "^7.2.2",
 		"vite-plugin-static-copy": "^3.1.4",
 		"vitest": "~3.2.0",
-		"wrangler": "^4.46.0"
+		"wrangler": "^4.59.3"
 	},
 	"dependencies": {
 		"@radix-ui/react-alert-dialog": "^1.1.15",
